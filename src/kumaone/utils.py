@@ -27,27 +27,33 @@ console = Console()
 
 
 # Turn on/off debugging
-def debug_manager():
-    """This function acts accordingly with --debug switch"""
+def debug_manager(log_level=None):
+    """
+    This function acts accordingly with --debug switch
 
-    try:
-        from http.client import HTTPConnection
-    except ImportError:
-        console.print(f":x: Can't import http client", style="logging.level.error")
-        sys.exit(1)
-    console.print(f":beetle: DEBUG mode is ON.", style="logging.keyword")
-    debug_format = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-    HTTPConnection.debuglevel = 4
-    logging.basicConfig(
-        level="NOTSET",
-        format=debug_format,
-        datefmt="[%X]",
-        handlers=[RichHandler(rich_tracebacks=True)],
-    )
-    log = logging.getLogger("kumaone")
-    log.setLevel(logging.DEBUG)
-    log.propagate = True
-    return log
+    :param log_level: (str) Log level
+    :return: (object) logger
+    """
+
+    if log_level is not None:
+        log_format = "[%(funcName)s()] %(message)s"
+        logging.basicConfig(
+            level="NOTSET",
+            format=log_format,
+            datefmt="[%X]",
+            handlers=[RichHandler(rich_tracebacks=True)]
+        )
+        level = logging.getLevelName(f"{log_level}".upper())
+        console.print(f":beetle: {log_level} mode is ON.".upper(), style="logging.keyword")
+        logger = logging.getLogger(__name__)
+        logger.setLevel(level)
+        logger.propagate = True
+        return logger
+    else:
+        logger = logging.getLogger(__name__)
+        logger.addHandler(logging.NullHandler())
+        logger.propagate = False
+        return logger
 
 
 def app_info():

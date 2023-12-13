@@ -1,0 +1,11 @@
+---
+monitors:
+  - name: Google
+    type: http
+    url: https://google.com
+  - name: Personal Website
+    type: http
+    url: https://dalwar23.com
+  - name: PI Server
+    type: ping
+    url: 192.168.178.179
