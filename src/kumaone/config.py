@@ -5,20 +5,15 @@
 
 # Import builtin python libraries
 from enum import Enum
-import logging
 from pathlib import Path
-import sys
 
 # Import external python libraries
 from rich.console import Console
 from rich import print
-import typer
-from typing import Optional
-from typing_extensions import Annotated
 import yaml
 
 # Import custom (local) python packages
-from .utils import debug_manager, app_info
+from .utils import log_manager
 
 console = Console()
 
@@ -33,7 +28,7 @@ class ConfigActions(str, Enum):
     create = "create"
     delete = "delete"
     edit = "edit"
-    none = "none"
+    show = "show"
 
 
 def check_config(config_path=None, log_level=None):
@@ -45,7 +40,7 @@ def check_config(config_path=None, log_level=None):
     :return: (object) Python dictionary object with the config
     """
 
-    logger = debug_manager(log_level=log_level)
+    logger = log_manager(log_level=log_level)
 
     if config_path is None:
         config_file_found = False
@@ -61,7 +56,10 @@ def check_config(config_path=None, log_level=None):
         if not config_file_found:
             logger.error(f"Config file not found.")
             console.print(f":x: Config file not found.", style="logging.level.error")
-            console.print(f":speak_no_evil: Please run 'kumaone config --action create' to create a new config file.", style="logging.level.info")
+            console.print(
+                f":speak_no_evil: Please run 'kumaone config --action create' to create a new config file.",
+                style="logging.level.info",
+            )
     else:
         if Path.exists(config_path):
             if Path.is_file(config_path):

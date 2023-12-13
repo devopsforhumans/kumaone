@@ -17,7 +17,7 @@ from typing_extensions import Annotated
 
 # Import custom (local) python packages
 from .config import check_config, ConfigActions
-from .utils import debug_manager, app_info
+from .utils import log_manager, app_info
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -38,7 +38,7 @@ def info(debug: Annotated[bool, typer.Option(help="Turn on Debug mode.", is_eage
     """
 
     if debug or state["debug"]:
-        debug_manager()
+        log_manager()
     app_info()
 
 
@@ -57,7 +57,7 @@ def bulk_add_monitor(
     """
 
     if debug or state["debug"]:
-        debug_manager()
+        log_manager()
 
     config_data = check_config(config_path=config_file)
     print(config_data)
@@ -65,8 +65,9 @@ def bulk_add_monitor(
 
 @app.command(name="config", help="Kumaone config handler.")
 def config(
-    action: Annotated[ConfigActions, typer.Option(..., "--action", "-a", help="Perform uptime kuma config actions.")] = "none",
-    show: Annotated[bool, typer.Option(help="Show current uptime kuma config.")] = False,
+    action: Annotated[
+        ConfigActions, typer.Option(..., "--action", "-a", help="Perform uptime kuma config actions.")
+    ] = "show",
     debug: Annotated[bool, typer.Option(help="Turn on Debug mode.", is_eager=True)] = False,
 ):
     """
@@ -80,11 +81,17 @@ def config(
     else:
         log_level = None
 
-    if show:
-        if action != "none":
-            console.print(f":x: Both 'show' and 'action' can't be used together.")
-        else:
-            check_config(log_level=log_level)
+    if action == "show":
+        check_config(log_level=log_level)
+    elif action == "create":
+        console.print(f":bear: Create a config.")
+    elif action == "delete":
+        console.print(f":wastebasket: Delete a config.")
+    elif action == "edit":
+        console.print(f":pencil: Edit a config.")
+    else:
+        console.print(f":x: Not a valid action.")
+        exit(1)
 
 
 @app.callback()

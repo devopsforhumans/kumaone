@@ -14,7 +14,7 @@ import typer
 from typing_extensions import Annotated
 
 # Import custom (local) python packages
-from .utils import debug_manager, app_info
+from .utils import log_manager, app_info
 
 # Source code meta data
 __author__ = "Dalwar Hossain"

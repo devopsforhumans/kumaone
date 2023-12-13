@@ -26,8 +26,8 @@ __email__ = "dalwar23@pm.me"
 console = Console()
 
 
-# Turn on/off debugging
-def debug_manager(log_level=None):
+# Turn on/off logging visibility
+def log_manager(log_level=None):
     """
     This function acts accordingly with --debug switch
 
@@ -38,10 +38,7 @@ def debug_manager(log_level=None):
     if log_level is not None:
         log_format = "[%(funcName)s()] %(message)s"
         logging.basicConfig(
-            level="NOTSET",
-            format=log_format,
-            datefmt="[%X]",
-            handlers=[RichHandler(rich_tracebacks=True)]
+            level="NOTSET", format=log_format, datefmt="[%X]", handlers=[RichHandler(rich_tracebacks=True)]
         )
         level = logging.getLevelName(f"{log_level}".upper())
         console.print(f":beetle: {log_level} mode is ON.".upper(), style="logging.keyword")
