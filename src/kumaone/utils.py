@@ -4,8 +4,8 @@
 """Utility module for kumaone"""
 
 # Import builtin python libraries
+from datetime import datetime
 import logging
-import sys
 
 # Import external python libraries
 from rich.console import Console
@@ -38,10 +38,11 @@ def log_manager(log_level=None):
     if log_level is not None:
         log_format = "[%(funcName)s()] %(message)s"
         logging.basicConfig(
-            level="NOTSET", format=log_format, datefmt="[%X]", handlers=[RichHandler(rich_tracebacks=True)]
+            level="NOTSET", format=log_format, datefmt="[%m-%d-%Y %X]", handlers=[RichHandler(rich_tracebacks=True)]
         )
         level = logging.getLevelName(f"{log_level}".upper())
-        console.print(f":beetle: {log_level} mode is ON.".upper(), style="logging.keyword")
+        if not log_level.upper().startswith("W"):
+            console.print(f":beetle: {log_level} mode is ON.".upper(), style="logging.keyword")
         logger = logging.getLogger(__name__)
         logger.setLevel(level)
         logger.propagate = True
@@ -53,17 +54,22 @@ def log_manager(log_level=None):
         return logger
 
 
-def app_info():
+def app_info(log_level=None):
     """
     Shows application information
 
+    :param log_level: (str) Log levels
     :return: application information
     """
 
-    print("=" * 50)
+    length = 60
+    logger = log_manager(log_level=log_level)
+
+    logger.info(f"Please check github repository for updated info.")
+    print("=" * length)
     print(f":hatching_chick: Author: {author}")
     print(f":penguin: Version: {version}")
     print(f":memo: License: {app_license}")
     print(f":link: Home: {homepage}")
     print(f":copyright: Copyright: {app_copy_right}")
-    print("=" * 50)
+    print("=" * length)

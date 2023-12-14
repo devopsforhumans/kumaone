@@ -42,36 +42,39 @@ def check_config(config_path=None, log_level=None):
 
     logger = log_manager(log_level=log_level)
 
-    if config_path is None:
+    if config_path is None or not config_path:
         config_file_found = False
         for item in kuma_config_default_locations:
             config_file = Path(item)
             logger.info(f"Looking for uptime kuma config file at: {config_file}")
             if Path.exists(config_file):
                 if Path.is_file(config_file):
-                    print(f":white_check_mark: Uptime kuma config file found at: {config_file}")
+                    console.print(f":white_check_mark: Uptime kuma config file found at: {config_file}", style="green")
                     config_file_found = True
                     check_config(config_path=config_file)
                     break
         if not config_file_found:
-            logger.error(f"Config file not found.")
-            console.print(f":x: Config file not found.", style="logging.level.error")
+            logger.critical(f"Config file not found.")
+            console.print(f":x: Sorry! We couldn't find the config file.", style="logging.level.critical")
             console.print(
                 f":speak_no_evil: Please run 'kumaone config --action create' to create a new config file.",
                 style="logging.level.info",
             )
     else:
-        if Path.exists(config_path):
-            if Path.is_file(config_path):
-                with open(config_path, "r") as kuma_config:
+        config_file = Path(config_path)
+        if Path.exists(config_file):
+            if Path.is_file(config_file):
+                with open(config_file, "r") as kuma_config:
                     config_data = yaml.safe_load(kuma_config)
+                    console.print(f":white_check_mark: Uptime kuma config file found at: {config_file}", style="green")
+                    logger.info(f"Config file [{config_file}] found!")
                     logger.info(f"{config_data}")
                 return config_data
             else:
                 logger.error(f"Config path is not a file.")
-                console.print(f":x: {config_path} is not a file.", style="red")
+                console.print(f":x: {config_file} is not a file.", style="red")
                 exit(1)
         else:
             logger.error(f"Provided config path doesn't exists.")
-            console.print(f":x: {config_path} doesn't exists.", style="red")
+            console.print(f":x: {config_file} doesn't exists.", style="red")
             exit(1)
