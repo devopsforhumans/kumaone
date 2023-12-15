@@ -10,7 +10,9 @@ from pathlib import Path
 # Import external python libraries
 from rich.console import Console
 from rich import print
+from rich.prompt import Prompt
 import yaml
+import validators
 
 # Import custom (local) python packages
 from .utils import log_manager
@@ -78,3 +80,41 @@ def check_config(config_path=None, log_level=None):
             logger.error(f"Provided config path doesn't exists.")
             console.print(f":x: {config_file} doesn't exists.", style="red")
             exit(1)
+
+
+def create_config(config_path=None, log_level=None):
+    """
+    Create a new config for kumaone with necessary info about uptime kuma
+
+    :param config_path: (Path) Custom configuration path.
+    :param log_level: (str) Log level
+    :return: (file) Cerates a file with configuration
+    """
+
+    logger = log_manager(log_level=log_level)
+
+    logger.info(f"Provided location: {config_path}")
+    if config_path is None or not config_path:
+        logger.info(f"Provided config path is either empty or set to None.")
+        console.print(f":bear: No custom config path provided. Default path will be used for configuration.")
+        config_file_path = kuma_config_default_locations[0]
+    else:
+        logger.info(f"Custom config path provided.")
+        console.print(f":teddy_bear: Custom config path provided. {config_path} will be used for configuration.")
+        config_file_path = config_path
+    logger.info(f"Uptime kuma configuration will be written in: {config_file_path}")
+    console.print(f":honey_pot: Creating config file at: {config_file_path}")
+    while True:
+        kuma_url = Prompt.ask(":link: Uptime kuma URL (https://example.com)")
+        if validators.url(kuma_url):
+            logger.info("URL syntax is valid.")
+            break
+        else:
+            console.print(":lying_face: Invalid URL syntax.", style="prompt.invalid")
+    kuma_user = Prompt.ask(":goat: Uptime kuma username")
+    kuma_password = Prompt.ask(":see_no_evil: Uptime kuma password", password=True)
+
+    if Path(config_file_path).parent.exists():
+        print("Parent directory exists!")
+    else:
+        print("Parent directory doesn't exists!")

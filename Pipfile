@@ -8,6 +8,7 @@ kumaone = {file = ".", editable = true}
 "python-socketio[asyncio_client]" = ">=5.10.0"
 pyyaml = ">=6.0.1"
 "typer[all]" = ">=0.9.0"
+validators = ">=0.22.0"
 
 
 [dev-packages]

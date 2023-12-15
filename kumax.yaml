@@ -1,0 +1,5 @@
+---
+server:
+    kuma_url: http://uptime.homelab.do
+    kuma_username: dalwar
+    kuma_password: magic
