@@ -177,5 +177,34 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
     logger = log_manager(log_level=log_level)
 
     logger.info(f"Deleting {config_path} configuration file.")
-
-    print("this")
+    files_to_delete = []
+    if config_path is None or not config_path:
+        logger.info("Empty config path provided.")
+        console.print(f":zipper-mouth_face: Empty config path provided. Looking for default config file.", style="logging.level.info")
+        for item in kuma_config_default_locations:
+            if Path(item).exists():
+                logger.info(f"Config file found at: {item}")
+                files_to_delete.append(item)
+    else:
+        if Path(config_path).exists():
+            logger.info(f"Config file found at: {config_path}")
+            files_to_delete.append(config_path)
+        else:
+            logger.info(f"Provided config file doesn't exists!")
+            console.print(f":lollipop: Provided config file path doesn't exists. Nothing to delete.", style="logging.level.info")
+            exit(0)
+    if not files_to_delete:
+        logger.info(f"No config file found.")
+        console.print(f":lollipop: No config file found. Nothing to delete.", style="logging.level.info")
+        exit(0)
+    else:
+        for item in files_to_delete:
+            console.print(f":hammer_and_wrench: Deleting {item} file.", style="logging.level.info")
+            try:
+                Path.unlink(item, missing_ok=True)
+                logger.info(f"File {item} removed.")
+                console.print(f":wastebasket: File {item} has been deleted.", style="green")
+            except Exception as err:
+                console.print(f":x: Exception occurred. ERROR: {err}", style="logging.level.error")
+                logger.error(f"{err}")
+                exit(1)

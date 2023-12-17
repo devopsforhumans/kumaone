@@ -85,7 +85,6 @@ def config(
     elif action == "create":
         create_config(config_path=config_path, log_level=log_level)
     elif action == "delete":
-        console.print(f":wastebasket: Delete a config.")
         delete_config(config_path=config_path, log_level=log_level)
     elif action == "edit":
         console.print(f":pencil: Edit a config.")
