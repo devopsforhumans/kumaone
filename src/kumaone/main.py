@@ -14,7 +14,7 @@ from typing import Optional
 from typing_extensions import Annotated
 
 # Import custom (local) python packages
-from .config import ConfigActions, check_config, create_config
+from .config import ConfigActions, check_config, create_config, delete_config
 from .utils import app_info
 
 # Source code meta data
@@ -63,7 +63,9 @@ def bulk_add_monitor(
 
 @app.command(name="config", help="Kumaone config handler.")
 def config(
-    config_path: Annotated[str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")] = "",
+    config_path: Annotated[
+        str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")
+    ] = "",
     action: Annotated[
         ConfigActions, typer.Option(..., "--action", "-a", help="Perform uptime kuma config actions.")
     ] = "show",
@@ -79,11 +81,12 @@ def config(
         state["log_level"] = log_level
 
     if action == "show":
-        check_config(log_level=log_level, config_path=config_path)
+        check_config(config_path=config_path, log_level=log_level)
     elif action == "create":
-        create_config(log_level=log_level, config_path=config_path)
+        create_config(config_path=config_path, log_level=log_level)
     elif action == "delete":
         console.print(f":wastebasket: Delete a config.")
+        delete_config(config_path=config_path, log_level=log_level)
     elif action == "edit":
         console.print(f":pencil: Edit a config.")
     else:
