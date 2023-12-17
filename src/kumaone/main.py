@@ -14,7 +14,7 @@ from typing import Optional
 from typing_extensions import Annotated
 
 # Import custom (local) python packages
-from .config import ConfigActions, check_config, create_config, delete_config
+from .config import ConfigActions, check_config, create_config, delete_config, edit_config
 from .utils import app_info
 
 # Source code meta data
@@ -87,7 +87,7 @@ def config(
     elif action == "delete":
         delete_config(config_path=config_path, log_level=log_level)
     elif action == "edit":
-        console.print(f":pencil: Edit a config.")
+        edit_config(config_path=config_path, log_level=log_level)
     else:
         console.print(f":x: Not a valid action.")
         exit(1)

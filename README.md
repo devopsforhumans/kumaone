@@ -57,10 +57,10 @@ pip install kumaone
 - [x] Show `uptime kuma` configuration (custom path)
 - [x] Create `uptime kuma` configuration (default path)
 - [x] Create `uptime kuma` configuration (custom path)
+- [x] Delete `uptime kuma` configuration
 - [ ] Edit `uptime kuma` configuration
-- [ ] Delete `uptime kuma` configuration
-- [ ] Bulk add monitors
-- [ ] Bulk delete monitors
+- [ ] Bulk add monitors from file(s)
+- [ ] Bulk delete monitors from file(s)
 - [ ] Bulk edit monitors
 - [ ] Add Single monitor
 - [ ] Delete Single Monitor

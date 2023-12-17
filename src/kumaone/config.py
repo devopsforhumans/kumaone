@@ -208,3 +208,15 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
                 console.print(f":x: Exception occurred. ERROR: {err}", style="logging.level.error")
                 logger.error(f"{err}")
                 exit(1)
+
+
+def edit_config(config_path=None, log_level=None):
+    """
+    Delete uptime kuma config
+
+    :param config_path: (Path) Custom configuration path.
+    :param log_level: (str) Log level
+    :return: None
+    """
+
+    console.print(f":sunflower: Not implemented, yet!")
