@@ -32,6 +32,27 @@ authentication_methods = [
 
 docker_engine_connection_types = ["socket", "tcp"]
 
+event_data = {
+    "connect": None,
+    "disconnect": None,
+    "heartbeatList": None,
+    "monitorList": None,
+    "notificationList": None,
+    "proxyList": None,
+    "statusPageList": None,
+    "importantHeartbeatList": None,
+    "avgPing": None,
+    "uptime": None,
+    "heartbeat": None,
+    "info": None,
+    "certInfo": None,
+    "dockerHostList": None,
+    "autoLogin": None,
+    "initServerTimezone": None,
+    "maintenanceList": None,
+    "apiKeyList": None,
+}
+
 incident_styles = [
     "danger",
     "dark",
@@ -49,6 +70,8 @@ maintenance_strategies = [
     "recurring-day-of-month",
     "single",
 ]
+
+monitor_events = ["avgPing", "uptime", "heartbeatList", "importantHeartbeatList", "certInfo", "heartbeat"]
 
 monitor_status_mapping = {"down": 0, "maintenance": 3, "pending": 2, "up": 1}
 

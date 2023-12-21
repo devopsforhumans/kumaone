@@ -8,14 +8,15 @@ from pathlib import Path
 
 # Import external python libraries
 from rich.console import Console
-from rich import print
 import typer
 from typing import Optional
 from typing_extensions import Annotated
 
 # Import custom (local) python packages
 from .config import ConfigActions, check_config, create_config, delete_config, edit_config
-from .utils import app_info
+from .connection import connect_login, disconnect
+from .monitors import get_monitors
+from .utils import app_info, log_manager
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -40,13 +41,13 @@ def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "WARNI
     app_info(log_level=log_level)
 
 
-@app.command(name="bulk_add_monitor", help="Add one or more monitor(s).")
-def bulk_add_monitor(
+@app.command(name="add_monitor_bulk", help="Add one or more monitor(s).")
+def add_monitor_bulk(
     monitor_data: Annotated[Optional[Path], typer.Option(..., "--file", "-f", help="Monitor data file path.")],
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
-    ] = "kuma.conf",
-    log_level: Annotated[str, typer.Option(help="Set log level.")] = "WARNING",
+    ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
     Adds uptime kuma monitor(s)
@@ -54,11 +55,15 @@ def bulk_add_monitor(
     :return: (object) json object
     """
 
-    if log_level:
+    if log_level != "NOTSET":
         state["log_level"] = log_level
-
-    config_data = check_config(config_path=config_file)
-    print(config_data)
+        logger = log_manager(log_level=log_level)
+    else:
+        logger = None
+    config_data = check_config(config_path=config_file, logger=logger)
+    connect_login(config_data=config_data)
+    get_monitors()
+    disconnect()
 
 
 @app.command(name="config", help="Kumaone config handler.")

@@ -6,6 +6,7 @@
 # Import builtin python libraries
 from enum import Enum
 from pathlib import Path
+from types import SimpleNamespace
 
 # Import external python libraries
 from rich.console import Console
@@ -16,9 +17,18 @@ import validators
 # Import custom (local) python packages
 from .utils import log_manager
 
+# Source code meta data
+__author__ = "Dalwar Hossain"
+__email__ = "dalwar23@pm.me"
+
 console = Console()
 
-kuma_config_default_locations = [Path.home().joinpath(".config/kumaone/kuma.yaml"), Path.home().joinpath("kuma.yaml"), "./kuma.yaml", "/etc/kumaone/kuma.yaml"]
+kuma_config_default_locations = [
+    Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    Path.home().joinpath("kuma.yaml"),
+    "./kuma.yaml",
+    "/etc/kumaone/kuma.yaml",
+]
 
 
 class ConfigActions(str, Enum):
@@ -57,7 +67,7 @@ def check_config(config_path=None, log_level=None, logger=None):
     :param config_path: (Path) configuration yaml file path
     :param log_level: (str) Log level
     :param logger: (object) Logger object for logging
-    :return: (object) Python dictionary object with the config
+    :return: (object) Python SimpleNamespace object with the config
     """
 
     if logger is None:
@@ -88,10 +98,12 @@ def check_config(config_path=None, log_level=None, logger=None):
             if Path.is_file(config_file):
                 with open(config_file, "r") as kuma_config:
                     config_data = yaml.safe_load(kuma_config)
-                    console.print(f":white_heavy_check_mark:  Uptime kuma config file found at: {config_file}", style="green")
+                    console.print(
+                        f":white_heavy_check_mark:  Uptime kuma config file found at: {config_file}", style="green"
+                    )
                     logger.info(f"Config file {config_file} found!")
                     logger.debug(f"{config_data}")
-                return config_data
+                return SimpleNamespace(**config_data["kuma"])
             else:
                 logger.error(f"Config path is not a file.")
                 console.print(f":x: {config_file} is not a file.", style="red")
@@ -117,11 +129,17 @@ def create_config(config_path=None, log_level=None):
     config_data = {}
     if config_path is None or not config_path:
         logger.info(f"Provided config path is either empty or set to None.")
-        console.print(f":bear: No custom config path provided. Default path will be used for configuration.", style="logging.level.info")
+        console.print(
+            f":bear: No custom config path provided. Default path will be used for configuration.",
+            style="logging.level.info",
+        )
         config_file_path = kuma_config_default_locations[0]
     else:
         logger.info(f"Custom config path provided.")
-        console.print(f":teddy_bear: Custom config path provided. {config_path} will be used for configuration.", style="logging.level.info")
+        console.print(
+            f":teddy_bear: Custom config path provided. {config_path} will be used for configuration.",
+            style="logging.level.info",
+        )
         config_file_path = config_path
     logger.info(f"Uptime kuma configuration will be written in: {config_file_path}")
     console.print(f":honey_pot: Creating config file at: {config_file_path}", style="logging.level.info")
@@ -180,7 +198,10 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
     files_to_delete = []
     if config_path is None or not config_path:
         logger.info("Empty config path provided.")
-        console.print(f":zipper-mouth_face: Empty config path provided. Looking for default config file.", style="logging.level.info")
+        console.print(
+            f":zipper-mouth_face: Empty config path provided. Looking for default config file.",
+            style="logging.level.info",
+        )
         for item in kuma_config_default_locations:
             if Path(item).exists():
                 logger.info(f"Config file found at: {item}")
@@ -191,7 +212,9 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
             files_to_delete.append(config_path)
         else:
             logger.info(f"Provided config file doesn't exists!")
-            console.print(f":lollipop: Provided config file path doesn't exists. Nothing to delete.", style="logging.level.info")
+            console.print(
+                f":lollipop: Provided config file path doesn't exists. Nothing to delete.", style="logging.level.info"
+            )
             exit(0)
     if not files_to_delete:
         logger.info(f"No config file found.")
