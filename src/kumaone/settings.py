@@ -10,11 +10,11 @@ import sys
 # Import external python libraries
 from rich.console import Console
 from rich import print
-import typer
 from typing_extensions import Annotated
 
 # Import custom (local) python packages
-from .utils import log_manager, app_info
+from . import ioevents as event
+from .utils import app_info, log_manager
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -33,24 +33,24 @@ authentication_methods = [
 docker_engine_connection_types = ["socket", "tcp"]
 
 event_data = {
-    "connect": None,
-    "disconnect": None,
-    "heartbeatList": None,
-    "monitorList": None,
-    "notificationList": None,
-    "proxyList": None,
-    "statusPageList": None,
-    "importantHeartbeatList": None,
-    "avgPing": None,
-    "uptime": None,
-    "heartbeat": None,
-    "info": None,
-    "certInfo": None,
-    "dockerHostList": None,
-    "autoLogin": None,
-    "initServerTimezone": None,
-    "maintenanceList": None,
-    "apiKeyList": None,
+    event.api_key_list: None,
+    event.auto_login: None,
+    event.avg_ping: None,
+    event.cert_info: None,
+    event.connect: None,
+    event.disconnect: None,
+    event.docker_host_list: None,
+    event.heartbeat: None,
+    event.heartbeat_list: None,
+    event.important_heartbeat_list: None,
+    event.info: None,
+    event.init_server_timezone: None,
+    event.maintenance_list: None,
+    event.monitor_list: None,
+    event.notification_list: None,
+    event.proxy_list: None,
+    event.status_page_list: None,
+    event.uptime: None,
 }
 
 incident_styles = [

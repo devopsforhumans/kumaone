@@ -3,9 +3,10 @@
 
 """Connection module for kumaone"""
 
+import json
+
 # Import builtin python libraries
 from copy import deepcopy
-import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -14,10 +15,10 @@ from rich.console import Console
 import socketio
 from socketio.exceptions import TimeoutError
 
-
 # Import custom (local) python packages
 from .config import ConfigActions, check_config, create_config, delete_config, edit_config
-from .event_handlers import get_event_data, list_monitors_event
+from .event_handlers import connect_event, disconnect_event, get_event_data, monitor_list_event
+from . import ioevents
 from .utils import app_info, log_manager
 
 # Source code meta data
@@ -27,6 +28,33 @@ __email__ = "dalwar23@pm.me"
 console = Console()
 sio = socketio.Client()
 monitor_list_data = None
+
+
+def _register_event_handlers():
+    """
+    Registers event handlers
+
+    :return: None
+    """
+
+    # sio.on(ioevents.api_key_list, api_key_list_event)
+    # sio.on(ioevents.auto_login, auto_login_event)
+    # sio.on(ioevents.avg_ping, avg_ping_event)
+    # sio.on(ioevents.cert_info, cert_info_event)
+    sio.on(ioevents.connect, connect_event)
+    sio.on(ioevents.disconnect, disconnect_event)
+    # sio.on(ioevents.docker_host_list, docker_host_list_event)
+    # sio.on(ioevents.heartbeat, heartbeat_event)
+    # sio.on(ioevents.heartbeat_list, heartbeat_list_event)
+    # sio.on(ioevents.important_heartbeat_list, important_heartbeat_list_event)
+    # sio.on(ioevents.info, info_events)
+    # sio.on(ioevents.init_server_timezone, init_server_timezone_event)
+    # sio.on(ioevents.maintenance_list, maintenance_list_event)
+    sio.on(ioevents.monitor_list, monitor_list_event)
+    # sio.on(ioevents.notification_list, notification_list_event)
+    # sio.on(ioevents.proxy_list, proxy_list_event)
+    # sio.on(ioevents.status_page_list, status_page_list_event)
+    # sio.on(ioevents.uptime, uptime_event)
 
 
 def connect_login(config_data=None, headers=None):
@@ -39,7 +67,7 @@ def connect_login(config_data=None, headers=None):
     """
 
     try:
-        sio.on("monitorList", list_monitors_event)
+        _register_event_handlers()
         sio.connect(config_data.url, headers=headers)
         console.print(f":white_heavy_check_mark:  Connected to {config_data.url}", style="green")
     except TimeoutError:

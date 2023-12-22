@@ -6,8 +6,8 @@
 # Import builtin python libraries
 from copy import deepcopy
 import json
-from pathlib import Path
 import time
+from pathlib import Path
 from types import SimpleNamespace
 
 # Import external python libraries
@@ -15,9 +15,9 @@ from rich.console import Console
 import socketio
 from socketio.exceptions import TimeoutError
 
-
 # Import custom (local) python packages
 from .config import ConfigActions, check_config, create_config, delete_config, edit_config
+from . import ioevents
 from .settings import event_data, monitor_events
 from .utils import app_info, log_manager
 
@@ -45,10 +45,30 @@ def get_event_data(event):
     return deepcopy(event_data[event].copy())
 
 
-def list_monitors_event(data):
+def connect_event():
+    """
+    Connect event handler
+
+    :return:
+    """
+
+    pass
+
+
+def disconnect_event():
+    """
+    Disconnect event handler
+
+    :return: None
+    """
+
+    pass
+
+
+def monitor_list_event(data):
     """
     Get all the monitors
 
-    :return: (dict) socketIO event data
+    :return: None
     """
-    event_data["monitorList"] = data
+    event_data[ioevents.monitor_list] = data

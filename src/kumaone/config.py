@@ -7,11 +7,11 @@
 from enum import Enum
 from pathlib import Path
 from types import SimpleNamespace
+import yaml
 
 # Import external python libraries
 from rich.console import Console
 from rich.prompt import Prompt
-import yaml
 import validators
 
 # Import custom (local) python packages

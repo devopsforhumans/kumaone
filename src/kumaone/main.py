@@ -5,12 +5,12 @@
 
 # Import builtin python libraries
 from pathlib import Path
+from typing import Optional
 
 # Import external python libraries
 from rich.console import Console
-import typer
-from typing import Optional
 from typing_extensions import Annotated
+import typer
 
 # Import custom (local) python packages
 from .config import ConfigActions, check_config, create_config, delete_config, edit_config

@@ -8,16 +8,16 @@ from datetime import datetime
 import logging
 
 # Import external python libraries
+from rich import print
 from rich.console import Console
 from rich.logging import RichHandler
-from rich import print
 
 # Import custom (local) python packages
-from .__about__ import __version__ as version
 from .__about__ import __author__ as author
-from .__about__ import __license__ as app_license
-from .__about__ import __home_page__ as homepage
 from .__about__ import __copy_right__ as app_copy_right
+from .__about__ import __home_page__ as homepage
+from .__about__ import __license__ as app_license
+from .__about__ import __version__ as version
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
