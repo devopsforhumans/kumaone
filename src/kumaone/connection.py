@@ -6,6 +6,7 @@
 import json
 
 # Import builtin python libraries
+from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
@@ -41,8 +42,8 @@ def _register_event_handlers():
     # sio.on(ioevents.auto_login, auto_login_event)
     # sio.on(ioevents.avg_ping, avg_ping_event)
     # sio.on(ioevents.cert_info, cert_info_event)
-    sio.on(ioevents.connect, connect_event)
-    sio.on(ioevents.disconnect, disconnect_event)
+    # sio.on(ioevents.connect, connect_event)
+    # sio.on(ioevents.disconnect, disconnect_event)
     # sio.on(ioevents.docker_host_list, docker_host_list_event)
     # sio.on(ioevents.heartbeat, heartbeat_event)
     # sio.on(ioevents.heartbeat_list, heartbeat_list_event)
@@ -83,7 +84,6 @@ def connect_login(config_data=None, headers=None):
     except Exception as err:
         console.print(f":x:  Error: {err}", style="logging.level.error")
         exit(1)
-
 
 @sio.event
 def connect_error(data):

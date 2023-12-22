@@ -15,7 +15,7 @@ import typer
 # Import custom (local) python packages
 from .config import ConfigActions, check_config, create_config, delete_config, edit_config
 from .connection import connect_login, disconnect
-from .monitors import get_monitors
+from .monitors import list_monitors
 from .utils import app_info, log_manager
 
 # Source code meta data
@@ -41,7 +41,7 @@ def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "WARNI
     app_info(log_level=log_level)
 
 
-@app.command(name="add_monitor_bulk", help="Add one or more monitor(s).")
+@app.command(name="add-monitor-bulk", help="Add one or more monitor(s).")
 def add_monitor_bulk(
     monitor_data: Annotated[Optional[Path], typer.Option(..., "--file", "-f", help="Monitor data file path.")],
     config_file: Annotated[
@@ -52,7 +52,7 @@ def add_monitor_bulk(
     """
     Adds uptime kuma monitor(s)
 
-    :return: (object) json object
+    :return: None
     """
 
     if log_level != "NOTSET":
@@ -60,9 +60,31 @@ def add_monitor_bulk(
         logger = log_manager(log_level=log_level)
     else:
         logger = None
+    pass
+
+
+@app.command(name="list-monitors", help="List all monitor groups and processes.")
+def list_all_monitors(
+    config_file: Annotated[
+        Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
+    ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+):
+    """
+    Lists all monitor groups and processes
+
+    :return: None
+    """
+
+    if log_level != "NOTSET":
+        state["log_level"] = log_level
+        logger = log_manager(log_level=log_level)
+    else:
+        logger = None
+
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    get_monitors()
+    list_monitors()
     disconnect()
 
 

@@ -27,7 +27,7 @@ __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
 
-def get_monitors():
+def list_monitors():
     response = list(get_event_data(ioevents.monitor_list).values())
     # print(json.dumps(response, indent=4))
     groups = []
