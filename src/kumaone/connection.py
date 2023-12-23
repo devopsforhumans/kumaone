@@ -3,12 +3,7 @@
 
 """Connection module for kumaone"""
 
-import json
-
 # Import builtin python libraries
-from contextlib import contextmanager
-from copy import deepcopy
-from pathlib import Path
 from types import SimpleNamespace
 
 # Import external python libraries
@@ -17,10 +12,8 @@ import socketio
 from socketio.exceptions import TimeoutError
 
 # Import custom (local) python packages
-from .config import ConfigActions, check_config, create_config, delete_config, edit_config
-from .event_handlers import connect_event, disconnect_event, get_event_data, monitor_list_event
+from .event_handlers import monitor_list_event
 from . import ioevents
-from .utils import app_info, log_manager
 
 # Source code meta data
 __author__ = "Dalwar Hossain"

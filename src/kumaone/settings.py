@@ -4,17 +4,11 @@
 """Settings module for kumaone"""
 
 # Import builtin python libraries
-import logging
-import sys
 
 # Import external python libraries
-from rich.console import Console
-from rich import print
-from typing_extensions import Annotated
 
 # Import custom (local) python packages
 from . import ioevents as event
-from .utils import app_info, log_manager
 
 # Source code meta data
 __author__ = "Dalwar Hossain"

@@ -13,11 +13,11 @@ from rich.console import Console
 from rich.logging import RichHandler
 
 # Import custom (local) python packages
-from .__about__ import __author__ as author
-from .__about__ import __copy_right__ as app_copy_right
-from .__about__ import __home_page__ as homepage
-from .__about__ import __license__ as app_license
-from .__about__ import __version__ as version
+from src.kumaone.__about__ import __author__ as author
+from src.kumaone.__about__ import __copy_right__ as app_copy_right
+from src.kumaone.__about__ import __home_page__ as homepage
+from src.kumaone.__about__ import __license__ as app_license
+from src.kumaone.__about__ import __version__ as version
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -35,7 +35,12 @@ def log_manager(log_level=None):
     :return: (object) logger
     """
 
-    if log_level is not None:
+    if log_level is None or log_level == "NOTSET":
+        logger = logging.getLogger(__name__)
+        logger.addHandler(logging.NullHandler())
+        logger.propagate = False
+        return logger
+    else:
         log_format = "[%(funcName)s()] %(message)s"
         logging.basicConfig(
             level="NOTSET", format=log_format, datefmt="[%m-%d-%Y %X]", handlers=[RichHandler(rich_tracebacks=True)]
@@ -46,11 +51,6 @@ def log_manager(log_level=None):
         logger = logging.getLogger(__name__)
         logger.setLevel(level)
         logger.propagate = True
-        return logger
-    else:
-        logger = logging.getLogger(__name__)
-        logger.addHandler(logging.NullHandler())
-        logger.propagate = False
         return logger
 
 
