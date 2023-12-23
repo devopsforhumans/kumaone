@@ -3,10 +3,6 @@
 
 """Settings module for kumaone"""
 
-# Import builtin python libraries
-
-# Import external python libraries
-
 # Import custom (local) python packages
 from . import ioevents as event
 
