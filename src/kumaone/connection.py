@@ -78,6 +78,7 @@ def connect_login(config_data=None, headers=None):
         console.print(f":x:  Error: {err}", style="logging.level.error")
         exit(1)
 
+
 @sio.event
 def connect_error(data):
     console.print(f":x: Could not connect to server. Error: {data}", style="logging.level.error")

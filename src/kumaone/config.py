@@ -61,10 +61,10 @@ def config_create(
 
 @app.command(name="delete", help="Delete kumaone config.")
 def config_delete(
-        config_path: Annotated[
-            str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")
-        ] = "",
-        log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+    config_path: Annotated[
+        str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")
+    ] = "",
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
     Delete kumaone config for uptime kuma server.
@@ -80,10 +80,10 @@ def config_delete(
 
 @app.command(name="edit", help="Edit kumaone config.")
 def config_edit(
-        config_path: Annotated[
-            str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")
-        ] = "",
-        log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+    config_path: Annotated[
+        str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")
+    ] = "",
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
     Edit kumaone config for uptime kuma server.
