@@ -13,6 +13,7 @@ import typer
 # Import custom (local) python packages
 from . import monitor_cli
 from . import config_cli
+from .utils import app_info
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -26,17 +27,17 @@ state = {"log_level": "NOTSET"}
 console = Console()
 
 
-# @app.command(name="info", help="Show information about this application.")
-# def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "WARNING"):
-#     """
-#     Show application information
-#
-#     :return: Information on screen.
-#     """
-#
-#     if log_level:
-#         state["log_level"] = log_level
-#     app_info(log_level=log_level)
+@app.command(name="info", help="Show information about this application.")
+def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
+    """
+    Show application information
+
+    :return: Information on screen.
+    """
+
+    if log_level:
+        state["log_level"] = log_level
+    app_info(log_level=log_level)
 
 
 @app.callback()

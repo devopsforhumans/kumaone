@@ -59,10 +59,10 @@ pip install kumaone
 - [x] Create `uptime kuma` configuration (custom path)
 - [x] Delete `uptime kuma` configuration
 - [ ] Edit `uptime kuma` configuration
+- [x] List all monitors. `groups` and `processes` also.
 - [ ] Bulk add monitors from file(s)
 - [ ] Bulk delete monitors from file(s)
-- [ ] Bulk edit monitors
-- [ ] Add Single monitor
+- [ ] Add Single monitor from `inline` data
 - [ ] Delete Single Monitor
 - [ ] Supported Monitor types
   - [ ] HTTP
