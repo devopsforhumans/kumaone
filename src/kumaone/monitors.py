@@ -4,7 +4,6 @@
 """Monitors module for kumaone"""
 
 # Import builtin python libraries
-import json
 
 # Import external python libraries
 from rich import print
