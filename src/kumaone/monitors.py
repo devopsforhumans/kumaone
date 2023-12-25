@@ -7,7 +7,7 @@
 import json
 
 # Import external python libraries
-from rich.table import Table
+from rich import print
 
 # Import custom (local) python packages
 from .event_handlers import get_event_data
@@ -28,19 +28,15 @@ def list_monitors(show_groups=None, show_processes=None):
     """
     response = list(get_event_data(ioevents.monitor_list).values())
     # print(json.dumps(response, indent=4))
-    groups = []
-    processes = []
-    for item in response:
-        if item["type"] == "group":
-            groups.append(item)
-        else:
-            processes.append(item)
+
     if show_groups:
-        for group in groups:
-            print(group["name"])
+        for item in response:
+            if item["type"] == "group":
+                print(item["name"])
     elif show_processes:
-        for process in processes:
-            print(process["name"])
+        for item in response:
+            if item["type"] != "group":
+                print(item["name"])
     else:
         for item in response:
             print(item["name"])
