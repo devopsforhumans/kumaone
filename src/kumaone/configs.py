@@ -15,7 +15,7 @@ from rich.prompt import Prompt
 import validators
 
 # Import custom (local) python packages
-from .utils import log_manager
+from src.kumaone.utils import log_manager
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
