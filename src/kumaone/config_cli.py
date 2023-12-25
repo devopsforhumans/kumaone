@@ -9,7 +9,7 @@ from typing_extensions import Annotated
 import typer
 
 # Import custom (local) python packages
-from .core.configs import check_config, create_config, delete_config, edit_config
+from src.kumaone.configs import check_config, create_config, delete_config, edit_config
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -100,7 +100,7 @@ def config_edit(
 @app.callback()
 def config_mission_control(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
     """
-    Mission control for kumaone monitor, an uptime kuma helper python package.
+    Kumaone config manager.
     """
 
     if log_level:

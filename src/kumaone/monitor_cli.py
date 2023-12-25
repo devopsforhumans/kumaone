@@ -13,10 +13,10 @@ from typing_extensions import Annotated
 import typer
 
 # Import custom (local) python packages
-from .config import check_config
+from .configs import check_config
 from .connection import connect_login, disconnect
 from .monitors import list_monitors
-from src.kumaone.core.utils import log_manager
+from src.kumaone.utils import log_manager
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -55,6 +55,8 @@ def monitor_list(
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    groups: Annotated[bool, typer.Option(help="Show only monitoring groups.")] = False,
+    processes: Annotated[bool, typer.Option(help="Show only monitoring processes.")] = False,
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
@@ -71,14 +73,14 @@ def monitor_list(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_monitors()
+    list_monitors(show_groups=groups, show_processes=processes)
     disconnect()
 
 
 @app.callback()
 def monitor_mission_control(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
     """
-    Mission control for kumaone monitor, an uptime kuma helper python package.
+    Kumaone monitor manager.
     """
 
     if log_level:

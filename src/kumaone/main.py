@@ -11,8 +11,8 @@ from typing_extensions import Annotated
 import typer
 
 # Import custom (local) python packages
-from . import monitor
-from . import config
+from . import monitor_cli
+from . import config_cli
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -20,8 +20,8 @@ __email__ = "dalwar23@pm.me"
 
 # Create typer app and turn off debug mode by default
 app = typer.Typer()
-app.add_typer(monitor.app, name="monitor")
-app.add_typer(config.app, name="config")
+app.add_typer(monitor_cli.app, name="monitor")
+app.add_typer(config_cli.app, name="config")
 state = {"log_level": "NOTSET"}
 console = Console()
 
