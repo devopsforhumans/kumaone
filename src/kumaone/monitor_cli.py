@@ -73,7 +73,7 @@ def monitor_list(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_monitors(show_groups=groups, show_processes=processes)
+    list_monitors(show_groups=groups, show_processes=processes, logger=logger)
     disconnect()
 
 

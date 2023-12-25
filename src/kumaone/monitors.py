@@ -4,6 +4,7 @@
 """Monitors module for kumaone"""
 
 # Import builtin python libraries
+import json
 
 # Import external python libraries
 from rich import print
@@ -17,16 +18,17 @@ __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
 
-def list_monitors(show_groups=None, show_processes=None):
+def list_monitors(show_groups=None, show_processes=None, logger=None):
     """
     Show list of monitor groups and processes.
 
     :param show_groups: (bool) Show only monitoring groups.
-    :param show_processes: (bool) Show only monitoring processes
+    :param show_processes: (bool) Show only monitoring processes.
+    :param logger: Logger object.
     :return: None
     """
     response = list(get_event_data(ioevents.monitor_list).values())
-    # print(json.dumps(response, indent=4))
+    logger.info(json.dumps(response, indent=4))
 
     if show_groups:
         for item in response:
