@@ -32,7 +32,7 @@ def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSE
     """
     Show application information
 
-    :return: Information on screen.
+    :return: (None) Information on screen.
     """
 
     if log_level:

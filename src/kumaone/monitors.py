@@ -5,8 +5,12 @@
 
 # Import builtin python libraries
 import json
+from pathlib import Path
+import os
 
+import yaml
 # Import external python libraries
+from rich.console import Console
 from rich import print
 
 # Import custom (local) python packages
@@ -16,6 +20,8 @@ from . import ioevents
 # Source code meta data
 __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
+
+console = Console()
 
 
 def list_monitors(show_groups=None, show_processes=None, logger=None):
@@ -41,3 +47,39 @@ def list_monitors(show_groups=None, show_processes=None, logger=None):
     else:
         for item in response:
             print(item["name"])
+
+
+def _check_monitor_data_path(data_path=None, logger=None):
+    """
+    Adds monitor to uptime kuma server
+
+    :param data_path: (Path) monitor data.
+    :param logger: (object) logger object.
+    :return: (int) Monitor ID.
+    """
+
+    if Path(data_path).exists():
+        if Path(data_path).is_dir():
+            logger.info(f"{data_path} is a directory. All yaml files in this directory will be considered.")
+            console.print(f"{data_path} is a directory. Reading all 'yaml/yml' files from this directory.", style="logging.level.info")
+            with os.scandir(Path(data_path)) as items:
+                monitor_data_files = []
+                for item in items:
+                    if item.is_file():
+                        file_type = item.name.split(".")[-1]
+                        if file_type == "yaml" or file_type == "yml":
+                            logger.info(f"{item.name} - {item.stat().st_size} bytes.")
+                            monitor_data_files.append(Path(data_path).joinpath(item.name))
+                        else:
+                            console.print(f".{file_type} file type is not supported.", style="logging.level.info")
+                    else:
+                        console.print(f"Only files are supported. {item.name} might not be a file.", style="logging.level.info")
+            console.print(f"Total: {len(monitor_data_files)} files found in supported format.", style="logging.level.info")
+            logger.debug(f"{monitor_data_files}")
+        elif Path(data_path).is_file():
+            logger.info(f"{data_path} is a file. All items from the file will be read.")
+            console.print(f"{data_path} is a file. Reading all elements from the 'yaml' file.", style="logging.level.info")
+            print("f")
+    else:
+        console.print(f":x:  Monitor data path: {data_path}, does not exists!", style="logging.level.error")
+        exit(1)

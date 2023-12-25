@@ -12,7 +12,7 @@ import socketio
 from socketio.exceptions import TimeoutError
 
 # Import custom (local) python packages
-from .event_handlers import monitor_list_event
+from .event_handlers import connect_event, disconnect_event, monitor_list_event
 from . import ioevents
 
 # Source code meta data
@@ -35,8 +35,8 @@ def _register_event_handlers():
     # sio.on(ioevents.auto_login, auto_login_event)
     # sio.on(ioevents.avg_ping, avg_ping_event)
     # sio.on(ioevents.cert_info, cert_info_event)
-    # sio.on(ioevents.connect, connect_event)
-    # sio.on(ioevents.disconnect, disconnect_event)
+    sio.on(ioevents.connect, connect_event)
+    sio.on(ioevents.disconnect, disconnect_event)
     # sio.on(ioevents.docker_host_list, docker_host_list_event)
     # sio.on(ioevents.heartbeat, heartbeat_event)
     # sio.on(ioevents.heartbeat_list, heartbeat_list_event)
@@ -63,7 +63,7 @@ def connect_login(config_data=None, headers=None):
     try:
         _register_event_handlers()
         sio.connect(config_data.url, headers=headers)
-        console.print(f":white_heavy_check_mark:  Connected to {config_data.url}", style="green")
+        console.print(f":linked_paperclips: Connected to {config_data.url}", style="green")
     except TimeoutError:
         console.print(f":hourglass_done: Connection timed out.", style="logging.level.info")
     except Exception as err:
@@ -72,7 +72,7 @@ def connect_login(config_data=None, headers=None):
         login_data = {"username": config_data.user, "password": config_data.password}
         login_response = sio.call("login", data=login_data)
         if isinstance(login_response, dict) and "ok" in login_response:
-            console.print(f":white_heavy_check_mark:  Logged into {config_data.url}", style="green")
+            console.print(f":locked_with_key: Logged into {config_data.url}", style="green")
             login_response = SimpleNamespace(**login_response)
     except Exception as err:
         console.print(f":x:  Error: {err}", style="logging.level.error")

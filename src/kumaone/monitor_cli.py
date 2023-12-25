@@ -15,7 +15,7 @@ import typer
 # Import custom (local) python packages
 from .configs import check_config
 from .connection import connect_login, disconnect
-from .monitors import list_monitors
+from .monitors import _check_monitor_data_path, list_monitors
 from src.kumaone.utils import log_manager
 
 # Source code meta data
@@ -30,7 +30,7 @@ console = Console()
 
 @app.command(name="add", help="Add one or more monitor(s).")
 def monitor_add(
-    monitor_data: Annotated[Optional[Path], typer.Option(..., "--file", "-f", help="Monitor data file path.")],
+    monitors: Annotated[Optional[Path], typer.Option(..., "--monitors", "-m", help="Monitor(s) data.")],
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -42,12 +42,14 @@ def monitor_add(
     :return: None
     """
 
-    if log_level != "NOTSET":
+    if log_level:
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
-    else:
-        logger = None
-    pass
+
+    # config_data = check_config(config_path=config_file, logger=logger)
+    # connect_login(config_data=config_data)
+    _check_monitor_data_path(data_path=monitors, logger=logger)
+    # disconnect()
 
 
 @app.command(name="list", help="List all monitor groups and processes.")
@@ -65,11 +67,9 @@ def monitor_list(
     :return: None
     """
 
-    if log_level != "NOTSET":
+    if log_level:
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
-    else:
-        logger = None
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
