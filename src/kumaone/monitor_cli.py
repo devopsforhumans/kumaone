@@ -49,6 +49,7 @@ def monitor_add(
     # config_data = check_config(config_path=config_file, logger=logger)
     # connect_login(config_data=config_data)
     monitor_file_paths, monitor_input_type = _check_monitor_data_path(data_path=monitors, logger=logger)
+    add_monitor(monitor_file_paths, monitor_input_type)
     # disconnect()
 
 

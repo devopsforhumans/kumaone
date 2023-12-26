@@ -1,0 +1,90 @@
+monitor_data = {
+    "type": {{ type }},
+    "name": {{ name }},
+    "description": {{ description | default(None) }},
+    "parent": {{ parent | int | default(None) }},
+    "interval": {{ interval | int | default(60) }},
+    "retryInterval": {{ retryInterval | int | default(60) }},
+    "resendInterval": {{ resendInterval | int | default(0) }},
+    "maxretries": {{ maxretries | int | default(1) }},
+    "notificationIDList": {{ notificationIDList | default(None) }},
+    "upsideDown": {{ upsideDown | default(False, True) }},
+    "httpBodyEncoding": {{ httpBodyEncoding | default("json") }},
+    {# HTTP, KEYWORD, JSON_QUERY, REAL_BROWSER #}
+    "url": {{ url | default(None) }},
+    {# HTTP, KEYWORD, GRPC_KEYWORD #}
+    "maxredirects": {{ maxredirects | int | default(10) }},
+    "accepted_statuscodes = {{ accepted_statuscodes | default("200-299") }},
+    {# HTTP, KEYWORD, JSON_QUERY #}
+    "expiryNotification": {{ expiryNotification | default(False, True) }},
+    "ignoreTls": {{ ignoreTls | default(False, True) }},
+    "proxyId": {{ proxyId | int | default(None) }},
+    "method": {{ method | default("GET") }},
+    "body": {{ body | default(None) }},
+    "headers": {{ headers | default(None) }},
+    "authMethod": {{ authMethod | default(None) }},
+    "tlsCert": {{ tlsCert | default(None) }},
+    "tlsKey": {{ tlsKey | default(None) }},
+    "tlsCa": {{ tlsCa | default(None) }},
+    "basic_auth_user": {{ basic_auth_user | default(None) }},
+    "basic_auth_pass": {{ basic_auth_pass | default(None) }},
+    "authDomain": {{ authDomain | default(None) }},
+    "authWorkstation": {{ authWorkstation | default(None) }},
+    "oauth_auth_method": {{ oauth_auth_method | default("client_secret_basic") }},
+    "oauth_token_url": {{ oauth_token_url | default(None) }},
+    "oauth_client_id": {{ oauth_client_id | default(None) }},
+    "oauth_client_secret": {{ oauth_client_secret | default(None) }},
+    "oauth_scopes": {{ oauth_scopes | default(None) }},
+    "timeout": {{ timeout | int | default(60) }},
+    {# KEYWORD #}
+    "keyword": {{ keyword | default(None) }},
+    "invertKeyword": {{ invertKeyword | default(None) }},
+    {# GRPC_KEYWORD #}
+    "grpcUrl": {{ grpcUrl | default(None) }},
+    "grpcEnableTls": {{ grpcEnableTls | default(False, True) }},
+    "grpcServiceName": {{ grpcServiceName | default(None) }},
+    "grpcMethod": {{ grpcMethod | default(None) }},
+    "grpcProtobuf": {{ grpcProtobuf | default(None) }},
+    "grpcBody": {{ grpcBody | default(None) }},
+    "grpcMetadata": {{ grpcMetadata | default(None) }},
+    {# PORT, PING, DNS, STEAM, MQTT, RADIUS, TAILSCALE_PING #}
+    "hostname": {{ hostname | default(None) }},
+    {# PING #}
+    "packetSize": {{ packetSize | int | default(56) }},
+    {# PORT, DNS, STEAM, MQTT, RADIUS #}
+    "port": {{ port | int | default(None) }},
+    {# DNS #}
+    "dns_resolve_server": {{ dns_resolve_server | default("1.1.1.1") }},
+    "dns_resolve_type": {{ dns_resolve_type | default("A") }},
+    {# MQTT #}
+    "mqttUsername": {{ mqttUsername | default("") }},
+    "mqttPassword": {{ mqttPassword | default("") }},
+    "mqttTopic": {{ mqttTopic | default("") }},
+    "mqttSuccessMessage": {{ mqttSuccessMessage | default("") }},
+    {# SQLSERVER, POSTGRES, MYSQL, MONGODB, REDIS #}
+    "databaseConnectionString": {{ databaseConnectionString | default(None) }},
+    {# SQLSERVER, POSTGRES, MYSQL #}
+    "databaseQuery": {{ databaseQuery | default(None) }},
+    {# DOCKER #}
+    "docker_container": {{ docker_container | default("") }},
+    "docker_host": {{ docker_host | default(None) }},
+    {# RADIUS #}
+    "radiusUsername": {{ radiusUsername | default(None) }},
+    "radiusPassword": {{ radiusPassword | default(None) }},
+    "radiusSecret": {{ radiusSecret | default(None) }},
+    "radiusCalledStationId": {{ radiusCalledStationId | default(None) }},
+    "radiusCallingStationId": {{ radiusCallingStationId | default(None) }},
+    {# GAMEDIG #}
+    "game": {{ game | default(None) }},
+    "gamedigGivenPortOnly": {{ gamedigGivenPortOnly | default(True, True) }},
+    {# JSON_QUERY #}
+    "jsonPath": {{ jsonPath | default(None) }},
+    "expectedValue": {{ expectedValue | default(None) }},
+    {# KAFKA_PRODUCER #}
+    "kafkaProducerBrokers": {{ kafkaProducerBrokers | default(None) }},
+    "kafkaProducerTopic": {{ kafkaProducerTopic | default(None) }},
+    "kafkaProducerMessage": {{ kafkaProducerMessage | default(None) }},
+    "kafkaProducerSsl": {{ kafkaProducerSsl | default(False, True) }},
+    "kafkaProducerAllowAutoTopicCreation": {{ kafkaProducerAllowAutoTopicCreation | default(False, True) }},
+    "kafkaProducerSaslOptions": {{ kafkaProducerSaslOptions | default(None) }}
+}

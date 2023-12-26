@@ -86,3 +86,27 @@ def list_monitors(show_groups=None, show_processes=None, logger=None):
     else:
         for item in response:
             print(item["name"])
+
+
+def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
+    """
+    Adds one or more monitor(s)
+
+    :param monitor_data_files: (list) Data file path(s)
+    :param monitor_input_type: (string) file or directory.
+    :param logger: (object) Logger object
+    :return: None
+    """
+
+    http_monitor = {
+        "type": type,
+        "name": name,
+        "interval": interval,
+        "retryInterval": retry_interval,
+        "maxretries": max_retries,
+        "notificationIDList": notification_id_List,
+        "upsideDown": upside_down,
+        "resendInterval": resend_interval,
+        "description": description,
+        "httpBodyEncoding": http_body_encoding,
+    }
