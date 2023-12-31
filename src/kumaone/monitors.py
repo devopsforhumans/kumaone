@@ -32,7 +32,7 @@ console = Console()
 
 def _check_monitor_data_path(data_path=None, logger=None):
     """
-    Adds monitor to uptime kuma server
+    Checks data path for monitor input file or directory
 
     :param data_path: (Path) monitor data.
     :param logger: (object) logger object.
@@ -86,7 +86,8 @@ def _sio_call(event=None, data=None):
         sys.exit(1)
     if isinstance(response, dict):
         if not response["ok"]:
-            console.print(f":point_right:  Error! {response.get('msg')}")
+            console.print(f":point_right: Error! {response.get('msg')}")
+            sys.exit(1)
     return response
     # try:
     #     json_response = json.load(response)
@@ -98,6 +99,29 @@ def _sio_call(event=None, data=None):
     #     console.print(f":point_right: Error: {err}")
 
 
+def _check_monitor(monitor_name_to_check=None):
+    """
+    Checks if the provided monitor exists or not. Can check both group and process monitor.
+
+    :param monitor_name_to_check: (str) Name of the monitor to check
+    :return: (dict) Monitor info dictionary
+    """
+
+    current_monitors = get_event_data(ioevents.monitor_list).values()
+    monitor_exists = False
+    monitor_info = {}
+    for item in current_monitors:
+        if item["name"] == monitor_name_to_check:
+            m_id = item["id"]
+            monitor_exists = True
+            monitor_info = {"name": item["name"], "id": m_id, "exists": monitor_exists}
+        else:
+            pass
+    if not monitor_exists:
+        monitor_info = {"name": monitor_name_to_check, "id": None, "exists": monitor_exists}
+    return monitor_info
+
+
 def _get_or_create_monitor_group(group_name=None):
     """
     Get or create monitor group
@@ -106,24 +130,42 @@ def _get_or_create_monitor_group(group_name=None):
     :return: (dict) Name and id of the group as python dict
     """
 
-    current_monitors = get_event_data(ioevents.monitor_list).values()
-    group_exists = False
-    group_info = {}
-    for item in current_monitors:
-        if item["name"] == group_name:
-            m_id = item["id"]
-            group_exists = True
-            group_info = {"name": item["name"], "id": m_id}
-        else:
-            pass
-    if not group_exists:
+    monitor_group_check = _check_monitor(monitor_name_to_check=group_name)
+    if monitor_group_check['exists']:
+        console.print(f":sunflower: Monitor group '{group_name}' already exists.", style="logging.level.info")
+        monitor_group_info = {"name": group_name, "id": monitor_group_check["id"]}
+    if not monitor_group_check['exists']:
         console.print(f":point_right: Monitor group: '{group_name}' does not exists.", style="logging.level.info")
-        group_data_payload = _get_monitor_payload(type="group", name=group_name)
-        print(group_data_payload)
+        monitor_group_data_payload = _get_monitor_payload(type="group", name=group_name)
         with wait_for_event(ioevents.monitor_list):
-            add_event_response = _sio_call("add", group_data_payload)
-        print(add_event_response)
-    return group_info
+            add_event_response = _sio_call("add", monitor_group_data_payload)
+        if add_event_response["ok"]:
+            console.print(f":hatching_chick: Group '{group_name}' has been created.", style="logging.level.info")
+            monitor_group_info = {"name": group_name, "id": add_event_response["monitorID"]}
+        else:
+            console.print(f":point_right: Error! {add_event_response.get('msg')}")
+    return monitor_group_info
+
+
+def _get_or_create_monitor_process(input_data=None):
+    """
+    Get or create monitor process
+
+    :param input_data: (dict) Monitor process input data
+    :return: (dict) 'add' event response or process exists dictionary
+    """
+
+    monitor_process_check = _check_monitor(monitor_name_to_check=input_data["name"])
+    monitor_process_name = input_data["name"]
+
+    if monitor_process_check["exists"]:
+        console.print(f":sunflower: Monitor process '{monitor_process_name}' already exists.")
+        monitor_process_info = {"name": monitor_process_name, "id": monitor_process_check["id"]}
+    else:
+        console.print(f":point_right: Monitor process '{monitor_process_name}' doesn't exists.", style="logging.level.info")
+        console.print(f":chart_with_upwards_trend: Creating monitor process for '{monitor_process_name}'", style="logging.level.info")
+        monitor_process_data_payload = _get_monitor_payload(**input_data)
+        print(monitor_process_data_payload)
 
 
 def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=None):
@@ -176,19 +218,25 @@ def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
     :return: None
     """
 
-    current_monitors = get_event_data(ioevents.monitor_list).values()
-
     for monitor_file in monitor_data_files:
         with open(monitor_file, "r") as monitors_:
             monitors = yaml.safe_load(monitors_)["monitors"]
             groups = [group for group in monitors.keys()]
             for group in groups:
-                group_info = _get_or_create_monitor_group(group_name=group)
-                if group_info:
-                    print(group_info)
-                    print("Here we add the process monitors")
+                monitor_group_info = _get_or_create_monitor_group(group_name=group)
+                if monitor_group_info:
+                    for input_data in monitors[group]:
+                        if isinstance(input_data, dict):
+                            input_data.update({"parent": monitor_group_info["id"]})
+                            monitor_process_info = _get_or_create_monitor_process(input_data=input_data)
+                            if monitor_process_info:
+                                console.print(f":hatching_chick: Monitor process has been created.", style="logging.level.info")
+                        else:
+                            console.print(f"Monitor process data malformed, please check input.")
+                            sys.exit(1)
                 else:
-                    print(f"Create: {group}")
+                    console.print(f":potato: Group creation failed! Couldn't create group: '{group}'", style="logging.level.info")
+                    console.print(f":point_right: Message: {monitor_group_info}", style="logging.level.error")
             # Check if group exists or not, if exists return group monitor id
             # otherwise, create the group monitor and return id with name
             # {
@@ -203,7 +251,7 @@ def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
             #             console.print(f"{group_name} already exists.", style="logging.level.info")
             #         else:
             #             pass
-            #     group_exists = _check_monitor_group(group_name=group_name)
-            #     print(group_exists)
+            #     monitor_group_exists = _check_monitor_group(group_name=group_name)
+            #     print(monitor_group_exists)
             #     for item in monitor:
             #         print(item)
