@@ -93,11 +93,47 @@ monitor_types = [
 proxy_protocols = ["http", "https", "socks", "socks4", "socks5", "socks5h"]
 
 
-def required_arguments_by_type(event_type=None):
+def required_arguments_by_type(monitor_type=None):
     """
     Returns minimum required arguments by event type
-    :param type_name:
+    :param monitor_type: (str) Name of the event type
     :return:
+    """
+
+    required_arguments = {
+        "dns": ["hostname", "dns_resolve_server", "port"],
+        "docker": ["docker_container", "docker_host"],
+        "gamedig": ["game", "hostname", "port"],
+        "group": [],
+        "grpc-keyword": ["grpcUrl", "keyword", "grpcServiceName", "grpcMethod"],
+        "http": ["url", "maxredirects"],
+        "json-query": ["url", "jsonPath", "expectedValue"],
+        "kafka-producer": ["kafkaProducerTopic", "kafkaProducerMessage"],
+        "keyword": ["url", "keyword", "maxredirects"],
+        "mongodb": [],
+        "mqtt": ["hostname", "port", "mqttTopic"],
+        "mysql": [],
+        "ping": ["hostname"],
+        "port": ["hostname", "port"],
+        "postgres": [],
+        "push": [],
+        "radius": [],
+        "real-browser": ["hostname", "port"],
+        "redis": [],
+        "sqlserver": [],
+        "stream": ["hostname", "port"],
+        "tailscale-ping": ["hostname"],
+    }
+
+    return required_arguments[monitor_type]
+
+
+def get_missing_argument(input_data_keys=None):
+    """
+    Finds missing argument key from input based on required argument keys for monitors
+
+    :param input_data_keys: (list) List of input keys for monitor arguments
+    :return: (list) Missing keys as list or empty list if all required arguments are provided
     """
 
     pass

@@ -22,6 +22,7 @@ from .connection import sio
 from .event_handlers import get_event_data, wait_for_event
 from . import ioevents
 from .payload_handler import _get_monitor_payload
+from .settings import required_arguments_by_type
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -44,7 +45,7 @@ def _check_monitor_data_path(data_path=None, logger=None):
         if Path(data_path).is_dir():
             monitor_input_type = "directory"
             logger.info(f"{data_path} is a directory. All yaml files in this directory will be considered.")
-            console.print(f":file_folder: '{data_path}' is a directory.", style="logging.level.info")
+            console.print(f":file_folder: Directory input detected. Input file directory: '{data_path}'.", style="logging.level.info")
             with os.scandir(Path(data_path)) as items:
                 monitor_data_files = []
                 for item in items:
@@ -54,16 +55,25 @@ def _check_monitor_data_path(data_path=None, logger=None):
                             logger.info(f"{item.name} - {item.stat().st_size} bytes.")
                             monitor_data_files.append(Path(data_path).joinpath(item.name))
                         else:
-                            console.print(f":bulb: '.{file_type}' file type is not supported. Skipping '{item.name}'. ", style="logging.level.info")
+                            console.print(
+                                f":bulb: '.{file_type}' file type is not supported. Skipping '{item.name}'. ",
+                                style="logging.level.info",
+                            )
                     else:
-                        console.print(f":card_index_dividers: Nested directories are not supported. Skipping '{item.name}'.", style="logging.level.info")
-            console.print(f":high_brightness: {len(monitor_data_files)} files found in supported format.", style="logging.level.info")
+                        console.print(
+                            f":card_index_dividers: Nested directories are not supported. Skipping '{item.name}'.",
+                            style="logging.level.info",
+                        )
+            console.print(
+                f":high_brightness: {len(monitor_data_files)} files found in supported format.",
+                style="logging.level.info",
+            )
             logger.debug(f"{monitor_data_files}")
             return monitor_data_files, monitor_input_type
         elif Path(data_path).is_file():
             monitor_input_type = "singlefile"
             logger.info(f"'{data_path}' is a file.")
-            console.print(f":high_brightness: '{data_path}' is a file.", style="logging.level.info")
+            console.print(f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info")
             return [data_path], monitor_input_type
     else:
         console.print(f":x:  Monitor data path: '{data_path}', does not exists!", style="logging.level.error")
@@ -134,16 +144,18 @@ def _get_or_create_monitor_group(group_name=None):
     if monitor_group_check['exists']:
         console.print(f":sunflower: Monitor group '{group_name}' already exists.", style="logging.level.info")
         monitor_group_info = {"name": group_name, "id": monitor_group_check["id"]}
-    if not monitor_group_check['exists']:
+    else:
         console.print(f":point_right: Monitor group: '{group_name}' does not exists.", style="logging.level.info")
         monitor_group_data_payload = _get_monitor_payload(type="group", name=group_name)
         with wait_for_event(ioevents.monitor_list):
             add_event_response = _sio_call("add", monitor_group_data_payload)
         if add_event_response["ok"]:
-            console.print(f":hatching_chick: Group '{group_name}' has been created.", style="logging.level.info")
             monitor_group_info = {"name": group_name, "id": add_event_response["monitorID"]}
+            console.print(
+                f":hatching_chick: Monitor group '{group_name}' has been created.", style="logging.level.info"
+            )
         else:
-            console.print(f":point_right: Error! {add_event_response.get('msg')}")
+            console.print(f":point_right: Error! {add_event_response.get('msg')}", style="logging.level.error")
     return monitor_group_info
 
 
@@ -159,13 +171,31 @@ def _get_or_create_monitor_process(input_data=None):
     monitor_process_name = input_data["name"]
 
     if monitor_process_check["exists"]:
-        console.print(f":sunflower: Monitor process '{monitor_process_name}' already exists.")
+        console.print(
+            f":sunflower: Monitor process '{monitor_process_name}' already exists.", style="logging.level.info"
+        )
         monitor_process_info = {"name": monitor_process_name, "id": monitor_process_check["id"]}
     else:
-        console.print(f":point_right: Monitor process '{monitor_process_name}' doesn't exists.", style="logging.level.info")
-        console.print(f":chart_with_upwards_trend: Creating monitor process for '{monitor_process_name}'", style="logging.level.info")
+        console.print(
+            f":point_right: Monitor process '{monitor_process_name}' doesn't exists.", style="logging.level.info"
+        )
+        console.print(
+            f":chart_with_upwards_trend: Creating monitor process for '{monitor_process_name}'.",
+            style="logging.level.info",
+        )
         monitor_process_data_payload = _get_monitor_payload(**input_data)
-        print(monitor_process_data_payload)
+        # print(monitor_process_data_payload)
+        with wait_for_event(ioevents.monitor_list):
+            add_event_response = _sio_call("add", monitor_process_data_payload)
+        if add_event_response["ok"]:
+            monitor_process_info = {"name": monitor_process_name, "id": add_event_response["monitorID"]}
+            console.print(
+                f":hatching_chick: Monitor process for '{input_data['name']}' has been created.",
+                style="logging.level.info",
+            )
+        else:
+            console.print(f":point_right: Error! {add_event_response.get('msg')}", style="logging.level.error")
+    return monitor_process_info
 
 
 def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=None):
@@ -199,7 +229,7 @@ def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=No
         if table.rows:
             console.print(table, style="green")
         else:
-            console.print(f":four_leaf_clover: No data available.")
+            console.print(f":four_leaf_clover: No data available.", style="logging.level.info")
     elif verbose:
         console.print(json.dumps(response, indent=4, sort_keys=True))
     else:
@@ -230,12 +260,14 @@ def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
                             input_data.update({"parent": monitor_group_info["id"]})
                             monitor_process_info = _get_or_create_monitor_process(input_data=input_data)
                             if monitor_process_info:
-                                console.print(f":hatching_chick: Monitor process has been created.", style="logging.level.info")
+                                pass
                         else:
                             console.print(f"Monitor process data malformed, please check input.")
                             sys.exit(1)
                 else:
-                    console.print(f":potato: Group creation failed! Couldn't create group: '{group}'", style="logging.level.info")
+                    console.print(
+                        f":potato: Group creation failed! Couldn't create group: '{group}'", style="logging.level.info"
+                    )
                     console.print(f":point_right: Message: {monitor_group_info}", style="logging.level.error")
             # Check if group exists or not, if exists return group monitor id
             # otherwise, create the group monitor and return id with name

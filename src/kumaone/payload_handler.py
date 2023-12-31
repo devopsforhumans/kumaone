@@ -10,7 +10,7 @@ import logging
 from rich.console import Console
 
 # Import custom (local) python packages
-from .settings import authentication_methods, required_arguments_by_type
+from .settings import authentication_methods
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -20,94 +20,94 @@ console = Console()
 
 
 def _get_monitor_payload(
-        type=None,
-        name=None,
-        parent=None,
-        description=None,
-        interval=60,
-        retryInterval=60,
-        resendInterval=0,
-        maxretries=1,
-        upsideDown=False,
-        notificationIDList=None,
-        httpBodyEncoding="json",
-        # HTTP, KEYWORD, JSON_QUERY, REAL_BROWSER
-        url=None,
-        # HTTP, KEYWORD, GRPC_KEYWORD
-        maxredirects=10,
-        accepted_statuscodes=None,
-        # HTTP, KEYWORD, JSON_QUERY
-        expiryNotification=False,
-        ignoreTls=False,
-        proxyId=None,
-        method="GET",
-        body=None,
-        headers=None,
-        authMethod="",
-        tlsCert=None,
-        tlsKey=None,
-        tlsCa=None,
-        basic_auth_user=None,
-        basic_auth_pass=None,
-        authDomain=None,
-        authWorkstation=None,
-        oauth_auth_method="client_secret_basic",
-        oauth_token_url=None,
-        oauth_client_id=None,
-        oauth_client_secret=None,
-        oauth_scopes=None,
-        timeout=48,
-        # KEYWORD
-        keyword=None,
-        invertKeyword=False,
-        # GRPC_KEYWORD
-        grpcUrl=None,
-        grpcEnableTls=False,
-        grpcServiceName=None,
-        grpcMethod=None,
-        grpcProtobuf=None,
-        grpcBody=None,
-        grpcMetadata=None,
-        # PORT, PING, DNS, STEAM, MQTT, RADIUS, TAILSCALE_PING
-        hostname=None,
-        # PING
-        packetSize=56,
-        # PORT, DNS, STEAM, MQTT, RADIUS
-        port=None,
-        # DNS
-        dns_resolve_server="1.1.1.1",
-        dns_resolve_type="A",
-        # MQTT
-        mqttUsername="",
-        mqttPassword="",
-        mqttTopic="",
-        mqttSuccessMessage="",
-        # SQLSERVER, POSTGRES, MYSQL, MONGODB, REDIS
-        databaseConnectionString=None,
-        # SQLSERVER, POSTGRES, MYSQL
-        databaseQuery=None,
-        # DOCKER
-        docker_container="",
-        docker_host=None,
-        # RADIUS
-        radiusUsername=None,
-        radiusPassword=None,
-        radiusSecret=None,
-        radiusCalledStationId=None,
-        radiusCallingStationId=None,
-        # GAMEDIG
-        game=None,
-        gamedigGivenPortOnly=True,
-        # JSON_QUERY
-        jsonPath=None,
-        expectedValue=None,
-        # KAFKA_PRODUCER
-        kafkaProducerBrokers=None,
-        kafkaProducerTopic=None,
-        kafkaProducerMessage=None,
-        kafkaProducerSsl=False,
-        kafkaProducerAllowAutoTopicCreation=False,
-        kafkaProducerSaslOptions=None,
+    type=None,
+    name=None,
+    parent=None,
+    description=None,
+    interval=60,
+    retryInterval=60,
+    resendInterval=0,
+    maxretries=1,
+    upsideDown=False,
+    notificationIDList=None,
+    httpBodyEncoding="json",
+    # HTTP, KEYWORD, JSON_QUERY, REAL_BROWSER
+    url=None,
+    # HTTP, KEYWORD, GRPC_KEYWORD
+    maxredirects=10,
+    accepted_statuscodes=None,
+    # HTTP, KEYWORD, JSON_QUERY
+    expiryNotification=False,
+    ignoreTls=False,
+    proxyId=None,
+    method="GET",
+    body=None,
+    headers=None,
+    authMethod="",
+    tlsCert=None,
+    tlsKey=None,
+    tlsCa=None,
+    basic_auth_user=None,
+    basic_auth_pass=None,
+    authDomain=None,
+    authWorkstation=None,
+    oauth_auth_method="client_secret_basic",
+    oauth_token_url=None,
+    oauth_client_id=None,
+    oauth_client_secret=None,
+    oauth_scopes=None,
+    timeout=48,
+    # KEYWORD
+    keyword=None,
+    invertKeyword=False,
+    # GRPC_KEYWORD
+    grpcUrl=None,
+    grpcEnableTls=False,
+    grpcServiceName=None,
+    grpcMethod=None,
+    grpcProtobuf=None,
+    grpcBody=None,
+    grpcMetadata=None,
+    # PORT, PING, DNS, STEAM, MQTT, RADIUS, TAILSCALE_PING
+    hostname=None,
+    # PING
+    packetSize=56,
+    # PORT, DNS, STEAM, MQTT, RADIUS
+    port=None,
+    # DNS
+    dns_resolve_server="1.1.1.1",
+    dns_resolve_type="A",
+    # MQTT
+    mqttUsername="",
+    mqttPassword="",
+    mqttTopic="",
+    mqttSuccessMessage="",
+    # SQLSERVER, POSTGRES, MYSQL, MONGODB, REDIS
+    databaseConnectionString=None,
+    # SQLSERVER, POSTGRES, MYSQL
+    databaseQuery=None,
+    # DOCKER
+    docker_container="",
+    docker_host=None,
+    # RADIUS
+    radiusUsername=None,
+    radiusPassword=None,
+    radiusSecret=None,
+    radiusCalledStationId=None,
+    radiusCallingStationId=None,
+    # GAMEDIG
+    game=None,
+    gamedigGivenPortOnly=True,
+    # JSON_QUERY
+    jsonPath=None,
+    expectedValue=None,
+    # KAFKA_PRODUCER
+    kafkaProducerBrokers=None,
+    kafkaProducerTopic=None,
+    kafkaProducerMessage=None,
+    kafkaProducerSsl=False,
+    kafkaProducerAllowAutoTopicCreation=False,
+    kafkaProducerSaslOptions=None,
 ):
     """
     Generates payload for monitor "add" event
@@ -144,148 +144,178 @@ def _get_monitor_payload(
     }
 
     # HTTP, KEYWORD, JSON_QUERY, REAL_BROWSER
-    monitor_data.update({
-        "url": url
-    })
+    monitor_data.update({"url": url})
 
     if type in ["keyword", "grpc-keyword"]:
-        monitor_data.update({
-            "keyword": keyword,
-            "invertKeyword": invertKeyword,
-        })
+        monitor_data.update(
+            {
+                "keyword": keyword,
+                "invertKeyword": invertKeyword,
+            }
+        )
 
     # HTTP, KEYWORD, GRPC_KEYWORD
-    monitor_data.update({
-        "maxredirects": maxredirects,
-        "accepted_statuscodes": accepted_statuscodes,
-    })
+    monitor_data.update(
+        {
+            "maxredirects": maxredirects,
+            "accepted_statuscodes": accepted_statuscodes,
+        }
+    )
 
     # AUTH METHODS
     if authMethod:
         if authMethod in authentication_methods:
             if authMethod in ["basic", "ntlm"]:
-                monitor_data.update({
-                    "basic_auth_user": basic_auth_user,
-                    "basic_auth_pass": basic_auth_pass,
-                })
+                monitor_data.update(
+                    {
+                        "basic_auth_user": basic_auth_user,
+                        "basic_auth_pass": basic_auth_pass,
+                    }
+                )
 
             if authMethod == "ntlm":
-                monitor_data.update({
-                    "authDomain": authDomain,
-                    "authWorkstation": authWorkstation,
-                })
+                monitor_data.update(
+                    {
+                        "authDomain": authDomain,
+                        "authWorkstation": authWorkstation,
+                    }
+                )
 
             if authMethod == "mtls":
-                monitor_data.update({
-                    "tlsCert": tlsCert,
-                    "tlsKey": tlsKey,
-                    "tlsCa": tlsCa,
-                })
+                monitor_data.update(
+                    {
+                        "tlsCert": tlsCert,
+                        "tlsKey": tlsKey,
+                        "tlsCa": tlsCa,
+                    }
+                )
 
             if authMethod == "oauth2-cc":
-                monitor_data.update({
-                    "oauth_auth_method": oauth_auth_method,
-                    "oauth_token_url": oauth_token_url,
-                    "oauth_client_id": oauth_client_id,
-                    "oauth_client_secret": oauth_client_secret,
-                    "oauth_scopes": oauth_scopes,
-                })
+                monitor_data.update(
+                    {
+                        "oauth_auth_method": oauth_auth_method,
+                        "oauth_token_url": oauth_token_url,
+                        "oauth_client_id": oauth_client_id,
+                        "oauth_client_secret": oauth_client_secret,
+                        "oauth_scopes": oauth_scopes,
+                    }
+                )
         else:
-            console.print(f":blowfish: Provided authentication method: {authMethod} is not supported.", style="logging.level.info")
+            console.print(
+                f":blowfish: Provided authentication method: {authMethod} is not supported.", style="logging.level.info"
+            )
 
     if type == "grpc-keyword":
-        monitor_data.update({
-            "grpcUrl": grpcUrl,
-            "grpcEnableTls": grpcEnableTls,
-            "grpcServiceName": grpcServiceName,
-            "grpcMethod": grpcMethod,
-            "grpcProtobuf": grpcProtobuf,
-            "grpcBody": grpcBody,
-            "grpcMetadata": grpcMetadata,
-        })
+        monitor_data.update(
+            {
+                "grpcUrl": grpcUrl,
+                "grpcEnableTls": grpcEnableTls,
+                "grpcServiceName": grpcServiceName,
+                "grpcMethod": grpcMethod,
+                "grpcProtobuf": grpcProtobuf,
+                "grpcBody": grpcBody,
+                "grpcMetadata": grpcMetadata,
+            }
+        )
 
     # DNS, MQTT, PING, PORT, RADIUS, STEAM, TAILSCALE_PING
     if type in ["dns", "mqtt", "ping", "port", "radius", "steam", "tailscale-ping"]:
-        monitor_data.update({
-            "hostname": hostname,
-        })
+        monitor_data.update(
+            {
+                "hostname": hostname,
+            }
+        )
 
     # PING
     if type == "ping":
-        monitor_data.update({
-            "packetSize": packetSize,
-        })
+        monitor_data.update(
+            {
+                "packetSize": packetSize,
+            }
+        )
 
     # PORT, DNS, STEAM, MQTT, RADIUS
     if not port:
         if type == "radius":
             port = 1812
-    monitor_data.update({
-        "port": port,
-    })
+    monitor_data.update(
+        {
+            "port": port,
+        }
+    )
 
     # DNS
     if type == "dns":
-        monitor_data.update({
-            "dns_resolve_server": dns_resolve_server,
-            "dns_resolve_type": dns_resolve_type,
-        })
+        monitor_data.update(
+            {
+                "dns_resolve_server": dns_resolve_server,
+                "dns_resolve_type": dns_resolve_type,
+            }
+        )
         if not port:
-            monitor_data.update({
-                "port": 53
-            })
+            monitor_data.update({"port": 53})
 
     # MQTT
     if type == "mqtt":
-        monitor_data.update({
-            "mqttUsername": mqttUsername,
-            "mqttPassword": mqttPassword,
-            "mqttTopic": mqttTopic,
-            "mqttSuccessMessage": mqttSuccessMessage,
-        })
+        monitor_data.update(
+            {
+                "mqttUsername": mqttUsername,
+                "mqttPassword": mqttPassword,
+                "mqttTopic": mqttTopic,
+                "mqttSuccessMessage": mqttSuccessMessage,
+            }
+        )
 
     # SQLSERVER, POSTGRES, MYSQL, MONGODB, REDIS
     if type in ["sqlserver", "postgres", "mysql", "mongodb", "redis"]:
-        monitor_data.update({
-            "databaseConnectionString": databaseConnectionString
-        })
+        monitor_data.update({"databaseConnectionString": databaseConnectionString})
 
     # SQLSERVER, POSTGRES, MYSQL
     if type in ["sqlserver", "postgres", "mysql"]:
-        monitor_data.update({
-            "databaseQuery": databaseQuery,
-        })
+        monitor_data.update(
+            {
+                "databaseQuery": databaseQuery,
+            }
+        )
 
     # DOCKER
     if type == "docker":
-        monitor_data.update({
-            "docker_container": docker_container,
-            "docker_host": docker_host,
-        })
+        monitor_data.update(
+            {
+                "docker_container": docker_container,
+                "docker_host": docker_host,
+            }
+        )
 
     # RADIUS
     if type == "radius":
-        monitor_data.update({
-            "radiusUsername": radiusUsername,
-            "radiusPassword": radiusPassword,
-            "radiusSecret": radiusSecret,
-            "radiusCalledStationId": radiusCalledStationId,
-            "radiusCallingStationId": radiusCallingStationId,
-        })
+        monitor_data.update(
+            {
+                "radiusUsername": radiusUsername,
+                "radiusPassword": radiusPassword,
+                "radiusSecret": radiusSecret,
+                "radiusCalledStationId": radiusCalledStationId,
+                "radiusCallingStationId": radiusCallingStationId,
+            }
+        )
 
     # GAMEDIG
     if type == "gamedig":
-        monitor_data.update({
-            "game": game,
-            "gamedigGivenPortOnly": gamedigGivenPortOnly,
-        })
+        monitor_data.update(
+            {
+                "game": game,
+                "gamedigGivenPortOnly": gamedigGivenPortOnly,
+            }
+        )
 
     # JSON_QUERY
     if type == "json-query":
-        monitor_data.update({
-            "jsonPath": jsonPath,
-            "expectedValue": expectedValue,
-        })
+        monitor_data.update(
+            {
+                "jsonPath": jsonPath,
+                "expectedValue": expectedValue,
+            }
+        )
 
     # KAFKA_PRODUCER
     if type == "kafka-producer":
@@ -295,13 +325,15 @@ def _get_monitor_payload(
             kafkaProducerSaslOptions = {
                 "mechanism": "None",
             }
-        monitor_data.update({
-            "kafkaProducerBrokers": kafkaProducerBrokers,
-            "kafkaProducerTopic": kafkaProducerTopic,
-            "kafkaProducerMessage": kafkaProducerMessage,
-            "kafkaProducerSsl": kafkaProducerSsl,
-            "kafkaProducerAllowAutoTopicCreation": kafkaProducerAllowAutoTopicCreation,
-            "kafkaProducerSaslOptions": kafkaProducerSaslOptions,
-        })
+        monitor_data.update(
+            {
+                "kafkaProducerBrokers": kafkaProducerBrokers,
+                "kafkaProducerTopic": kafkaProducerTopic,
+                "kafkaProducerMessage": kafkaProducerMessage,
+                "kafkaProducerSsl": kafkaProducerSsl,
+                "kafkaProducerAllowAutoTopicCreation": kafkaProducerAllowAutoTopicCreation,
+                "kafkaProducerSaslOptions": kafkaProducerSaslOptions,
+            }
+        )
 
     return monitor_data

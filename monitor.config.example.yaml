@@ -7,13 +7,13 @@ monitors:
     - name: Gmail
       type: http
       url: https://mail.google.com
-#  homelab:
-#    - name: PI Server
-#      type: ping
-#      url: 192.168.178.179
-#    - name: Plane Server
-#      type: ping
-#      url: 192.168.178.201
+  homelab:
+    - name: PI Server
+      type: ping
+      url: 192.168.178.179
+    - name: Plane Server
+      type: ping
+      url: 192.168.178.201
 #  default:
 #    - name: Personal Website
 #      type: http
