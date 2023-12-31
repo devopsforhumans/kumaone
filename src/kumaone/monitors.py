@@ -5,17 +5,23 @@
 
 # Import builtin python libraries
 import json
-from pathlib import Path
 import os
+from pathlib import Path
+import sys
 
-import yaml
+
 # Import external python libraries
 from rich.console import Console
 from rich import print
+from rich.table import Table
+from socketio.exceptions import TimeoutError
+import yaml
 
 # Import custom (local) python packages
-from .event_handlers import get_event_data
+from .connection import sio
+from .event_handlers import get_event_data, wait_for_event
 from . import ioevents
+from .payload_handler import _get_monitor_payload
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -33,6 +39,7 @@ def _check_monitor_data_path(data_path=None, logger=None):
     :return: (int) Monitor ID.
     """
 
+    console.print(f":clipboard: Checking monitor input data path.", style="logging.level.info")
     if Path(data_path).exists():
         if Path(data_path).is_dir():
             monitor_input_type = "directory"
@@ -59,31 +66,102 @@ def _check_monitor_data_path(data_path=None, logger=None):
             console.print(f":high_brightness: '{data_path}' is a file.", style="logging.level.info")
             return [data_path], monitor_input_type
     else:
-        console.print(f":x:  Monitor data path: {data_path}, does not exists!", style="logging.level.error")
+        console.print(f":x:  Monitor data path: '{data_path}', does not exists!", style="logging.level.error")
         exit(1)
 
 
-def list_monitors(show_groups=None, show_processes=None, logger=None):
+def _sio_call(event=None, data=None):
+    """
+    Calls socketIO event
+
+    :param event: (str) Event name.
+    :param data: (any) Event related data.
+    :return: (any)
+    """
+
+    try:
+        response = sio.call(event, data=data)
+    except TimeoutError:
+        console.print(f":hourglass:  Request timed out while waiting for '{event}' event.", style="logging.level.info")
+        sys.exit(1)
+    if isinstance(response, dict):
+        if not response["ok"]:
+            console.print(f":point_right:  Error! {response.get('msg')}")
+    return response
+    # try:
+    #     json_response = json.load(response)
+    #     if not json_response["ok"]:
+    #         console.print(f":point_right: Error: {json_response.get('msg')}")
+    #     return json_response
+    # except ValueError as err:
+    #     console.print(f":dizzy_face: Response is not JSON serializable.", style="logging.level.error")
+    #     console.print(f":point_right: Error: {err}")
+
+
+def _get_or_create_monitor_group(group_name=None):
+    """
+    Get or create monitor group
+
+    :param group_name: (str) Monitor group to create
+    :return: (dict) Name and id of the group as python dict
+    """
+
+    current_monitors = get_event_data(ioevents.monitor_list).values()
+    group_exists = False
+    group_info = {}
+    for item in current_monitors:
+        if item["name"] == group_name:
+            m_id = item["id"]
+            group_exists = True
+            group_info = {"name": item["name"], "id": m_id}
+        else:
+            pass
+    if not group_exists:
+        console.print(f":point_right: Monitor group: '{group_name}' does not exists.", style="logging.level.info")
+        group_data_payload = _get_monitor_payload(type="group", name=group_name)
+        print(group_data_payload)
+        with wait_for_event(ioevents.monitor_list):
+            add_event_response = _sio_call("add", group_data_payload)
+        print(add_event_response)
+    return group_info
+
+
+def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=None):
     """
     Show list of monitor groups and processes.
 
     :param show_groups: (bool) Show only monitoring groups.
     :param show_processes: (bool) Show only monitoring processes.
+    :param verbose: (bool) Show verbose output.
     :param logger: Logger object.
     :return: None
     """
     response = list(get_event_data(ioevents.monitor_list).values())
     logger.info(json.dumps(response, indent=4))
 
+    table = Table("id", "name")
     if show_groups:
         for item in response:
             if item["type"] == "group":
-                print(item["name"])
+                table.add_row(str(item["id"]), item["name"])
+        console.print(f":hamburger: Available monitor groups.", style="green")
+        if table.rows:
+            console.print(table, style="green")
+        else:
+            console.print(f":four_leaf_clover: No data available.")
     elif show_processes:
         for item in response:
             if item["type"] != "group":
-                print(item["name"])
+                table.add_row(str(item["id"]), item["name"])
+        console.print(f":hamburger: Available monitor processes.", style="green")
+        if table.rows:
+            console.print(table, style="green")
+        else:
+            console.print(f":four_leaf_clover: No data available.")
+    elif verbose:
+        console.print(json.dumps(response, indent=4, sort_keys=True))
     else:
+        console.print(f":hamburger: Available monitors (groups and processes).", style="green")
         for item in response:
             print(item["name"])
 
@@ -98,15 +176,34 @@ def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
     :return: None
     """
 
-    http_monitor = {
-        "type": type,
-        "name": name,
-        "interval": interval,
-        "retryInterval": retry_interval,
-        "maxretries": max_retries,
-        "notificationIDList": notification_id_List,
-        "upsideDown": upside_down,
-        "resendInterval": resend_interval,
-        "description": description,
-        "httpBodyEncoding": http_body_encoding,
-    }
+    current_monitors = get_event_data(ioevents.monitor_list).values()
+
+    for monitor_file in monitor_data_files:
+        with open(monitor_file, "r") as monitors_:
+            monitors = yaml.safe_load(monitors_)["monitors"]
+            groups = [group for group in monitors.keys()]
+            for group in groups:
+                group_info = _get_or_create_monitor_group(group_name=group)
+                if group_info:
+                    print(group_info)
+                    print("Here we add the process monitors")
+                else:
+                    print(f"Create: {group}")
+            # Check if group exists or not, if exists return group monitor id
+            # otherwise, create the group monitor and return id with name
+            # {
+            #   "name": _group_name_
+            #   "id": _group_id_
+            # }
+
+            # for group_name in yaml_data["monitors"].keys():
+            #     for item in current_monitors:
+            #         if item["name"] == group_name:
+            #             console.print(f":four_leaf_clover: {item['name']} - {item['id']}", style="logging.level.info")
+            #             console.print(f"{group_name} already exists.", style="logging.level.info")
+            #         else:
+            #             pass
+            #     group_exists = _check_monitor_group(group_name=group_name)
+            #     print(group_exists)
+            #     for item in monitor:
+            #         print(item)

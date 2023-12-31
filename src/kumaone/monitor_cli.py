@@ -15,7 +15,7 @@ import typer
 # Import custom (local) python packages
 from .configs import check_config
 from .connection import connect_login, disconnect
-from .monitors import _check_monitor_data_path, list_monitors
+from .monitors import _check_monitor_data_path, add_monitor, list_monitors
 from src.kumaone.utils import log_manager
 
 # Source code meta data
@@ -46,11 +46,11 @@ def monitor_add(
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
 
-    # config_data = check_config(config_path=config_file, logger=logger)
-    # connect_login(config_data=config_data)
+    config_data = check_config(config_path=config_file, logger=logger)
+    connect_login(config_data=config_data)
     monitor_file_paths, monitor_input_type = _check_monitor_data_path(data_path=monitors, logger=logger)
     add_monitor(monitor_file_paths, monitor_input_type)
-    # disconnect()
+    disconnect()
 
 
 @app.command(name="list", help="List all monitor groups and processes.")
@@ -60,6 +60,7 @@ def monitor_list(
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
     groups: Annotated[bool, typer.Option(help="Show only monitoring groups.")] = False,
     processes: Annotated[bool, typer.Option(help="Show only monitoring processes.")] = False,
+    verbose: Annotated[bool, typer.Option(help="Show verbose output.")] = False,
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
@@ -74,7 +75,7 @@ def monitor_list(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_monitors(show_groups=groups, show_processes=processes, logger=logger)
+    list_monitors(show_groups=groups, show_processes=processes, verbose=verbose, logger=logger)
     disconnect()
 
 

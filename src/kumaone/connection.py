@@ -20,7 +20,7 @@ __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
 console = Console()
-sio = socketio.Client()
+sio = socketio.Client(logger=False, engineio_logger=False)
 monitor_list_data = None
 
 
@@ -63,7 +63,7 @@ def connect_login(config_data=None, headers=None):
     try:
         _register_event_handlers()
         sio.connect(config_data.url, headers=headers)
-        console.print(f":linked_paperclips: Connected to {config_data.url}", style="green")
+        console.print(f":linked_paperclips: Connected to {config_data.url}", style="logging.level.info")
     except TimeoutError:
         console.print(f":hourglass_done: Connection timed out.", style="logging.level.info")
     except Exception as err:
@@ -72,7 +72,7 @@ def connect_login(config_data=None, headers=None):
         login_data = {"username": config_data.user, "password": config_data.password}
         login_response = sio.call("login", data=login_data)
         if isinstance(login_response, dict) and "ok" in login_response:
-            console.print(f":locked_with_key: Logged into {config_data.url}", style="green")
+            console.print(f":locked_with_key: Successfully logged in.", style="green")
             login_response = SimpleNamespace(**login_response)
     except Exception as err:
         console.print(f":x:  Error: {err}", style="logging.level.error")

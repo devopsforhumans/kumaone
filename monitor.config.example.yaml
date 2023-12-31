@@ -7,14 +7,18 @@ monitors:
     - name: Gmail
       type: http
       url: https://mail.google.com
-  homelab:
-    - name: PI Server
-      type: ping
-      url: 192.168.178.179
-    - name: Plane Server
-      type: ping
-      url: 192.168.178.201
-  default:
-    - name: Personal Website
-      type: http
-      url: https://dalwar23.com
+#  homelab:
+#    - name: PI Server
+#      type: ping
+#      url: 192.168.178.179
+#    - name: Plane Server
+#      type: ping
+#      url: 192.168.178.201
+#  default:
+#    - name: Personal Website
+#      type: http
+#      url: https://dalwar23.com
+#  acme:
+#    - name: acme
+#      type: http
+#      url: https://acme.operaitons1.app
