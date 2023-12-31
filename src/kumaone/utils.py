@@ -48,7 +48,7 @@ def log_manager(log_level=None):
         level = logging.getLevelName(f"{log_level}".upper())
         if not log_level.upper().startswith("W"):
             console.print(f":beetle: {log_level} mode is ON.".upper(), style="logging.keyword")
-        logger = logging.getLogger("kumaone")
+        logger = logging.getLogger(__name__)
         logger.setLevel(level)
         logger.propagate = True
         return logger

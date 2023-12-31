@@ -17,7 +17,6 @@ __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
 console = Console()
-logger = logging.getLogger("kumaone")
 
 
 def _get_monitor_payload(
@@ -193,8 +192,6 @@ def _get_monitor_payload(
                 })
         else:
             console.print(f":blowfish: Provided authentication method: {authMethod} is not supported.", style="logging.level.info")
-            logger.debug(f"Provided authentication method: {authMethod}")
-            logger.debug(f"Supported authentication methods: {authentication_methods}")
 
     if type == "grpc-keyword":
         monitor_data.update({
