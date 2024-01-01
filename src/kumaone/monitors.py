@@ -261,14 +261,20 @@ def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
             groups = [group for group in monitors.keys()]
             for group in groups:
                 print(f"-" * 38 + f" {group} ".upper() + f"-" * (40-len(group)))
-                monitor_group_info = _get_or_create_monitor_group(group_name=group)
+                if group == "default":
+                    monitor_group_info = {"name": None, "id": None}
+                else:
+                    monitor_group_info = _get_or_create_monitor_group(group_name=group)
                 if monitor_group_info:
                     for input_data in monitors[group]:
                         if isinstance(input_data, dict):
-                            input_data.update({"parent": monitor_group_info["id"]})
+                            if group == "default":
+                                pass
+                            else:
+                                input_data.update({"parent": monitor_group_info["id"]})
                             monitor_process_info = _get_or_create_monitor_process(input_data=input_data)
-                            # if monitor_process_info:
-                            #     pass
+                            if monitor_process_info:
+                                pass
                         else:
                             console.print(f"Monitor process data malformed, please check input.")
                             sys.exit(1)

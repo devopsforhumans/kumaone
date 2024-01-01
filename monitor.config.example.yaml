@@ -14,11 +14,16 @@ monitors:
     - name: Windows Desktop
       type: ping
       hostname: 192.168.178.177
-#  default:
-#    - name: Personal Website
-#      type: http
-#      url: https://dalwar23.com
-#  acme:
-#    - name: acme
-#      type: http
-#      url: https://acme.operaitons1.app
+  default:
+    - name: Personal Website
+      type: http
+      url: https://dalwar23.com
+    - name: MacBook Pro
+      type: ping
+      hostname: 192.168.178.188
+  acme:
+    - name: http-acme
+      type: http
+      url: https://acme.operations1.app
+
+# TODO: Validation check for group name and process name can not be same
