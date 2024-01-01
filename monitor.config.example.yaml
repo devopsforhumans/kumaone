@@ -27,3 +27,4 @@ monitors:
       url: https://acme.operations1.app
 
 # TODO: Validation check for group name and process name can not be same
+# TODO: Missing arguments should skip the process and show notification in run summary
