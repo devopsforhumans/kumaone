@@ -31,17 +31,6 @@ kuma_config_default_locations = [
 ]
 
 
-class ConfigActions(str, Enum):
-    """
-    Configuration actions
-    """
-
-    create = "create"
-    delete = "delete"
-    edit = "edit"
-    show = "show"
-
-
 def __write_config_file(data_to_write=None, file_path=None):
     """
     Writes data to configuration file.
@@ -99,7 +88,7 @@ def check_config(config_path=None, log_level=None, logger=None):
                 with open(config_file, "r") as kuma_config:
                     config_data = yaml.safe_load(kuma_config)
                     console.print(
-                        f":white_heavy_check_mark:  Uptime kuma config file found at: {config_file}", style="green"
+                        f":partying_face: Uptime kuma config file found at: {config_file}", style="green"
                     )
                     logger.info(f"Config file {config_file} found!")
                     logger.debug(f"{config_data}")
