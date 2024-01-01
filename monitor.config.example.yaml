@@ -10,10 +10,10 @@ monitors:
   homelab:
     - name: PI Server
       type: ping
-      url: 192.168.178.179
-    - name: Plane Server
+      hostname: 192.168.178.179
+    - name: Windows Desktop
       type: ping
-      url: 192.168.178.201
+      hostname: 192.168.178.177
 #  default:
 #    - name: Personal Website
 #      type: http

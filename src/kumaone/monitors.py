@@ -22,7 +22,7 @@ from .connection import sio
 from .event_handlers import get_event_data, wait_for_event
 from . import ioevents
 from .payload_handler import _get_monitor_payload
-from .settings import required_arguments_by_type
+from .settings import get_missing_arguments
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -40,6 +40,7 @@ def _check_monitor_data_path(data_path=None, logger=None):
     :return: (int) Monitor ID.
     """
 
+    print("-" * 80)
     console.print(f":clipboard: Checking monitor input data path.", style="logging.level.info")
     if Path(data_path).exists():
         if Path(data_path).is_dir():
@@ -185,16 +186,22 @@ def _get_or_create_monitor_process(input_data=None):
         )
         monitor_process_data_payload = _get_monitor_payload(**input_data)
         # print(monitor_process_data_payload)
-        with wait_for_event(ioevents.monitor_list):
-            add_event_response = _sio_call("add", monitor_process_data_payload)
-        if add_event_response["ok"]:
-            monitor_process_info = {"name": monitor_process_name, "id": add_event_response["monitorID"]}
-            console.print(
-                f":hatching_chick: Monitor process for '{input_data['name']}' has been created.",
-                style="logging.level.info",
-            )
+        missing_arguments = get_missing_arguments(monitor_process_data_payload)
+        if not missing_arguments:
+            with wait_for_event(ioevents.monitor_list):
+                add_event_response = _sio_call("add", monitor_process_data_payload)
+            if add_event_response["ok"]:
+                monitor_process_info = {"name": monitor_process_name, "id": add_event_response["monitorID"]}
+                console.print(
+                    f":hatching_chick: Monitor process for '{input_data['name']}' has been created.",
+                    style="logging.level.info",
+                )
+            else:
+                console.print(f":point_right: Error! {add_event_response.get('msg')}", style="logging.level.error")
         else:
-            console.print(f":point_right: Error! {add_event_response.get('msg')}", style="logging.level.error")
+            flat_missing_arguments = ", ".join([f"'{item}'" for item in missing_arguments])
+            console.print(f":nut_and_bolt: Missing arguments for monitor process '{monitor_process_name}'. Missing {flat_missing_arguments} key(s).", style="logging.level.error")
+            sys.exit(1)
     return monitor_process_info
 
 
@@ -253,14 +260,15 @@ def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
             monitors = yaml.safe_load(monitors_)["monitors"]
             groups = [group for group in monitors.keys()]
             for group in groups:
+                print(f"-" * 38 + f" {group} ".upper() + f"-" * (40-len(group)))
                 monitor_group_info = _get_or_create_monitor_group(group_name=group)
                 if monitor_group_info:
                     for input_data in monitors[group]:
                         if isinstance(input_data, dict):
                             input_data.update({"parent": monitor_group_info["id"]})
                             monitor_process_info = _get_or_create_monitor_process(input_data=input_data)
-                            if monitor_process_info:
-                                pass
+                            # if monitor_process_info:
+                            #     pass
                         else:
                             console.print(f"Monitor process data malformed, please check input.")
                             sys.exit(1)
@@ -269,21 +277,4 @@ def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
                         f":potato: Group creation failed! Couldn't create group: '{group}'", style="logging.level.info"
                     )
                     console.print(f":point_right: Message: {monitor_group_info}", style="logging.level.error")
-            # Check if group exists or not, if exists return group monitor id
-            # otherwise, create the group monitor and return id with name
-            # {
-            #   "name": _group_name_
-            #   "id": _group_id_
-            # }
-
-            # for group_name in yaml_data["monitors"].keys():
-            #     for item in current_monitors:
-            #         if item["name"] == group_name:
-            #             console.print(f":four_leaf_clover: {item['name']} - {item['id']}", style="logging.level.info")
-            #             console.print(f"{group_name} already exists.", style="logging.level.info")
-            #         else:
-            #             pass
-            #     monitor_group_exists = _check_monitor_group(group_name=group_name)
-            #     print(monitor_group_exists)
-            #     for item in monitor:
-            #         print(item)
+    print("-" * 80)
