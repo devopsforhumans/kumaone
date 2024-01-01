@@ -70,12 +70,12 @@ def _check_monitor_data_path(data_path=None, logger=None):
                 style="logging.level.info",
             )
             logger.debug(f"{monitor_data_files}")
-            return monitor_data_files, monitor_input_type
+            return sorted(monitor_data_files), monitor_input_type
         elif Path(data_path).is_file():
             monitor_input_type = "singlefile"
             logger.info(f"'{data_path}' is a file.")
             console.print(f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info")
-            return [data_path], monitor_input_type
+            return sorted([data_path]), monitor_input_type
     else:
         console.print(f":x:  Monitor data path: '{data_path}', does not exists!", style="logging.level.error")
         exit(1)
