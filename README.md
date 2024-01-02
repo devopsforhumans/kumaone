@@ -53,20 +53,18 @@ pip install kumaone
 ## Features
 
 - [x] Show information about `kumaone`
-- [x] Show `uptime kuma` configuration (default paths)
-- [x] Show `uptime kuma` configuration (custom path)
-- [x] Create `uptime kuma` configuration (default path)
-- [x] Create `uptime kuma` configuration (custom path)
+- [x] Show `uptime kuma` configuration (default/custom paths)
+- [x] Create `uptime kuma` configuration (default/custom path)
 - [x] Delete `uptime kuma` configuration
 - [ ] Edit `uptime kuma` configuration
 - [x] List all monitors. `groups` and `processes` also.
-- [ ] Bulk add monitors from file(s)
-- [ ] Bulk delete monitors from file(s)
+- [x] Bulk `add` monitors from file(s)
+- [ ] Don't stop the program if one monitor process runs into error
+- [ ] Add debug logs for methods
+- [x] Bulk `delete` monitors from file(s)
 - [ ] Add Single monitor from `inline` data
-- [ ] Delete Single Monitor
-- [ ] Supported Monitor types
-  - [ ] HTTP
-  - [ ] JSON_QUERY
-  - [ ] PING
-  - [ ] PORT
-  - [ ] DNS
+- [ ] Delete Single Monitor by name
+- [ ] Supported Monitor types (tested)
+  - [x] HTTP
+  - [x] JSON_QUERY
+  - [x] PING
