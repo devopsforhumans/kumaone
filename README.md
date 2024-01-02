@@ -61,7 +61,7 @@ pip install kumaone
 - [x] Bulk `add` monitors from file(s)
 - [ ] Don't stop the program if one monitor process runs into error
 - [ ] Add debug logs for missing methods
-- [ ] Bulk `delete` monitors from file(s)
+- [x] Bulk `delete` monitors from file(s)
 - [ ] Add Single monitor from `inline` data
 - [ ] Delete Single Monitor
 - [ ] Supported Monitor types (tested)
