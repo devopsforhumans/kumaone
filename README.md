@@ -42,8 +42,14 @@
 
 ## Installation
 
-```console
+```shell
 pip install kumaone
+```
+
+## Installation (Dev)
+
+```shell
+pip install -e .
 ```
 
 ## License
