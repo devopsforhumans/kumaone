@@ -60,10 +60,10 @@ pip install kumaone
 - [x] List all monitors. `groups` and `processes` also.
 - [x] Bulk `add` monitors from file(s)
 - [ ] Don't stop the program if one monitor process runs into error
-- [ ] Add debug logs for missing methods
+- [ ] Add debug logs for methods
 - [x] Bulk `delete` monitors from file(s)
 - [ ] Add Single monitor from `inline` data
-- [ ] Delete Single Monitor
+- [ ] Delete Single Monitor by name
 - [ ] Supported Monitor types (tested)
   - [x] HTTP
   - [x] JSON_QUERY
