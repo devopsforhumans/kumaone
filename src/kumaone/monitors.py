@@ -46,7 +46,10 @@ def _check_monitor_data_path(data_path=None, logger=None):
         if Path(data_path).is_dir():
             monitor_input_type = "directory"
             logger.info(f"{data_path} is a directory. All yaml files in this directory will be considered.")
-            console.print(f":file_folder: Directory input detected. Input file directory: '{data_path}'.", style="logging.level.info")
+            console.print(
+                f":file_folder: Directory input detected. Input file directory: '{data_path}'.",
+                style="logging.level.info",
+            )
             with os.scandir(Path(data_path)) as items:
                 monitor_data_files = []
                 for item in items:
@@ -70,12 +73,14 @@ def _check_monitor_data_path(data_path=None, logger=None):
                 style="logging.level.info",
             )
             logger.debug(f"{monitor_data_files}")
-            return sorted(monitor_data_files), monitor_input_type
+            return sorted(monitor_data_files)
         elif Path(data_path).is_file():
             monitor_input_type = "singlefile"
             logger.info(f"'{data_path}' is a file.")
-            console.print(f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info")
-            return sorted([data_path]), monitor_input_type
+            console.print(
+                f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info"
+            )
+            return sorted([data_path])
     else:
         console.print(f":x:  Monitor data path: '{data_path}', does not exists!", style="logging.level.error")
         exit(1)
@@ -168,8 +173,8 @@ def _get_or_create_monitor_process(input_data=None):
     :return: (dict) 'add' event response or process exists dictionary
     """
 
-    monitor_process_check = _check_monitor(monitor_name_to_check=input_data["name"])
     monitor_process_name = input_data["name"]
+    monitor_process_check = _check_monitor(monitor_name_to_check=monitor_process_name)
 
     if monitor_process_check["exists"]:
         console.print(
@@ -177,13 +182,8 @@ def _get_or_create_monitor_process(input_data=None):
         )
         monitor_process_info = {"name": monitor_process_name, "id": monitor_process_check["id"]}
     else:
-        console.print(
-            f":point_right: Monitor process '{monitor_process_name}' doesn't exists.", style="logging.level.info"
-        )
-        console.print(
-            f":chart_with_upwards_trend: Creating monitor process for '{monitor_process_name}'.",
-            style="logging.level.info",
-        )
+        # logger.info(f"Monitor process '{monitor_process_name}' doesn't exists.")
+        # logger.info(f"Creating monitor process for '{monitor_process_name}'.")
         monitor_process_data_payload = _get_monitor_payload(**input_data)
         # print(monitor_process_data_payload)
         missing_arguments = get_missing_arguments(monitor_process_data_payload)
@@ -200,10 +200,103 @@ def _get_or_create_monitor_process(input_data=None):
                 console.print(f":point_right: Error! {add_event_response.get('msg')}", style="logging.level.error")
         else:
             flat_missing_arguments = ", ".join([f"'{item}'" for item in missing_arguments])
-            console.print(f":nut_and_bolt: Missing arguments for monitor process '{monitor_process_name}'. Missing {flat_missing_arguments} key(s).", style="logging.level.error")
+            console.print(
+                f":nut_and_bolt: Missing arguments for monitor process '{monitor_process_name}'. Missing {flat_missing_arguments} key(s).",
+                style="logging.level.error",
+            )
             sys.exit(1)
     return monitor_process_info
 
+
+def _delete_monitor_process_or_group(input_data=None):
+    """
+    Delete a monitor
+
+    :param input_data: (dict) Input data about the monitor to be deleted
+    :return: (bool) True if deletion is successful, False otherwise
+    """
+
+    monitor_process_name = input_data["name"]
+    monitor_process_check = _check_monitor(monitor_name_to_check=monitor_process_name)
+
+    if monitor_process_check["exists"]:
+        # console.print(f":wastebasket: Deleting process monitor '{monitor_process_name}'.", style="logging.level.info", new_line_start=False)
+        monitor_id = monitor_process_check["id"]
+        delete_event_response = _sio_call("deleteMonitor", monitor_id)
+        if isinstance(delete_event_response, dict):
+            if delete_event_response["ok"]:
+                console.print(f":ghost: '{monitor_process_name}' deletion successful!", style="logging.level.info")
+            else:
+                console.print(f":crab: '{monitor_process_name}' deletion unsuccessful!", style="logging.level.warning")
+        else:
+            console.print(f":point_right: Something went wrong! {delete_event_response['msg']}", style="logging.level.error")
+            return False
+    else:
+        console.print(f":running_shoe: Monitor {monitor_process_name} doesn't exist. Skipping...", style="logging.level.info")
+
+
+def add_monitor(monitor_data_files=None, logger=None):
+    """
+    Adds one or more monitor(s)
+
+    :param monitor_data_files: (list) Data file path(s)
+    :param logger: (object) Logger object
+    :return: None
+    """
+
+    for monitor_file in monitor_data_files:
+        with open(monitor_file, "r") as monitors_:
+            monitors = yaml.safe_load(monitors_)["monitors"]
+            groups = [group for group in monitors.keys()]
+            for group in groups:
+                print(f"-" * 38 + f" {group} ".upper() + f"-" * (40 - len(group)))
+                if group == "default":
+                    monitor_group_info = {"name": None, "id": None}
+                else:
+                    monitor_group_info = _get_or_create_monitor_group(group_name=group)
+                if monitor_group_info:
+                    for input_data in monitors[group]:
+                        if isinstance(input_data, dict):
+                            if group == "default":
+                                pass
+                            else:
+                                input_data.update({"parent": monitor_group_info["id"]})
+                            monitor_process_info = _get_or_create_monitor_process(input_data=input_data)
+                            if monitor_process_info:
+                                pass
+                        else:
+                            console.print(f":gloves: Monitor process data malformed, please check input.", style="logging.level.error")
+                            sys.exit(1)
+                else:
+                    console.print(
+                        f":potato: Group creation failed! Couldn't create group: '{group}'", style="logging.level.info"
+                    )
+                    console.print(f":point_right: Message: {monitor_group_info}", style="logging.level.error")
+    print("-" * 80)
+
+
+def delete_monitor(monitor_data_files=None, logger=None):
+    """
+    Deletes one or more monitor(s)
+
+    :param monitor_data_files: (list) Data file path(s)
+    :param logger: (object) Logger object
+    :return: None
+    """
+
+    for monitor_file in monitor_data_files:
+        with open(monitor_file, "r") as monitors_:
+            monitors = yaml.safe_load(monitors_)["monitors"]
+            groups = [group for group in monitors.keys()]
+            for group in groups:
+                print(f"-" * 38 + f" {group} ".upper() + f"-" * (40 - len(group)))
+                for monitor_process_data in monitors[group]:
+                    if isinstance(monitor_process_data, dict):
+                        _delete_monitor_process_or_group(input_data=monitor_process_data)
+                    else:
+                        console.print(f":gloves: Monitor process data malformed, please check input.", style="logging.level.error")
+                        sys.exit(1)
+    print("-" * 80)
 
 def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=None):
     """
@@ -243,44 +336,3 @@ def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=No
         console.print(f":hamburger: Available monitors (groups and processes).", style="green")
         for item in response:
             print(item["name"])
-
-
-def add_monitor(monitor_data_files=None, monitor_input_type=None, logger=None):
-    """
-    Adds one or more monitor(s)
-
-    :param monitor_data_files: (list) Data file path(s)
-    :param monitor_input_type: (string) file or directory.
-    :param logger: (object) Logger object
-    :return: None
-    """
-
-    for monitor_file in monitor_data_files:
-        with open(monitor_file, "r") as monitors_:
-            monitors = yaml.safe_load(monitors_)["monitors"]
-            groups = [group for group in monitors.keys()]
-            for group in groups:
-                print(f"-" * 38 + f" {group} ".upper() + f"-" * (40-len(group)))
-                if group == "default":
-                    monitor_group_info = {"name": None, "id": None}
-                else:
-                    monitor_group_info = _get_or_create_monitor_group(group_name=group)
-                if monitor_group_info:
-                    for input_data in monitors[group]:
-                        if isinstance(input_data, dict):
-                            if group == "default":
-                                pass
-                            else:
-                                input_data.update({"parent": monitor_group_info["id"]})
-                            monitor_process_info = _get_or_create_monitor_process(input_data=input_data)
-                            if monitor_process_info:
-                                pass
-                        else:
-                            console.print(f"Monitor process data malformed, please check input.")
-                            sys.exit(1)
-                else:
-                    console.print(
-                        f":potato: Group creation failed! Couldn't create group: '{group}'", style="logging.level.info"
-                    )
-                    console.print(f":point_right: Message: {monitor_group_info}", style="logging.level.error")
-    print("-" * 80)

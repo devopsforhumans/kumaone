@@ -87,9 +87,7 @@ def check_config(config_path=None, log_level=None, logger=None):
             if Path.is_file(config_file):
                 with open(config_file, "r") as kuma_config:
                     config_data = yaml.safe_load(kuma_config)
-                    console.print(
-                        f":partying_face: Uptime kuma config file found at: {config_file}", style="green"
-                    )
+                    console.print(f":partying_face: Uptime kuma config file found at: {config_file}", style="green")
                     logger.info(f"Config file {config_file} found!")
                     logger.debug(f"{config_data}")
                 return SimpleNamespace(**config_data["kuma"])
