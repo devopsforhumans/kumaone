@@ -100,7 +100,7 @@ def config_edit(
 @app.callback()
 def config_mission_control(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
     """
-    Kumaone config manager.
+    Kumaone configuration manager.
     """
 
     if log_level:

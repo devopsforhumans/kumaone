@@ -28,8 +28,8 @@ state = {"log_level": "NOTSET"}
 console = Console()
 
 
-@app.command(name="add", help="Add one or more monitor(s).")
-def monitor_add(
+@app.command(name="add", help="Add one or more uptime kuma status page(s).")
+def status_page_add(
     monitors: Annotated[Optional[Path], typer.Option(..., "--monitors", "-m", help="Monitor(s) data.")],
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
@@ -37,7 +37,7 @@ def monitor_add(
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
-    Adds uptime kuma monitor(s)
+    Add one or more uptime kuma status page(s).
 
     :return: None
     """
@@ -48,13 +48,13 @@ def monitor_add(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    monitor_file_paths = _check_monitor_data_path(data_path=monitors, logger=logger)
-    add_monitor(monitor_data_files=monitor_file_paths, logger=logger)
+    # monitor_file_paths = _check_monitor_data_path(data_path=monitors, logger=logger)
+    # add_monitor(monitor_data_files=monitor_file_paths, logger=logger)
     disconnect()
 
 
-@app.command(name="delete", help="Delete one or more monitor(s).")
-def monitor_delete(
+@app.command(name="delete", help="Delete one or more uptime kuma status page(s).")
+def status_page_delete(
     monitors: Annotated[Optional[Path], typer.Option(..., "--monitors", "-m", help="Monitor(s) data.")],
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
@@ -62,7 +62,7 @@ def monitor_delete(
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
-    Deletes uptime kuma monitor(s).
+    Delete one or more uptime kuma status page(s).
 
     :return: None
     """
@@ -73,13 +73,13 @@ def monitor_delete(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    monitor_file_paths = _check_monitor_data_path(data_path=monitors, logger=logger)
-    delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
+    # monitor_file_paths = _check_monitor_data_path(data_path=monitors, logger=logger)
+    # delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
     disconnect()
 
 
-@app.command(name="list", help="List all monitor groups and processes.")
-def monitor_list(
+@app.command(name="list", help="List all uptime kuma status pages.")
+def status_page_list(
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -89,7 +89,7 @@ def monitor_list(
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
-    Lists all monitor groups and processes
+    Lists all uptime kuma status pages.
 
     :return: None
     """
@@ -100,14 +100,14 @@ def monitor_list(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_monitors(show_groups=groups, show_processes=processes, verbose=verbose, logger=logger)
+    # list_monitors(show_groups=groups, show_processes=processes, verbose=verbose, logger=logger)
     disconnect()
 
 
 @app.callback()
-def monitor_mission_control(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
+def status_page_mission_control(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
     """
-    Kumaone monitor manager. An uptime kuma monitor group and process manager wrapper.
+    Kumaone status page manager. An uptime kuma status page manager wrapper.
     """
 
     if log_level:

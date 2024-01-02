@@ -44,7 +44,6 @@ def _check_monitor_data_path(data_path=None, logger=None):
     console.print(f":clipboard: Checking monitor input data path.", style="logging.level.info")
     if Path(data_path).exists():
         if Path(data_path).is_dir():
-            monitor_input_type = "directory"
             logger.info(f"{data_path} is a directory. All yaml files in this directory will be considered.")
             console.print(
                 f":file_folder: Directory input detected. Input file directory: '{data_path}'.",
@@ -75,7 +74,6 @@ def _check_monitor_data_path(data_path=None, logger=None):
             logger.debug(f"{monitor_data_files}")
             return sorted(monitor_data_files)
         elif Path(data_path).is_file():
-            monitor_input_type = "singlefile"
             logger.info(f"'{data_path}' is a file.")
             console.print(
                 f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info"
@@ -220,7 +218,7 @@ def _delete_monitor_process_or_group(input_data=None):
     monitor_process_check = _check_monitor(monitor_name_to_check=monitor_process_name)
 
     if monitor_process_check["exists"]:
-        # console.print(f":wastebasket: Deleting process monitor '{monitor_process_name}'.", style="logging.level.info", new_line_start=False)
+        # console.print(f":wastebasket: Deleting process monitor '{monitor_process_name}'.", style="logging.level.info")
         monitor_id = monitor_process_check["id"]
         delete_event_response = _sio_call("deleteMonitor", monitor_id)
         if isinstance(delete_event_response, dict):
@@ -229,10 +227,14 @@ def _delete_monitor_process_or_group(input_data=None):
             else:
                 console.print(f":crab: '{monitor_process_name}' deletion unsuccessful!", style="logging.level.warning")
         else:
-            console.print(f":point_right: Something went wrong! {delete_event_response['msg']}", style="logging.level.error")
+            console.print(
+                f":point_right: Something went wrong! {delete_event_response['msg']}", style="logging.level.error"
+            )
             return False
     else:
-        console.print(f":running_shoe: Monitor {monitor_process_name} doesn't exist. Skipping...", style="logging.level.info")
+        console.print(
+            f":running_shoe: Monitor {monitor_process_name} doesn't exist. Skipping...", style="logging.level.info"
+        )
 
 
 def add_monitor(monitor_data_files=None, logger=None):
@@ -265,7 +267,10 @@ def add_monitor(monitor_data_files=None, logger=None):
                             if monitor_process_info:
                                 pass
                         else:
-                            console.print(f":gloves: Monitor process data malformed, please check input.", style="logging.level.error")
+                            console.print(
+                                f":gloves: Monitor process data malformed, please check input.",
+                                style="logging.level.error",
+                            )
                             sys.exit(1)
                 else:
                     console.print(
@@ -294,9 +299,12 @@ def delete_monitor(monitor_data_files=None, logger=None):
                     if isinstance(monitor_process_data, dict):
                         _delete_monitor_process_or_group(input_data=monitor_process_data)
                     else:
-                        console.print(f":gloves: Monitor process data malformed, please check input.", style="logging.level.error")
+                        console.print(
+                            f":gloves: Monitor process data malformed, please check input.", style="logging.level.error"
+                        )
                         sys.exit(1)
     print("-" * 80)
+
 
 def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=None):
     """
