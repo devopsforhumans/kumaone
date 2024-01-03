@@ -4,13 +4,15 @@
 """Utility module for kumaone"""
 
 # Import builtin python libraries
-from datetime import datetime
 import logging
+import os
+from pathlib import Path
 import sys
 
 # Import external python libraries
 from rich import print
 from rich.console import Console
+from rich.panel import Panel
 from rich.logging import RichHandler
 
 # Import custom (local) python packages
@@ -93,14 +95,87 @@ def _sio_call(event=None, data=None):
         sys.exit(1)
     if isinstance(response, dict):
         if not response["ok"]:
-            console.print(f":point_right: Error! {response.get('msg')}", style="logging.level.error")
+            console.print(f":red_circle: Error! {response.get('msg')}", style="logging.level.error")
             sys.exit(1)
     return response
     # try:
     #     json_response = json.load(response)
     #     if not json_response["ok"]:
-    #         console.print(f":point_right: Error: {json_response.get('msg')}")
+    #         console.print(f":red_circle: Error: {json_response.get('msg')}")
     #     return json_response
     # except ValueError as err:
     #     console.print(f":dizzy_face: Response is not JSON serializable.", style="logging.level.error")
-    #     console.print(f":point_right: Error: {err}")
+    #     console.print(f":red_circle: Error: {err}")
+
+
+def _print_missing_options_panel(missing_options=None):
+    """
+    Prints missing option in error rich panel.
+
+    :param missing_options: (str) Missing options.
+    :return: None.
+    """
+
+    print("[yellow]Usage:[/yellow] kumaone status_page show [OPTIONS]")
+    print("[grey70]Try [light_sky_blue1]'kumaone status-page show [bold]--help[/bold]'[/light_sky_blue1] for help.")
+    print(
+        Panel(
+            f"Missing option {missing_options}",
+            title="Error",
+            title_align="left",
+            border_style="red",
+        )
+    )
+
+
+def _check_data_path(data_path=None, logger=None):
+    """
+    Checks data path for monitor input file or directory
+
+    :param data_path: (Path) uptime kuma input data.
+    :param logger: (object) logger object.
+    :return: (int) Monitor ID.
+    """
+
+    print("-" * 80)
+    console.print(f":clipboard: Checking input data path.", style="logging.level.info")
+    if Path(data_path).exists():
+        if Path(data_path).is_dir():
+            logger.info(f"{data_path} is a directory. All yaml files in this directory will be considered.")
+            console.print(
+                f":file_folder: Directory input detected. Input file directory: '{data_path}'.",
+                style="logging.level.info",
+            )
+            with os.scandir(Path(data_path)) as items:
+                data_files = []
+                for item in items:
+                    if item.is_file():
+                        file_type = item.name.split(".")[-1]
+                        if file_type == "yaml" or file_type == "yml":
+                            logger.info(f"{item.name} - {item.stat().st_size} bytes.")
+                            data_files.append(Path(data_path).joinpath(item.name))
+                        else:
+                            console.print(
+                                f":bulb: '.{file_type}' file type is not supported. Skipping '{item.name}'. ",
+                                style="logging.level.info",
+                            )
+                    else:
+                        console.print(
+                            f":card_index_dividers: Nested directories are not supported. Skipping '{item.name}'.",
+                            style="logging.level.info",
+                        )
+            console.print(
+                f":high_brightness: {len(data_files)} files found in supported format.",
+                style="logging.level.info",
+            )
+            logger.debug(f"{data_files}")
+            return sorted(data_files)
+        elif Path(data_path).is_file():
+            logger.info(f"'{data_path}' is a file.")
+            console.print(
+                f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info"
+            )
+            return sorted([data_path])
+    else:
+        console.print(f":x:  Data path: '{data_path}', does not exists!", style="logging.level.error")
+        exit(1)

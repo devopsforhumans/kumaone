@@ -5,8 +5,6 @@
 
 # Import builtin python libraries
 import json
-import os
-from pathlib import Path
 import sys
 
 
@@ -15,11 +13,9 @@ from rich.console import Console
 from rich import print
 from rich.table import Table
 import requests
-from socketio.exceptions import TimeoutError
-import yaml
+
 
 # Import custom (local) python packages
-from .connection import sio
 from .event_handlers import get_event_data, wait_for_event
 from . import ioevents
 from .payload_handler import _get_monitor_payload
@@ -92,20 +88,29 @@ def get_satus_page(url=None, slug=None, logger=None):
     console.print(f"{json.dumps(status_page_data, indent=4, sort_keys=True)}", style="logging.level.info")
 
 
-def add_status_page(status_page_title=None, status_page_slug=None, logger=None):
+def add_status_page(status_page_data_files=None, status_page_title=None, status_page_slug=None, logger=None):
     """
     Creates/Adds a status page in uptime kuma.
 
+    :param status_page_data_files: (Path) Status page config file location. File or Directory.
     :param status_page_title: (str) Title of the status page.
     :param status_page_slug: (str) Slug of the status page.
     :param logger: (object) Logger object for logging purposes.
     :return: None.
     """
 
-    with wait_for_event(ioevents.status_page_list):
-        response = _sio_call("addStatusPage", (status_page_title, status_page_slug))
-    if response["ok"]:
-        console.print(f":hatching_chick: Status page '{status_page_title} ({status_page_slug})' has been created.", style="logging.level.info")
+    if status_page_data_files:
+        print(status_page_data_files)
     else:
-        console.print(f":point_right: Error: {response['msg']}")
-        sys.exit(1)
+        print(status_page_title)
+        print(status_page_slug)
+    # with wait_for_event(ioevents.status_page_list):
+    #     response = _sio_call("addStatusPage", (status_page_title, status_page_slug))
+    # if response["ok"]:
+    #     console.print(
+    #         f":hatching_chick: Status page '{status_page_title} ({status_page_slug})' has been created.",
+    #         style="logging.level.info",
+    #     )
+    # else:
+    #     console.print(f":red_circle: Error: {response['msg']}")
+    #     sys.exit(1)

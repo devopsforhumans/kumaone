@@ -31,59 +31,6 @@ __email__ = "dalwar23@pm.me"
 console = Console()
 
 
-def _check_monitor_data_path(data_path=None, logger=None):
-    """
-    Checks data path for monitor input file or directory
-
-    :param data_path: (Path) monitor data.
-    :param logger: (object) logger object.
-    :return: (int) Monitor ID.
-    """
-
-    print("-" * 80)
-    console.print(f":clipboard: Checking monitor input data path.", style="logging.level.info")
-    if Path(data_path).exists():
-        if Path(data_path).is_dir():
-            logger.info(f"{data_path} is a directory. All yaml files in this directory will be considered.")
-            console.print(
-                f":file_folder: Directory input detected. Input file directory: '{data_path}'.",
-                style="logging.level.info",
-            )
-            with os.scandir(Path(data_path)) as items:
-                monitor_data_files = []
-                for item in items:
-                    if item.is_file():
-                        file_type = item.name.split(".")[-1]
-                        if file_type == "yaml" or file_type == "yml":
-                            logger.info(f"{item.name} - {item.stat().st_size} bytes.")
-                            monitor_data_files.append(Path(data_path).joinpath(item.name))
-                        else:
-                            console.print(
-                                f":bulb: '.{file_type}' file type is not supported. Skipping '{item.name}'. ",
-                                style="logging.level.info",
-                            )
-                    else:
-                        console.print(
-                            f":card_index_dividers: Nested directories are not supported. Skipping '{item.name}'.",
-                            style="logging.level.info",
-                        )
-            console.print(
-                f":high_brightness: {len(monitor_data_files)} files found in supported format.",
-                style="logging.level.info",
-            )
-            logger.debug(f"{monitor_data_files}")
-            return sorted(monitor_data_files)
-        elif Path(data_path).is_file():
-            logger.info(f"'{data_path}' is a file.")
-            console.print(
-                f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info"
-            )
-            return sorted([data_path])
-    else:
-        console.print(f":x:  Monitor data path: '{data_path}', does not exists!", style="logging.level.error")
-        exit(1)
-
-
 def _check_monitor(monitor_name_to_check=None):
     """
     Checks if the provided monitor exists or not. Can check both group and process monitor.
@@ -120,7 +67,7 @@ def _get_or_create_monitor_group(group_name=None):
         console.print(f":sunflower: Monitor group '{group_name}' already exists.", style="logging.level.info")
         monitor_group_info = {"name": group_name, "id": monitor_group_check["id"]}
     else:
-        console.print(f":point_right: Monitor group: '{group_name}' does not exists.", style="logging.level.info")
+        # logger.info(f":blue_circle: Monitor group: '{group_name}' does not exist.", style="logging.level.info")
         monitor_group_data_payload = _get_monitor_payload(type="group", name=group_name)
         with wait_for_event(ioevents.monitor_list):
             add_event_response = _sio_call("add", monitor_group_data_payload)
@@ -130,7 +77,7 @@ def _get_or_create_monitor_group(group_name=None):
                 f":hatching_chick: Monitor group '{group_name}' has been created.", style="logging.level.info"
             )
         else:
-            console.print(f":point_right: Error! {add_event_response.get('msg')}", style="logging.level.error")
+            console.print(f":red_circle: Error! {add_event_response.get('msg')}", style="logging.level.error")
     return monitor_group_info
 
 
@@ -166,7 +113,7 @@ def _get_or_create_monitor_process(input_data=None):
                     style="logging.level.info",
                 )
             else:
-                console.print(f":point_right: Error! {add_event_response.get('msg')}", style="logging.level.error")
+                console.print(f":red_circle: Error! {add_event_response.get('msg')}", style="logging.level.error")
         else:
             flat_missing_arguments = ", ".join([f"'{item}'" for item in missing_arguments])
             console.print(
@@ -199,7 +146,7 @@ def _delete_monitor_process_or_group(input_data=None):
                 console.print(f":crab: '{monitor_process_name}' deletion unsuccessful!", style="logging.level.warning")
         else:
             console.print(
-                f":point_right: Something went wrong! {delete_event_response['msg']}", style="logging.level.error"
+                f":red_circle: Something went wrong! {delete_event_response['msg']}", style="logging.level.error"
             )
             return False
     else:
@@ -247,7 +194,7 @@ def add_monitor(monitor_data_files=None, logger=None):
                     console.print(
                         f":potato: Group creation failed! Couldn't create group: '{group}'", style="logging.level.info"
                     )
-                    console.print(f":point_right: Message: {monitor_group_info}", style="logging.level.error")
+                    console.print(f":red_circle: Message: {monitor_group_info}", style="logging.level.error")
     print("-" * 80)
 
 

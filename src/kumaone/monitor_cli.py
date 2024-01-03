@@ -15,8 +15,8 @@ import typer
 # Import custom (local) python packages
 from .configs import check_config
 from .connection import connect_login, disconnect
-from .monitors import _check_monitor_data_path, add_monitor, delete_monitor, list_monitors
-from src.kumaone.utils import log_manager
+from .monitors import add_monitor, delete_monitor, list_monitors
+from src.kumaone.utils import _check_data_path, log_manager
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -48,7 +48,7 @@ def monitor_add(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    monitor_file_paths = _check_monitor_data_path(data_path=monitors, logger=logger)
+    monitor_file_paths = _check_data_path(data_path=monitors, logger=logger)
     add_monitor(monitor_data_files=monitor_file_paths, logger=logger)
     disconnect()
 
@@ -73,7 +73,7 @@ def monitor_delete(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    monitor_file_paths = _check_monitor_data_path(data_path=monitors, logger=logger)
+    monitor_file_paths = _check_data_path(data_path=monitors, logger=logger)
     delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
     disconnect()
 
