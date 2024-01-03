@@ -18,11 +18,11 @@ from socketio.exceptions import TimeoutError
 import yaml
 
 # Import custom (local) python packages
-from .connection import sio
 from .event_handlers import get_event_data, wait_for_event
 from . import ioevents
 from .payload_handler import _get_monitor_payload
 from .settings import get_missing_arguments
+from .utils import _sio_call
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -82,35 +82,6 @@ def _check_monitor_data_path(data_path=None, logger=None):
     else:
         console.print(f":x:  Monitor data path: '{data_path}', does not exists!", style="logging.level.error")
         exit(1)
-
-
-def _sio_call(event=None, data=None):
-    """
-    Calls socketIO event
-
-    :param event: (str) Event name.
-    :param data: (any) Event related data.
-    :return: (any)
-    """
-
-    try:
-        response = sio.call(event, data=data)
-    except TimeoutError:
-        console.print(f":hourglass:  Request timed out while waiting for '{event}' event.", style="logging.level.info")
-        sys.exit(1)
-    if isinstance(response, dict):
-        if not response["ok"]:
-            console.print(f":point_right: Error! {response.get('msg')}")
-            sys.exit(1)
-    return response
-    # try:
-    #     json_response = json.load(response)
-    #     if not json_response["ok"]:
-    #         console.print(f":point_right: Error: {json_response.get('msg')}")
-    #     return json_response
-    # except ValueError as err:
-    #     console.print(f":dizzy_face: Response is not JSON serializable.", style="logging.level.error")
-    #     console.print(f":point_right: Error: {err}")
 
 
 def _check_monitor(monitor_name_to_check=None):
@@ -313,18 +284,19 @@ def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=No
     :param show_groups: (bool) Show only monitoring groups.
     :param show_processes: (bool) Show only monitoring processes.
     :param verbose: (bool) Show verbose output.
-    :param logger: Logger object.
+    :param logger: (object) Logger object.
     :return: None
     """
+
     response = list(get_event_data(ioevents.monitor_list).values())
     logger.info(json.dumps(response, indent=4))
 
+    console.print(f":hamburger: Available monitor groups.", style="green")
     table = Table("id", "name")
     if show_groups:
         for item in response:
             if item["type"] == "group":
                 table.add_row(str(item["id"]), item["name"])
-        console.print(f":hamburger: Available monitor groups.", style="green")
         if table.rows:
             console.print(table, style="green")
         else:

@@ -92,6 +92,7 @@ monitor_types = [
 
 proxy_protocols = ["http", "https", "socks", "socks4", "socks5", "socks5h"]
 
+timeout = 10
 
 def required_arguments_by_type(monitor_type=None):
     """
