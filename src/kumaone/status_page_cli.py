@@ -66,7 +66,7 @@ def status_page_add(
     if status_page_config == "inline":
         add_status_page(status_page_title=title, status_page_slug=slug, logger=logger)
     elif status_page_config == "from_file":
-        status_page_file_paths = _check_data_path(data_path=status_pages)
+        status_page_file_paths = _check_data_path(data_path=status_pages, logger=logger, key_to_check_for="status_pages")
         add_status_page(status_page_data_files=status_page_file_paths, logger=logger)
     disconnect()
 

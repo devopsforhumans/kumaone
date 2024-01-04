@@ -7,7 +7,7 @@
 import json
 import sys
 
-
+import yaml
 # Import external python libraries
 from rich.console import Console
 from rich import print
@@ -54,39 +54,43 @@ def list_status_pages(verbose=None, logger=None):
         console.print(json.dumps(response, indent=4, sort_keys=True), style="green")
 
 
-def get_satus_page(url=None, slug=None, logger=None):
+def get_satus_page(url=None, slug=None, logger=None, full_details=True):
     """
     Get a status page by slug.
 
     :param url: (str) Uptime kuma url.
     :param slug: (str) Status page slug.
     :param logger: (object) Logger object.
+    :param full_details: (bool) Full details if True, event response only otherwise.
     :return: (dict) Python dictionary with status page info
     """
 
     event_response = _sio_call("getStatusPage", slug)
 
-    try:
-        http_response = requests.get(f"{url}/api/status-page/{slug}", timeout=timeout).json()
-    except requests.exceptions.JSONDecodeError:
-        console.print(f":cyclone: Response is not valid JSON.", style="logging.level.error")
-        sys.exit(1)
-    except requests.exceptions.Timeout:
-        console.print(f":poodle: Response timed out.", style="logging.level.error")
-        sys.exit(1)
+    if full_details:
+        try:
+            http_response = requests.get(f"{url}/api/status-page/{slug}", timeout=timeout).json()
+        except requests.exceptions.JSONDecodeError:
+            console.print(f":cyclone: Response is not valid JSON.", style="logging.level.error")
+            sys.exit(1)
+        except requests.exceptions.Timeout:
+            console.print(f":poodle: Response timed out.", style="logging.level.error")
+            sys.exit(1)
 
-    config = event_response["config"]
-    config.update(http_response["config"])
-    status_page_data = {
-        **config,
-        "incident": http_response["incident"],
-        "publicGroupList": http_response["publicGroupList"],
-        "maintenanceList": http_response["maintenanceList"],
-    }
-    # TODO: Check if we need to convert 'sendUrl' to boolean
-    console.print(f":page_facing_up: '{slug}' status page details", style="logging.level.info")
-    console.print(f"{json.dumps(status_page_data, indent=4, sort_keys=True)}", style="logging.level.info")
-
+        config = event_response["config"]
+        config.update(http_response["config"])
+        status_page_data = {
+            **config,
+            "incident": http_response["incident"],
+            "publicGroupList": http_response["publicGroupList"],
+            "maintenanceList": http_response["maintenanceList"],
+        }
+        # TODO: Check if we need to convert 'sendUrl' to boolean
+        console.print(f":page_facing_up: '{slug}' status page details", style="logging.level.info")
+        console.print(f"{json.dumps(status_page_data, indent=4, sort_keys=True)}", style="logging.level.info")
+        return status_page_data
+    else:
+        return event_response
 
 def add_status_page(status_page_data_files=None, status_page_title=None, status_page_slug=None, logger=None):
     """
@@ -100,17 +104,22 @@ def add_status_page(status_page_data_files=None, status_page_title=None, status_
     """
 
     if status_page_data_files:
-        print(status_page_data_files)
+        for status_page_data_file in status_page_data_files:
+            with open(status_page_data_file, "r") as tmp_data_file_read:
+                status_pages = yaml.safe_load(tmp_data_file_read)["status_pages"]
+                for status_page in status_pages:
+                    logger.debug(status_page)
+                    add_status_page(status_page_title=status_page["title"].title(), status_page_slug=status_page["slug"])
+                    status_page_id = get_satus_page(slug=status_page["slug"], full_details=False)
+                    print(status_page_id)
     else:
-        print(status_page_title)
-        print(status_page_slug)
-    # with wait_for_event(ioevents.status_page_list):
-    #     response = _sio_call("addStatusPage", (status_page_title, status_page_slug))
-    # if response["ok"]:
-    #     console.print(
-    #         f":hatching_chick: Status page '{status_page_title} ({status_page_slug})' has been created.",
-    #         style="logging.level.info",
-    #     )
-    # else:
-    #     console.print(f":red_circle: Error: {response['msg']}")
-    #     sys.exit(1)
+        with wait_for_event(ioevents.status_page_list):
+            response = _sio_call("addStatusPage", (status_page_title.title(), status_page_slug))
+            if response["ok"]:
+                console.print(
+                    f":hatching_chick: Status page '{status_page_title.title()} ({status_page_slug})' has been created.",
+                    style="logging.level.info",
+                )
+            else:
+                console.print(f":red_circle: Error: {response['msg']}")
+                sys.exit(1)

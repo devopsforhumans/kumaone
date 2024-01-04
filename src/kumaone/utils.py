@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import sys
 
+import yaml
 # Import external python libraries
 from rich import print
 from rich.console import Console
@@ -128,12 +129,13 @@ def _print_missing_options_panel(missing_options=None):
     )
 
 
-def _check_data_path(data_path=None, logger=None):
+def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
     """
     Checks data path for monitor input file or directory
 
     :param data_path: (Path) uptime kuma input data.
     :param logger: (object) logger object.
+    :param key_to_check_for: (str) What type of data should be checked.
     :return: (int) Monitor ID.
     """
 
@@ -148,17 +150,26 @@ def _check_data_path(data_path=None, logger=None):
             )
             with os.scandir(Path(data_path)) as items:
                 data_files = []
+                skipped_files = []
                 for item in items:
                     if item.is_file():
                         file_type = item.name.split(".")[-1]
                         if file_type == "yaml" or file_type == "yml":
                             logger.info(f"{item.name} - {item.stat().st_size} bytes.")
-                            data_files.append(Path(data_path).joinpath(item.name))
+                            with open(item, "r") as tmp_read_file:
+                                raw_data = yaml.safe_load(tmp_read_file)
+                                logger.debug(raw_data)
+                                if key_to_check_for in raw_data:
+                                    data_files.append(Path(data_path).joinpath(item.name))
+                                else:
+                                    logger.info(f"{item.name} did not have {key_to_check_for}, skipped.")
+                                    pass
                         else:
                             console.print(
                                 f":bulb: '.{file_type}' file type is not supported. Skipping '{item.name}'. ",
                                 style="logging.level.info",
                             )
+                            skipped_files.append(Path(data_path).joinpath(item.name))
                     else:
                         console.print(
                             f":card_index_dividers: Nested directories are not supported. Skipping '{item.name}'.",
@@ -169,13 +180,21 @@ def _check_data_path(data_path=None, logger=None):
                 style="logging.level.info",
             )
             logger.debug(f"{data_files}")
+            logger.debug(f"{skipped_files}")
             return sorted(data_files)
         elif Path(data_path).is_file():
             logger.info(f"'{data_path}' is a file.")
             console.print(
                 f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info"
             )
-            return sorted([data_path])
+            with open(data_path, "r") as tmp_read_file:
+                raw_data = yaml.safe_load(tmp_read_file)
+                logger.debug(raw_data)
+                if key_to_check_for in raw_data:
+                    return sorted([data_path])
+                else:
+                    console.print(f":orange_circle: Provided data file might not contain necessary data. Missing {key_to_check_for} key.", style="logging.level.warning")
+                    sys.exit(1)
     else:
         console.print(f":x:  Data path: '{data_path}', does not exists!", style="logging.level.error")
         exit(1)
