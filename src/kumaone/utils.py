@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 
 import yaml
+
 # Import external python libraries
 from rich import print
 from rich.console import Console
@@ -193,7 +194,10 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
                 if key_to_check_for in raw_data:
                     return sorted([data_path])
                 else:
-                    console.print(f":orange_circle: Provided data file might not contain necessary data. Missing {key_to_check_for} key.", style="logging.level.warning")
+                    console.print(
+                        f":orange_circle: Provided data file might not contain necessary data. Missing {key_to_check_for} key.",
+                        style="logging.level.warning",
+                    )
                     sys.exit(1)
     else:
         console.print(f":x:  Data path: '{data_path}', does not exists!", style="logging.level.error")

@@ -33,9 +33,16 @@ console = Console()
 
 @app.command(name="add", help="Add one or more uptime kuma status page(s).")
 def status_page_add(
-    status_pages: Annotated[Optional[Path], typer.Option(..., "--pages", "-p", help="Status page(s) data. Exclusive to '--title' and '--slug'")] = None,
-    title: Annotated[str, typer.Option(..., "--title", "-t", help="Title of the status page. '--slug' is required.")] = None,
-    slug: Annotated[str, typer.Option(..., "--slug", "-s", help="Slug of the status page. '--title' is required. ")] = None,
+    status_pages: Annotated[
+        Optional[Path],
+        typer.Option(..., "--pages", "-p", help="Status page(s) data. Exclusive to '--title' and '--slug'"),
+    ] = None,
+    title: Annotated[
+        str, typer.Option(..., "--title", "-t", help="Title of the status page. '--slug' is required.")
+    ] = None,
+    slug: Annotated[
+        str, typer.Option(..., "--slug", "-s", help="Slug of the status page. '--title' is required. ")
+    ] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -66,7 +73,9 @@ def status_page_add(
     if status_page_config == "inline":
         add_status_page(status_page_title=title, status_page_slug=slug, logger=logger)
     elif status_page_config == "from_file":
-        status_page_file_paths = _check_data_path(data_path=status_pages, logger=logger, key_to_check_for="status_pages")
+        status_page_file_paths = _check_data_path(
+            data_path=status_pages, logger=logger, key_to_check_for="status_pages"
+        )
         add_status_page(status_page_data_files=status_page_file_paths, logger=logger)
     disconnect()
 

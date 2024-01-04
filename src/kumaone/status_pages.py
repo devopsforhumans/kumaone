@@ -8,6 +8,7 @@ import json
 import sys
 
 import yaml
+
 # Import external python libraries
 from rich.console import Console
 from rich import print
@@ -92,6 +93,7 @@ def get_satus_page(url=None, slug=None, logger=None, full_details=True):
     else:
         return event_response
 
+
 def add_status_page(status_page_data_files=None, status_page_title=None, status_page_slug=None, logger=None):
     """
     Creates/Adds a status page in uptime kuma.
@@ -104,22 +106,37 @@ def add_status_page(status_page_data_files=None, status_page_title=None, status_
     """
 
     if status_page_data_files:
+        print("-" * 80)
         for status_page_data_file in status_page_data_files:
             with open(status_page_data_file, "r") as tmp_data_file_read:
                 status_pages = yaml.safe_load(tmp_data_file_read)["status_pages"]
                 for status_page in status_pages:
                     logger.debug(status_page)
-                    add_status_page(status_page_title=status_page["title"].title(), status_page_slug=status_page["slug"])
-                    status_page_id = get_satus_page(slug=status_page["slug"], full_details=False)
-                    print(status_page_id)
+                    # TODO: get or add status page.
+                    status_page_id = add_status_page(
+                        status_page_title=status_page["title"].title(),
+                        status_page_slug=status_page["slug"],
+                        logger=logger,
+                    )
     else:
-        with wait_for_event(ioevents.status_page_list):
-            response = _sio_call("addStatusPage", (status_page_title.title(), status_page_slug))
-            if response["ok"]:
-                console.print(
-                    f":hatching_chick: Status page '{status_page_title.title()} ({status_page_slug})' has been created.",
-                    style="logging.level.info",
-                )
-            else:
-                console.print(f":red_circle: Error: {response['msg']}")
-                sys.exit(1)
+        status_page_info = get_satus_page(slug=status_page_slug, full_details=False, logger=logger)
+        if status_page_info["ok"]:
+            status_page_id = status_page_info["config"]["id"]
+            console.print(
+                f":sunflower: Status page '{status_page_id} - {status_page_title}({status_page_slug})' already exists."
+            )
+            logger.debug(status_page_info)
+            return status_page_info["config"]["id"]
+        else:
+            with wait_for_event(ioevents.status_page_list):
+                response = _sio_call("addStatusPage", (status_page_title.title(), status_page_slug))
+                if response["ok"]:
+                    console.print(
+                        f":hatching_chick: Status page '{status_page_title.title()} ({status_page_slug})' has been created.",
+                        style="logging.level.info",
+                    )
+                    logger.debug(f"Status page creation response: {response}")
+                else:
+                    console.print(f":red_circle: Error: {response['msg']}")
+                    sys.exit(1)
+    print("-" * 80)
