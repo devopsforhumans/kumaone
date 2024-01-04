@@ -87,6 +87,19 @@ def monitor_list_event(data):
     """
     Get all the monitors
 
+    :param data: (dict) Event data.
     :return: None
     """
+
     event_data[ioevents.monitor_list] = data
+
+
+def status_page_list_event(data):
+    """
+    Get all the status pages
+
+    :param data: (dict) Event data.
+    :return:
+    """
+
+    event_data[ioevents.status_page_list] = data

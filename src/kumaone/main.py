@@ -13,6 +13,7 @@ import typer
 # Import custom (local) python packages
 from . import monitor_cli
 from . import config_cli
+from . import status_page_cli
 from .utils import app_info
 
 # Source code meta data
@@ -23,11 +24,12 @@ __email__ = "dalwar23@pm.me"
 app = typer.Typer()
 app.add_typer(monitor_cli.app, name="monitor")
 app.add_typer(config_cli.app, name="config")
+app.add_typer(status_page_cli.app, name="status-page")
 state = {"log_level": "NOTSET"}
 console = Console()
 
 
-@app.command(name="info", help="Show information about this application.")
+@app.command(name="info", help="Show information about kumaone application.")
 def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
     """
     Show application information
