@@ -12,6 +12,7 @@ import yaml
 # Import external python libraries
 from rich.console import Console
 from rich import print
+from rich.rule import Rule
 from rich.table import Table
 import requests
 
@@ -106,13 +107,12 @@ def add_status_page(status_page_data_files=None, status_page_title=None, status_
     """
 
     if status_page_data_files:
-        print("-" * 80)
+        # console.print(Rule(style="purple"))
         for status_page_data_file in status_page_data_files:
             with open(status_page_data_file, "r") as tmp_data_file_read:
                 status_pages = yaml.safe_load(tmp_data_file_read)["status_pages"]
                 for status_page in status_pages:
                     logger.debug(status_page)
-                    # TODO: get or add status page.
                     status_page_id = add_status_page(
                         status_page_title=status_page["title"].title(),
                         status_page_slug=status_page["slug"],
@@ -123,7 +123,7 @@ def add_status_page(status_page_data_files=None, status_page_title=None, status_
         if status_page_info["ok"]:
             status_page_id = status_page_info["config"]["id"]
             console.print(
-                f":sunflower: Status page '{status_page_id} - {status_page_title}({status_page_slug})' already exists."
+                f":sunflower: Status page '{status_page_id} - {status_page_title} ({status_page_slug})' already exists."
             )
             logger.debug(status_page_info)
             return status_page_info["config"]["id"]
@@ -139,4 +139,27 @@ def add_status_page(status_page_data_files=None, status_page_title=None, status_
                 else:
                     console.print(f":red_circle: Error: {response['msg']}")
                     sys.exit(1)
-    print("-" * 80)
+    # console.print(Rule(style="purple"))
+
+
+def delete_status_page(status_page_data_files=None, status_page_slug=None, logger=None):
+    """
+    Deletes a status page from uptime kuma.
+
+    :param status_page_data_files: (Path) Status page config file location. File or Directory.
+    :param status_page_slug: (str) Slug of the status page.
+    :param logger: (object) Logger object for logging purposes.
+    :return: None.
+    """
+
+    # console.print(Rule(title="Delete Status Page", style="purple"))
+    if status_page_data_files:
+        pass
+    elif status_page_slug:
+        status_page_info = _sio_call("getStatusPage", status_page_slug)
+        if status_page_info["ok"]:
+            response = _sio_call("deleteStatusPage", status_page_slug)
+            if response["ok"]:
+                console.print(f":wastebasket: Status page '{status_page_slug}' has been deleted.")
+        else:
+            console.print(f":orange_circle: Status page '{status_page_slug}' does not exist.")

@@ -15,6 +15,7 @@ import yaml
 from rich import print
 from rich.console import Console
 from rich.panel import Panel
+from rich.rule import Rule
 from rich.logging import RichHandler
 
 # Import custom (local) python packages
@@ -68,17 +69,16 @@ def app_info(log_level=None):
     :return: application information
     """
 
-    length = 60
     logger = log_manager(log_level=log_level)
 
     logger.info(f"Please check github repository for updated info.")
-    print("=" * length)
+    # console.print(Rule(style="purple"))
     print(f":hatching_chick: Author: {author}")
     print(f":penguin: Version: {version}")
     print(f":memo: License: {app_license}")
     print(f":link: Home: {homepage}")
     print(f":copyright: Copyright: {app_copy_right}")
-    print("=" * length)
+    # console.print(Rule(style="purple"))
 
 
 def _sio_call(event=None, data=None):
@@ -97,8 +97,8 @@ def _sio_call(event=None, data=None):
         sys.exit(1)
     if isinstance(response, dict):
         if not response["ok"]:
-            console.print(f":red_circle: Error! {response.get('msg')}", style="logging.level.error")
-            sys.exit(1)
+            console.print(f":orange_circle: {response.get('msg')}", style="logging.level.warning")
+            # sys.exit(1)
     return response
     # try:
     #     json_response = json.load(response)
@@ -140,7 +140,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
     :return: (int) Monitor ID.
     """
 
-    print("-" * 80)
+    console.print(Rule(style="purple"))
     console.print(f":clipboard: Checking input data path.", style="logging.level.info")
     if Path(data_path).exists():
         if Path(data_path).is_dir():

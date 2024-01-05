@@ -12,6 +12,7 @@ import yaml
 # Import external python libraries
 from rich.console import Console
 from rich.prompt import Prompt
+from rich.rule import Rule
 import validators
 
 # Import custom (local) python packages

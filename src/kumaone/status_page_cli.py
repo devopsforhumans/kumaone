@@ -18,7 +18,7 @@ import typer
 # Import custom (local) python packages
 from .configs import check_config
 from .connection import connect_login, disconnect
-from .status_pages import add_status_page, get_satus_page, list_status_pages
+from .status_pages import add_status_page, delete_status_page, get_satus_page, list_status_pages
 from src.kumaone.utils import _check_data_path, log_manager, _print_missing_options_panel
 
 # Source code meta data
@@ -41,7 +41,7 @@ def status_page_add(
         str, typer.Option(..., "--title", "-t", help="Title of the status page. '--slug' is required.")
     ] = None,
     slug: Annotated[
-        str, typer.Option(..., "--slug", "-s", help="Slug of the status page. '--title' is required. ")
+        str, typer.Option(..., "--slug", "-s", help="Slug of the status page. '--title' is required.")
     ] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
@@ -82,7 +82,13 @@ def status_page_add(
 
 @app.command(name="delete", help="Delete one or more uptime kuma status page(s).")
 def status_page_delete(
-    monitors: Annotated[Optional[Path], typer.Option(..., "--monitors", "-m", help="Monitor(s) data.")],
+    status_pages: Annotated[
+        Optional[Path],
+        typer.Option(..., "--pages", "-p", help="Status page(s) data. Exclusive to '--slug'"),
+    ] = None,
+    slug: Annotated[
+        str, typer.Option(..., "--slug", "-s", help="Slug of the status page.")
+    ] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -97,11 +103,23 @@ def status_page_delete(
     if log_level:
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
+    if status_pages is None and slug is None:
+        _print_missing_options_panel(missing_options="'--slug' / '-s' OR '--pages' / '-p'")
+        sys.exit(1)
+    elif status_pages:
+        status_page_config = "from_file"
+    elif status_pages is None and slug is not None:
+        status_page_config = "inline"
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    # monitor_file_paths = _check_monitor_data_path(status_page_data_files=monitors, logger=logger)
-    # delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
+    if status_page_config == "inline":
+        delete_status_page(status_page_slug=slug, logger=logger)
+    elif status_page_config == "from_file":
+        status_page_file_paths = _check_data_path(
+            data_path=status_pages, logger=logger, key_to_check_for="status_pages"
+        )
+        delete_status_page(status_page_data_files=status_page_file_paths, logger=logger)
     disconnect()
 
 
