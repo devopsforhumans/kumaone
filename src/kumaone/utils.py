@@ -95,10 +95,10 @@ def _sio_call(event=None, data=None):
     except TimeoutError:
         console.print(f":hourglass:  Request timed out while waiting for '{event}' event.", style="logging.level.info")
         sys.exit(1)
-    if isinstance(response, dict):
-        if not response["ok"]:
-            console.print(f":orange_circle: {response.get('msg')}", style="logging.level.warning")
-            # sys.exit(1)
+    # if isinstance(response, dict):
+    #     if not response["ok"]:
+    #         console.print(f":orange_circle: {response.get('msg')}", style="logging.level.warning")
+    #         # sys.exit(1)
     return response
     # try:
     #     json_response = json.load(response)
@@ -140,7 +140,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
     :return: (int) Monitor ID.
     """
 
-    console.print(Rule(style="purple"))
+    # console.print(Rule(style="purple"))
     console.print(f":clipboard: Checking input data path.", style="logging.level.info")
     if Path(data_path).exists():
         if Path(data_path).is_dir():

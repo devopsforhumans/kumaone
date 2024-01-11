@@ -76,7 +76,7 @@ def status_page_add(
         status_page_file_paths = _check_data_path(
             data_path=status_pages, logger=logger, key_to_check_for="status_pages"
         )
-        add_status_page(status_page_data_files=status_page_file_paths, logger=logger)
+        add_status_page(status_page_data_files=status_page_file_paths, logger=logger, url=config_data.url)
     disconnect()
 
 
@@ -167,7 +167,7 @@ def status_page_show(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    get_satus_page(url=config_data.url, slug=slug, logger=logger)
+    get_satus_page(slug=slug, logger=logger, url=config_data.url)
     disconnect()
 
 

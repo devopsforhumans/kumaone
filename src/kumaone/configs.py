@@ -50,13 +50,14 @@ def __write_config_file(data_to_write=None, file_path=None):
         exit(1)
 
 
-def check_config(config_path=None, log_level=None, logger=None):
+def check_config(config_path=None, log_level=None, logger=None, get_url=False):
     """
     Checks for uptime kuma config
 
     :param config_path: (Path) configuration yaml file path
     :param log_level: (str) Log level
     :param logger: (object) Logger object for logging
+    :param get_url: (bool) Get uptime kuma url
     :return: (object) Python SimpleNamespace object with the config
     """
 
@@ -66,31 +67,27 @@ def check_config(config_path=None, log_level=None, logger=None):
         logger = logger
 
     if config_path is None or not config_path:
-        config_file_found = False
         for item in kuma_config_default_locations:
             config_file = Path(item)
             logger.info(f"Looking for uptime kuma config file at: {config_file}")
             if Path.exists(config_file):
                 if Path.is_file(config_file):
-                    config_file_found = True
-                    check_config(config_path=config_file, logger=logger)
-                    break
-        if not config_file_found:
-            logger.critical(f"Config file not found.")
-            console.print(f":x: Sorry! We couldn't find the config file.", style="logging.level.critical")
-            console.print(
-                f":speak_no_evil: Please run 'kumaone config --action create' to create a new config file.",
-                style="logging.level.info",
-            )
+                    return check_config(config_path=config_file, logger=logger, get_url=get_url)
+        logger.critical(f"Config file not found.")
+        console.print(f":x: Sorry! We couldn't find the config file.", style="logging.level.critical")
+        console.print(
+            f":speak_no_evil: Please run 'kumaone config --action create' to create a new config file.",
+            style="logging.level.info",
+        )
     else:
         config_file = Path(config_path)
         if Path.exists(config_file):
             if Path.is_file(config_file):
                 with open(config_file, "r") as kuma_config:
                     config_data = yaml.safe_load(kuma_config)
-                    console.print(f":partying_face: Uptime kuma config file found at: {config_file}", style="green")
                     logger.info(f"Config file {config_file} found!")
                     logger.debug(f"{config_data}")
+                console.print(f":partying_face: Uptime kuma config file found at: {config_file}", style="green")
                 return SimpleNamespace(**config_data["kuma"])
             else:
                 logger.error(f"Config path is not a file.")

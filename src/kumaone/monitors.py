@@ -263,3 +263,5 @@ def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=No
         console.print(f":hamburger: Available monitors (groups and processes).", style="green")
         for item in response:
             print(item["name"])
+
+# TODO: Change line separator
