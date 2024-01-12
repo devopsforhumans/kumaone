@@ -100,3 +100,18 @@ pip install -e .
 - [ ] Add notifications from file(s)
 - [ ] Delete notification
 - [ ] Delete notifications from file(s)
+
+### Maintenance
+
+### Incident
+
+### Change Password
+
+- [ ] Change password from CLI
+- [ ] Updated password in `kumaone` config
+
+### Cleanup
+
+- [ ] Clear heartbeats
+- [ ] Clear statistics
+- [ ] Clear events

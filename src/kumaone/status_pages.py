@@ -129,7 +129,9 @@ def get_satus_page(slug=None, url=None, logger=None, show_details=False):
     return status_page_data
 
 
-def add_status_page(status_page_data_files=None, status_page_title=None, status_page_slug=None, logger=None, url=None, save=None):
+def add_status_page(
+    status_page_data_files=None, status_page_title=None, status_page_slug=None, logger=None, url=None, save=None
+):
     """
     Creates/Adds a status page in uptime kuma.
 
@@ -169,14 +171,18 @@ def add_status_page(status_page_data_files=None, status_page_title=None, status_
                         if status_page_save_response["ok"]:
                             console.print(f":floppy_disk: Status page saved successfully!", style="logging.level.info")
                         else:
-                            console.print(f":cyclone: Status page ({status_page['slug']}) couldn't be saved. Error: {status_page_save_response.get('msg')}", style="logging.level.error")
+                            console.print(
+                                f":cyclone: Status page ({status_page['slug']}) couldn't be saved. Error: {status_page_save_response.get('msg')}",
+                                style="logging.level.error",
+                            )
     else:
         status_page_info = _sio_call("getStatusPage", status_page_slug)
         if status_page_info["ok"]:
             status_page_details = get_satus_page(slug=status_page_slug, url=url, logger=logger)
             status_page_id = status_page_details["id"]
             console.print(
-                f":sunflower: Status page '{status_page_id} - {status_page_title} ({status_page_slug})' already exists.", style="logging.level.info"
+                f":sunflower: Status page '{status_page_id} - {status_page_title} ({status_page_slug})' already exists.",
+                style="logging.level.info",
             )
             logger.debug(status_page_details)
             status_page_details.pop("incident")
@@ -220,6 +226,10 @@ def delete_status_page(status_page_data_files=None, status_page_slug=None, logge
         if status_page_info["ok"]:
             response = _sio_call("deleteStatusPage", status_page_slug)
             if response["ok"]:
-                console.print(f":wastebasket: Status page '{status_page_slug}' has been deleted.", style="logging.level.info")
+                console.print(
+                    f":wastebasket: Status page '{status_page_slug}' has been deleted.", style="logging.level.info"
+                )
         else:
-            console.print(f":orange_circle: Status page '{status_page_slug}' does not exist.", style="logging.level.info")
+            console.print(
+                f":orange_circle: Status page '{status_page_slug}' does not exist.", style="logging.level.info"
+            )

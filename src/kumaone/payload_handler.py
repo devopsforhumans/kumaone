@@ -354,7 +354,7 @@ def _get_status_page_data_payload(
     showPoweredBy=False,
     showCertificateExpiry=False,
     icon="/icon.svg",
-    publicGroupList=None
+    publicGroupList=None,
 ):
     """
     Generates payload data for status page "save" event

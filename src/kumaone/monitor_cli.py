@@ -16,7 +16,7 @@ import typer
 from .configs import check_config
 from .connection import connect_login, disconnect
 from .monitors import add_monitor, delete_monitor, list_monitors
-from src.kumaone.utils import _check_data_path, log_manager
+from src.kumaone.utils import _check_data_path, log_manager, _mutual_exclusivity_check
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -55,7 +55,16 @@ def monitor_add(
 
 @app.command(name="delete", help="Delete one or more monitor(s).")
 def monitor_delete(
-    monitors: Annotated[Optional[Path], typer.Option(..., "--monitors", "-m", help="Monitor(s) data.")],
+    monitors: Annotated[
+        Optional[Path],
+        typer.Option(..., "--monitors", "-m", help="Monitor(s) data.", callback=_mutual_exclusivity_check(size=2)),
+    ] = None,
+    monitor_name: Annotated[
+        str,
+        typer.Option(
+            ..., "--name", "-n", help="Name of the monitor to delete.", callback=_mutual_exclusivity_check(size=2)
+        ),
+    ] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -73,8 +82,13 @@ def monitor_delete(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    monitor_file_paths = _check_data_path(data_path=monitors, logger=logger)
-    delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
+    if monitors is None and monitor_name is None:
+        raise typer.BadParameter("At least one of the parameter '--monitor'/'-m' OR '--name'/'-n' is required.")
+    if monitors:
+        monitor_file_paths = _check_data_path(data_path=monitors, logger=logger)
+        delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
+    elif monitor_name:
+        delete_monitor(monitor_name=monitor_name, logger=logger)
     disconnect()
 
 

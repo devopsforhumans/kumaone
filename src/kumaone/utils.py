@@ -15,8 +15,8 @@ import yaml
 from rich import print
 from rich.console import Console
 from rich.panel import Panel
-from rich.rule import Rule
 from rich.logging import RichHandler
+import typer
 
 # Import custom (local) python packages
 from .connection import sio
@@ -110,26 +110,6 @@ def _sio_call(event=None, data=None):
     #     console.print(f":red_circle: Error: {err}")
 
 
-def _print_missing_options_panel(missing_options=None):
-    """
-    Prints missing option in error rich panel.
-
-    :param missing_options: (str) Missing options.
-    :return: None.
-    """
-
-    print("[yellow]Usage:[/yellow] kumaone status_page show [OPTIONS]")
-    print("[grey70]Try [light_sky_blue1]'kumaone status-page show [bold]--help[/bold]'[/light_sky_blue1] for help.")
-    print(
-        Panel(
-            f"Missing option {missing_options}",
-            title="Error",
-            title_align="left",
-            border_style="red",
-        )
-    )
-
-
 def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
     """
     Checks data path for monitor input file or directory
@@ -202,3 +182,23 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
     else:
         console.print(f":x:  Data path: '{data_path}', does not exists!", style="logging.level.error")
         exit(1)
+
+
+def _mutual_exclusivity_check(size=None):
+    """
+    Checks mutual exclusivity
+    :param size: (int) size of the group
+    :return: None
+    """
+
+    group = set()
+
+    def callback(ctx: typer.Context, param: typer.CallbackParam, value: str):
+        # Add cli option to group if it was called with a value
+        if value is not None and param.name not in group:
+            group.add(param.name)
+        if len(group) > size - 1:
+            raise typer.BadParameter(f"{param.name} is mutually exclusive with {group.pop()}")
+        return value
+
+    return callback

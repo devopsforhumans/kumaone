@@ -19,7 +19,7 @@ import typer
 from .configs import check_config
 from .connection import connect_login, disconnect
 from .status_pages import add_status_page, delete_status_page, get_satus_page, list_status_pages
-from src.kumaone.utils import _check_data_path, log_manager, _print_missing_options_panel
+from src.kumaone.utils import _check_data_path, log_manager, _mutual_exclusivity_check
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -35,19 +35,41 @@ console = Console()
 def status_page_add(
     status_pages: Annotated[
         Optional[Path],
-        typer.Option(..., "--pages", "-p", help="Status page(s) data. Exclusive to '--title' and '--slug'"),
+        typer.Option(
+            ...,
+            "--pages",
+            "-p",
+            help="Status page(s) data. Exclusive to '--title' and '--slug'",
+            callback=_mutual_exclusivity_check(size=3),
+        ),
     ] = None,
     title: Annotated[
-        str, typer.Option(..., "--title", "-t", help="Title of the status page. '--slug' is required.")
+        str,
+        typer.Option(
+            ...,
+            "--title",
+            "-t",
+            help="Title of the status page. '--slug' is required.",
+            callback=_mutual_exclusivity_check(size=3),
+        ),
     ] = None,
     slug: Annotated[
-        str, typer.Option(..., "--slug", "-s", help="Slug of the status page. '--title' is required.")
+        str,
+        typer.Option(
+            ...,
+            "--slug",
+            "-s",
+            help="Slug of the status page. '--title' is required.",
+            callback=_mutual_exclusivity_check(size=3),
+        ),
     ] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
-    save: Annotated[bool, typer.Option(help="Add monitors to a status page. Valid when '--pages' / '-p' set to a directory.")] = False,
+    save: Annotated[
+        bool, typer.Option(help="Add monitors to a status page. Valid when '--pages' / '-p' set to a directory.")
+    ] = False,
 ):
     """
     Add one or more uptime kuma status page(s).
@@ -59,14 +81,16 @@ def status_page_add(
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
     if status_pages is None and title is None and slug is None:
-        _print_missing_options_panel(missing_options="'--title' / '-t' and '--slug' / '-s' OR '--pages' / '-p'")
+        raise typer.BadParameter(
+            "At least '--title' / '-t' and '--slug' / '-s' parameters OR '--pages' / '-p' parameter is required."
+        )
         sys.exit(1)
     elif status_pages:
         status_page_config = "from_file"
     elif title and slug:
         status_page_config = "inline"
     elif title is None or slug is None:
-        _print_missing_options_panel(missing_options="'--title' / '-t' and '--slug' / '-s'")
+        raise typer.BadParameter("Both '--title' / '-t' and '--slug' / '-s' parametes are required.")
         exit(1)
 
     config_data = check_config(config_path=config_file, logger=logger)
@@ -87,9 +111,7 @@ def status_page_delete(
         Optional[Path],
         typer.Option(..., "--pages", "-p", help="Status page(s) data. Exclusive to '--slug'"),
     ] = None,
-    slug: Annotated[
-        str, typer.Option(..., "--slug", "-s", help="Slug of the status page.")
-    ] = None,
+    slug: Annotated[str, typer.Option(..., "--slug", "-s", help="Slug of the status page.")] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -105,7 +127,7 @@ def status_page_delete(
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
     if status_pages is None and slug is None:
-        _print_missing_options_panel(missing_options="'--slug' / '-s' OR '--pages' / '-p'")
+        raise typer.BadParameter("At least one of the parameters '--slug' / '-s' OR '--pages' / '-p' is required.")
         sys.exit(1)
     elif status_pages:
         status_page_config = "from_file"
