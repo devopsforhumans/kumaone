@@ -23,7 +23,7 @@
   pipenv shell
   ```
 
-  > if there are no virtual environment available (e.g. first use), a virtual environment will created and activated
+  > if there are no virtual environment available (e.g. first use), a virtual environment will be created and activated
     automatically.
 
 - Install dependencies
@@ -56,7 +56,7 @@ pip install -e .
 
 `kumaone` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
 
-## Features
+## To Do List
 
 ### Info
 
@@ -91,3 +91,12 @@ pip install -e .
 - [x] Add status pages from file(s)
 - [x] Delete status page
 - [x] Delete status page from file(s)
+
+### Notification
+
+- [ ] List all `notification`(s)
+- [ ] See details of a `single notification`
+- [ ] Add new notification (interactive)
+- [ ] Add notifications from file(s)
+- [ ] Delete notification
+- [ ] Delete notifications from file(s)
