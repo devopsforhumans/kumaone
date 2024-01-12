@@ -210,7 +210,11 @@ def delete_status_page(status_page_data_files=None, status_page_slug=None, logge
 
     # console.print(Rule(title="Delete Status Page", style="purple"))
     if status_page_data_files:
-        pass
+        for status_page_data_file in status_page_data_files:
+            with open(status_page_data_file, "r") as tmp_data_file_read:
+                status_pages = yaml.safe_load(tmp_data_file_read)["status_pages"]
+                for status_page in status_pages:
+                    delete_status_page(status_page_slug=status_page["slug"], logger=logger)
     elif status_page_slug:
         status_page_info = _sio_call("getStatusPage", status_page_slug)
         if status_page_info["ok"]:
