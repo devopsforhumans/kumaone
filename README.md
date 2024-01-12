@@ -87,5 +87,7 @@ pip install -e .
 
 - [x] List all `staus page`(s)
 - [x] See details of a `single status page`
-- [x] Add a new `status page`.
-- [ ] Add status pages from file(s)
+- [x] Add a new `status page`
+- [x] Add status pages from file(s)
+- [x] Delete status page
+- [x] Delete status page from file(s)
