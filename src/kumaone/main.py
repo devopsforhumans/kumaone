@@ -11,8 +11,9 @@ from typing_extensions import Annotated
 import typer
 
 # Import custom (local) python packages
-from . import monitor_cli
 from . import config_cli
+from . import monitor_cli
+from . import notification_cli
 from . import status_page_cli
 from .utils import app_info
 
@@ -25,6 +26,7 @@ app = typer.Typer()
 app.add_typer(monitor_cli.app, name="monitor")
 app.add_typer(config_cli.app, name="config")
 app.add_typer(status_page_cli.app, name="status-page")
+app.add_typer(notification_cli.app, name="notification")
 state = {"log_level": "NOTSET"}
 console = Console()
 
