@@ -92,13 +92,14 @@ def list_status_pages(verbose=None, logger=None):
         console.print(json.dumps(response, indent=4, sort_keys=True), style="green")
 
 
-def get_satus_page(slug=None, url=None, logger=None):
+def get_satus_page(slug=None, url=None, logger=None, show_details=False):
     """
     Get a status page by slug.
 
     :param slug: (str) Status page slug.
     :param url: (str) URL for uptime kuma server
     :param logger: (object) Logger object.
+    :param show_details: (bool) Show details of the status page.
     :return: (dict) Python dictionary with status page info
     """
 
@@ -122,12 +123,13 @@ def get_satus_page(slug=None, url=None, logger=None):
         "maintenanceList": http_response["maintenanceList"],
     }
     # TODO: Check if we need to convert 'sendUrl' to boolean
-    console.print(f":page_facing_up: '{slug}' status page details", style="logging.level.info")
-    console.print(f"{json.dumps(status_page_data, indent=4, sort_keys=True)}", style="logging.level.info")
+    if show_details:
+        console.print(f":page_facing_up: '{slug}' status page details", style="logging.level.info")
+        console.print(f"{json.dumps(status_page_data, indent=4, sort_keys=True)}", style="logging.level.info")
     return status_page_data
 
 
-def add_status_page(status_page_data_files=None, status_page_title=None, status_page_slug=None, logger=None, url=None):
+def add_status_page(status_page_data_files=None, status_page_title=None, status_page_slug=None, logger=None, url=None, save=None):
     """
     Creates/Adds a status page in uptime kuma.
 
@@ -152,16 +154,22 @@ def add_status_page(status_page_data_files=None, status_page_title=None, status_
                         logger=logger,
                         url=url,
                     )
-                    public_group_list = _get_status_page_public_group_list(status_page["publicGroupList"])
-                    logger.debug(json.dumps(public_group_list, indent=4))
-                    status_page_info["publicGroupList"] = public_group_list
-                    status_page_data_to_save = _get_status_page_data_payload(**status_page_info)
-                    logger.debug(status_page_data_to_save)
-                    status_page_save_response = _sio_call("saveStatusPage", status_page_data_to_save)
-                    if status_page_save_response["ok"]:
-                        console.print(f":floppy_disk: Status page saved successfully!", style="logging.level.info")
-                    else:
-                        console.print(f":cyclone: Status page couldn't be saved. Error: {status_page_save_response.get('msg')}", style="logging.level.error")
+                    logger.debug(status_page_info)
+                    if save:
+                        if "ok" in status_page_info:
+                            status_page_info.pop("ok")
+                        if "msg" in status_page_info:
+                            status_page_info.pop("msg")
+                        status_page_info.update(status_page)
+                        public_group_list = _get_status_page_public_group_list(status_page["publicGroupList"])
+                        status_page_info["publicGroupList"] = public_group_list
+                        status_page_data_to_save = _get_status_page_data_payload(**status_page_info)
+                        logger.debug(status_page_data_to_save)
+                        status_page_save_response = _sio_call("saveStatusPage", status_page_data_to_save)
+                        if status_page_save_response["ok"]:
+                            console.print(f":floppy_disk: Status page saved successfully!", style="logging.level.info")
+                        else:
+                            console.print(f":cyclone: Status page ({status_page['slug']}) couldn't be saved. Error: {status_page_save_response.get('msg')}", style="logging.level.error")
     else:
         status_page_info = _sio_call("getStatusPage", status_page_slug)
         if status_page_info["ok"]:

@@ -47,6 +47,7 @@ def status_page_add(
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+    save: Annotated[bool, typer.Option(help="Add monitors to a status page. Valid when '--pages' / '-p' set to a directory.")] = False,
 ):
     """
     Add one or more uptime kuma status page(s).
@@ -76,7 +77,7 @@ def status_page_add(
         status_page_file_paths = _check_data_path(
             data_path=status_pages, logger=logger, key_to_check_for="status_pages"
         )
-        add_status_page(status_page_data_files=status_page_file_paths, logger=logger, url=config_data.url)
+        add_status_page(status_page_data_files=status_page_file_paths, logger=logger, url=config_data.url, save=save)
     disconnect()
 
 
@@ -167,7 +168,7 @@ def status_page_show(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    get_satus_page(slug=slug, logger=logger, url=config_data.url)
+    get_satus_page(slug=slug, logger=logger, url=config_data.url, show_details=True)
     disconnect()
 
 
