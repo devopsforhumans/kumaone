@@ -81,7 +81,7 @@ def _get_or_create_monitor_group(group_name=None):
     return monitor_group_info
 
 
-def _get_or_create_monitor_process(input_data=None):
+def _get_or_create_process_monitor(input_data=None):
     """
     Get or create monitor process
 
@@ -89,25 +89,25 @@ def _get_or_create_monitor_process(input_data=None):
     :return: (dict) 'add' event response or process exists dictionary
     """
 
-    monitor_process_name = input_data["name"]
-    monitor_process_check = _check_monitor(monitor_name_to_check=monitor_process_name)
+    process_monitor_name = input_data["name"]
+    process_monitor_check = _check_monitor(monitor_name_to_check=process_monitor_name)
 
-    if monitor_process_check["exists"]:
+    if process_monitor_check["exists"]:
         console.print(
-            f":sunflower: Monitor process '{monitor_process_name}' already exists.", style="logging.level.info"
+            f":sunflower: Monitor process '{process_monitor_name}' already exists.", style="logging.level.info"
         )
-        monitor_process_info = {"name": monitor_process_name, "id": monitor_process_check["id"]}
+        process_monitor_info = {"name": process_monitor_name, "id": process_monitor_check["id"]}
     else:
-        # logger.info(f"Monitor process '{monitor_process_name}' doesn't exists.")
-        # logger.info(f"Creating monitor process for '{monitor_process_name}'.")
-        monitor_process_data_payload = _get_monitor_payload(**input_data)
-        # print(monitor_process_data_payload)
-        missing_arguments = get_missing_arguments(monitor_process_data_payload)
+        # logger.info(f"Monitor process '{process_monitor_name}' doesn't exists.")
+        # logger.info(f"Creating monitor process for '{process_monitor_name}'.")
+        process_monitor_data_payload = _get_monitor_payload(**input_data)
+        # print(process_monitor_data_payload)
+        missing_arguments = get_missing_arguments(process_monitor_data_payload)
         if not missing_arguments:
             with wait_for_event(ioevents.monitor_list):
-                add_event_response = _sio_call("add", monitor_process_data_payload)
+                add_event_response = _sio_call("add", process_monitor_data_payload)
             if add_event_response["ok"]:
-                monitor_process_info = {"name": monitor_process_name, "id": add_event_response["monitorID"]}
+                process_monitor_info = {"name": process_monitor_name, "id": add_event_response["monitorID"]}
                 console.print(
                     f":hatching_chick: Monitor process for '{input_data['name']}' has been created.",
                     style="logging.level.info",
@@ -117,14 +117,14 @@ def _get_or_create_monitor_process(input_data=None):
         else:
             flat_missing_arguments = ", ".join([f"'{item}'" for item in missing_arguments])
             console.print(
-                f":nut_and_bolt: Missing arguments for monitor process '{monitor_process_name}'. Missing {flat_missing_arguments} key(s).",
+                f":nut_and_bolt: Missing arguments for monitor process '{process_monitor_name}'. Missing {flat_missing_arguments} key(s).",
                 style="logging.level.error",
             )
             sys.exit(1)
-    return monitor_process_info
+    return process_monitor_info
 
 
-def _delete_monitor_process_or_group(input_data=None):
+def _delete_process_monitor_or_group(input_data=None):
     """
     Delete a monitor
 
@@ -132,18 +132,22 @@ def _delete_monitor_process_or_group(input_data=None):
     :return: (bool) True if deletion is successful, False otherwise
     """
 
-    monitor_process_name = input_data["name"]
-    monitor_process_check = _check_monitor(monitor_name_to_check=monitor_process_name)
+    process_monitor_name = input_data["name"]
+    process_monitor_check = _check_monitor(monitor_name_to_check=process_monitor_name)
 
-    if monitor_process_check["exists"]:
-        # console.print(f":wastebasket: Deleting process monitor '{monitor_process_name}'.", style="logging.level.info")
-        monitor_id = monitor_process_check["id"]
+    if process_monitor_check["exists"]:
+        # console.print(f":wastebasket: Deleting process monitor '{process_monitor_name}'.", style="logging.level.info")
+        monitor_id = process_monitor_check["id"]
         delete_event_response = _sio_call("deleteMonitor", monitor_id)
         if isinstance(delete_event_response, dict):
             if delete_event_response["ok"]:
-                console.print(f":ghost: '{monitor_process_name}' deletion successful!", style="logging.level.info")
+                console.print(
+                    f":ghost: '{process_monitor_name}' monitor deletion successful!", style="logging.level.info"
+                )
             else:
-                console.print(f":crab: '{monitor_process_name}' deletion unsuccessful!", style="logging.level.warning")
+                console.print(
+                    f":crab: '{process_monitor_name}' monitor deletion unsuccessful!", style="logging.level.warning"
+                )
         else:
             console.print(
                 f":red_circle: Something went wrong! {delete_event_response['msg']}", style="logging.level.error"
@@ -151,7 +155,7 @@ def _delete_monitor_process_or_group(input_data=None):
             return False
     else:
         console.print(
-            f":running_shoe: Monitor {monitor_process_name} doesn't exist. Skipping...", style="logging.level.info"
+            f":running_shoe: Monitor {process_monitor_name} doesn't exist. Skipping...", style="logging.level.info"
         )
 
 
@@ -181,8 +185,8 @@ def add_monitor(monitor_data_files=None, logger=None):
                                 pass
                             else:
                                 input_data.update({"parent": monitor_group_info["id"]})
-                            monitor_process_info = _get_or_create_monitor_process(input_data=input_data)
-                            if monitor_process_info:
+                            process_monitor_info = _get_or_create_process_monitor(input_data=input_data)
+                            if process_monitor_info:
                                 pass
                         else:
                             console.print(
@@ -198,30 +202,35 @@ def add_monitor(monitor_data_files=None, logger=None):
     print("-" * 80)
 
 
-def delete_monitor(monitor_data_files=None, logger=None):
+def delete_monitor(monitor_data_files=None, monitor_name=None, logger=None):
     """
     Deletes one or more monitor(s)
 
     :param monitor_data_files: (list) Data file path(s)
+    :param monitor_name: (str) Single monitor name
     :param logger: (object) Logger object
     :return: None
     """
 
-    for monitor_file in monitor_data_files:
-        with open(monitor_file, "r") as monitors_:
-            monitors = yaml.safe_load(monitors_)["monitors"]
-            groups = [group for group in monitors.keys()]
-            for group in groups:
-                print(f"-" * 38 + f" {group} ".upper() + f"-" * (40 - len(group)))
-                for monitor_process_data in monitors[group]:
-                    if isinstance(monitor_process_data, dict):
-                        _delete_monitor_process_or_group(input_data=monitor_process_data)
-                    else:
-                        console.print(
-                            f":gloves: Monitor process data malformed, please check input.", style="logging.level.error"
-                        )
-                        sys.exit(1)
-    print("-" * 80)
+    if monitor_name is not None:
+        _delete_process_monitor_or_group(input_data={"name": monitor_name})
+    elif monitor_data_files:
+        for monitor_file in monitor_data_files:
+            with open(monitor_file, "r") as monitors_:
+                monitors = yaml.safe_load(monitors_)["monitors"]
+                groups = [group for group in monitors.keys()]
+                for group in groups:
+                    print(f"-" * 38 + f" {group} ".upper() + f"-" * (40 - len(group)))
+                    for process_monitor_data in monitors[group]:
+                        if isinstance(process_monitor_data, dict):
+                            _delete_process_monitor_or_group(input_data=process_monitor_data)
+                        else:
+                            console.print(
+                                f":gloves: Monitor process data malformed, please check input.",
+                                style="logging.level.error",
+                            )
+                    _delete_process_monitor_or_group(input_data=group)
+        print("-" * 80)
 
 
 def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=None):
@@ -263,3 +272,6 @@ def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=No
         console.print(f":hamburger: Available monitors (groups and processes).", style="green")
         for item in response:
             print(item["name"])
+
+
+# TODO: Change line separator

@@ -337,3 +337,66 @@ def _get_monitor_payload(
         )
 
     return monitor_data
+
+
+def _get_status_page_data_payload(
+    slug=None,
+    id=None,
+    title=None,
+    description=None,
+    theme="auto",
+    published=True,
+    showTags=False,
+    domainNameList=None,
+    googleAnalyticsId=None,
+    customCSS="",
+    footerText=None,
+    showPoweredBy=False,
+    showCertificateExpiry=False,
+    icon="/icon.svg",
+    publicGroupList=None,
+):
+    """
+    Generates payload data for status page "save" event
+
+    :param slug: (str) Status page slug.
+    :param id: (int) Status page ID.
+    :param title: (str) Status page title.
+    :param description: (str) Status page description.
+    :param theme: (str) Status page theme. [auto], light, or dark theme.
+    :param published: (bool) Status page status. Default [True].
+    :param showTags: (bool) Should the tags be visible on the page. Default [False].
+    :param domainNameList: (list) List of domain names.
+    :param googleAnalyticsId: (str) Google Analytics ID.
+    :param customCSS: (str) Custom CSS.
+    :param footerText: (str) Footer text for status page.
+    :param showPoweredBy: (bool) Show powered by. Default [False].
+    :param showCertificateExpiry: (bool) Show the status page show SSL certificate expiry time.
+    :param icon: (str) Status page icon location path. Default ["/icon.svg"]
+    :param publicGroupList: (list) List of public groups.
+    :return: (dict) Status page save payload data
+    """
+
+    if not domainNameList:
+        domainNameList = []
+    if not publicGroupList:
+        publicGroupList = []
+
+    status_page_payload = {
+        "id": id,
+        "slug": slug,
+        "title": title,
+        "description": description,
+        "domainNameList": domainNameList,
+        "icon": icon,
+        "theme": theme,
+        "published": published,
+        "showTags": showTags,
+        "showPoweredBy": showPoweredBy,
+        "googleAnalyticsId": googleAnalyticsId,
+        "customCSS": customCSS,
+        "footerText": footerText,
+        "showCertificateExpiry": showCertificateExpiry,
+    }
+
+    return slug, status_page_payload, icon, publicGroupList

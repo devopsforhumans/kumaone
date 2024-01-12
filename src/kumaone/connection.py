@@ -8,6 +8,7 @@ from types import SimpleNamespace
 
 # Import external python libraries
 from rich.console import Console
+from rich.rule import Rule
 import socketio
 from socketio.exceptions import TimeoutError
 
@@ -61,6 +62,7 @@ def connect_login(config_data=None, headers=None):
     """
 
     try:
+        # console.print(Rule(title="Connect", style="purple"))
         _register_event_handlers()
         sio.connect(config_data.url, headers=headers)
         console.print(f":linked_paperclips: Connected to {config_data.url}", style="logging.level.info")
@@ -86,6 +88,7 @@ def connect_error(data):
 
 
 def disconnect():
+    # console.print(Rule(title="Disconnect", style="purple"))
     try:
         sio.disconnect()
         console.print(f":boxing_glove: Disconnected from server.", style="logging.level.info")

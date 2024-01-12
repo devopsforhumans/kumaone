@@ -39,7 +39,7 @@ def wait_for_event(event):
     else:
         timestamp = time.time()
         while event_data[event] is None:
-            if time.time() - timestamp > 10:
+            if time.time() - timestamp > 30:
                 raise TimeoutError("Event response timed out.")
             time.sleep(0.01)
 
@@ -54,7 +54,7 @@ def get_event_data(event):
 
     timestamp = time.time()
     while event_data[event] is None:
-        if time.time() - timestamp > 10:
+        if time.time() - timestamp > 30:
             raise TimeoutError("Event response timed out.")
         if event_data[event] == {} and event in monitor_events:
             return []
