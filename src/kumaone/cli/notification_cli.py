@@ -90,7 +90,7 @@ def notification_list(
 
 
 @app.command(name="show", help="Show details of an uptime kuma notification provider.")
-def notification_list(
+def notification_show(
     notification_name: Annotated[
         str,
         typer.Option(

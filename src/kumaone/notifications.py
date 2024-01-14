@@ -80,13 +80,13 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
                         )
 
 
-def list_notifications(verbose=None, name=None, id=None, logger=None):
+def list_notifications(verbose=None, name=None, notification_id=None, logger=None):
     """
     Show list of notification processes
 
     :param verbose: (bool) Enable verbose output.
     :param name: (str) Uptime kuma notification process name.
-    :param id: (int) Uptime kuma notification process id.
+    :param notification_id: (int) Uptime kuma notification process id.
     :param logger: (object) Logging object.
     :return: None
     """
@@ -101,12 +101,12 @@ def list_notifications(verbose=None, name=None, id=None, logger=None):
         del flat_notification["config"]
         flat_notification.update(config)
         pretty_response.append(flat_notification)
-    if name is not None or id is not None:
+    if name is not None or notification_id is not None:
         pretty_response = _get_notification_by_name_or_id(
-            response=pretty_response, notification_name=name, notification_id=id, logger=logger
+            response=pretty_response, notification_name=name, notification_id=notification_id, logger=logger
         )
     if pretty_response:
-        console.print(f":megaphone: Available notification processes", style="logging.level.info")
+        console.print(f":megaphone: Available notification providers", style="logging.level.info")
         if verbose:
             console.print(f"{json.dumps(pretty_response, indent=4, sort_keys=True)}", style="logging.level.info")
         else:
