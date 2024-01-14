@@ -247,9 +247,9 @@ def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=No
     response = list(get_event_data(ioevents.monitor_list).values())
     logger.info(json.dumps(response, indent=4))
 
-    console.print(f":hamburger: Available monitor groups.", style="green")
     table = Table("id", "name")
     if show_groups:
+        console.print(f":hamburger: Available monitor groups.", style="green")
         for item in response:
             if item["type"] == "group":
                 table.add_row(str(item["id"]), item["name"])

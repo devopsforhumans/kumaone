@@ -32,11 +32,33 @@ __email__ = "dalwar23@pm.me"
 console = Console()
 
 
-def list_notifications(verbose=None, logger=None):
+def _get_notification_by_name_or_id(response=None, notification_name=None, notification_id=None, logger=None):
+    """
+    Get notification process details by name or id
+
+    :param response: (list) List of dictionaries with notification data.
+    :param notification_name: (str) The name of the notification process.
+    :param notification_id: (int) id of the notification process.
+    :param logger: (object) Logger object instance.
+    :return: (dict) notification details.
+    """
+
+    for _notification in response:
+        logger.debug(f"Notification id: {notification_id}")
+        logger.debug(f"Notification name: {notification_name}")
+        if _notification["name"] == notification_name or _notification["id"] == notification_id:
+            response = [_notification]
+            return response
+    console.print(f":orange_circle: Notification id or name doesn't exist.", style="logging.level.warning")
+
+
+def list_notifications(verbose=None, name=None, id=None, logger=None):
     """
     Show list of notification processes
 
     :param verbose: (bool) Enable verbose output.
+    :param name: (str) Uptime kuma notification process name.
+    :param id: (int) Uptime kuma notification process id.
     :param logger: (object) Logging object.
     :return: None
     """
@@ -51,11 +73,14 @@ def list_notifications(verbose=None, logger=None):
         del flat_notification["config"]
         flat_notification.update(config)
         pretty_response.append(flat_notification)
-    console.print(f":megaphone: Available notification processes", style="logging.level.info")
-    if verbose:
-        console.print(f"{json.dumps(pretty_response, indent=4, sort_keys=True)}", style="logging.level.info")
-    else:
-        table = Table("id", "type", "name", "active", "isDefault")
-        for item in pretty_response:
-            table.add_row(str(item["id"]), item["type"], item["name"], str(item["active"]), str(item["isDefault"]))
-        console.print(table, style="green")
+    if name is not None or id is not None:
+        pretty_response = _get_notification_by_name_or_id(response=pretty_response, notification_name=name, notification_id=id, logger=logger)
+    if pretty_response:
+        console.print(f":megaphone: Available notification processes", style="logging.level.info")
+        if verbose:
+            console.print(f"{json.dumps(pretty_response, indent=4, sort_keys=True)}", style="logging.level.info")
+        else:
+            table = Table("id", "type", "name", "active", "isDefault")
+            for item in pretty_response:
+                table.add_row(str(item["id"]), item["type"], item["name"], str(item["active"]), str(item["isDefault"]))
+            console.print(table, style="green")
