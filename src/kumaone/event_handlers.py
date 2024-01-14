@@ -99,7 +99,18 @@ def status_page_list_event(data):
     Get all the status pages
 
     :param data: (dict) Event data.
-    :return:
+    :return: None
     """
 
     event_data[ioevents.status_page_list] = data
+
+
+def notification_list_event(data):
+    """
+    Get all notification processes
+
+    :param data: (dict) Event data
+    :return: None
+    """
+
+    event_data[ioevents.notification_list] = data

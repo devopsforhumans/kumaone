@@ -71,7 +71,7 @@ def list_status_pages(verbose=None, logger=None):
     """
     Show list of status pages.
 
-    :param verbose: (bool) verbose output.
+    :param verbose: (bool) Enable verbose output.
     :param logger: (object) Logger object.
     :return: None
     """

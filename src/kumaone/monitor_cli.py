@@ -121,7 +121,7 @@ def monitor_list(
 @app.callback()
 def monitor_mission_control(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
     """
-    Kumaone monitor manager. An uptime kuma monitor group and process manager wrapper.
+    Kumaone monitor manager. An uptime kuma monitor group and process monitor manager wrapper.
     """
 
     if log_level:

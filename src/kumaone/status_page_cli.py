@@ -84,7 +84,6 @@ def status_page_add(
         raise typer.BadParameter(
             "At least '--title' / '-t' and '--slug' / '-s' parameters OR '--pages' / '-p' parameter is required."
         )
-        sys.exit(1)
     elif status_pages:
         status_page_config = "from_file"
     elif title and slug:

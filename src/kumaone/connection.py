@@ -13,7 +13,13 @@ import socketio
 from socketio.exceptions import TimeoutError
 
 # Import custom (local) python packages
-from .event_handlers import connect_event, disconnect_event, monitor_list_event, status_page_list_event
+from .event_handlers import (
+    connect_event,
+    disconnect_event,
+    monitor_list_event,
+    notification_list_event,
+    status_page_list_event,
+)
 from . import ioevents
 
 # Source code meta data
@@ -46,7 +52,7 @@ def _register_event_handlers():
     # sio.on(ioevents.init_server_timezone, init_server_timezone_event)
     # sio.on(ioevents.maintenance_list, maintenance_list_event)
     sio.on(ioevents.monitor_list, monitor_list_event)
-    # sio.on(ioevents.notification_list, notification_list_event)
+    sio.on(ioevents.notification_list, notification_list_event)
     # sio.on(ioevents.proxy_list, proxy_list_event)
     sio.on(ioevents.status_page_list, status_page_list_event)
     # sio.on(ioevents.uptime, uptime_event)

@@ -76,8 +76,8 @@ pip install -e .
 - [ ] Don't stop the program if one monitor process runs into error
 - [ ] Add debug logs for methods
 - [x] Bulk `delete` monitors from file(s)
-- [ ] Add Single monitor from `inline` data
-- [ ] Delete Single Monitor by name
+- [ ] Add Single monitor from `inline` dictionary data
+- [x] Delete Single Monitor by name
 - [x] Supported Monitor types (tested)
   - [x] HTTP
   - [x] JSON_QUERY
