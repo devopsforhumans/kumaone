@@ -52,6 +52,21 @@ def _get_notification_by_name_or_id(response=None, notification_name=None, notif
     console.print(f":orange_circle: Notification id or name doesn't exist.", style="logging.level.warning")
 
 
+def add_notification(notifications_file_path=None, interactive=None, logger=None, verbose=None):
+    """
+    Add notification provider(s)
+
+    :param notifications_file_path: (Path) Path to the notification provider definition file.
+    :param interactive: (bool) Whether the notification provider should be added interactively or not.
+    :param logger: (object) Logger object instance.
+    :param verbose: (bool) Print verbose output if True.
+    :return: None
+    """
+
+    print(notifications_file_path)
+    print(interactive)
+
+
 def list_notifications(verbose=None, name=None, id=None, logger=None):
     """
     Show list of notification processes
@@ -74,7 +89,9 @@ def list_notifications(verbose=None, name=None, id=None, logger=None):
         flat_notification.update(config)
         pretty_response.append(flat_notification)
     if name is not None or id is not None:
-        pretty_response = _get_notification_by_name_or_id(response=pretty_response, notification_name=name, notification_id=id, logger=logger)
+        pretty_response = _get_notification_by_name_or_id(
+            response=pretty_response, notification_name=name, notification_id=id, logger=logger
+        )
     if pretty_response:
         console.print(f":megaphone: Available notification processes", style="logging.level.info")
         if verbose:

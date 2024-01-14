@@ -71,6 +71,10 @@ pip install -e .
 
 ### Monitors
 
+- Supported Monitor types (tested)
+  - [x] HTTP
+  - [x] JSON_QUERY
+  - [x] PING
 - [x] List all monitors. `groups` and `processes` also.
 - [x] Bulk `add` monitors from file(s)
 - [ ] Don't stop the program if one monitor process runs into error
@@ -78,10 +82,6 @@ pip install -e .
 - [x] Bulk `delete` monitors from file(s)
 - [ ] Add Single monitor from `inline` dictionary data
 - [x] Delete Single Monitor by name
-- [x] Supported Monitor types (tested)
-  - [x] HTTP
-  - [x] JSON_QUERY
-  - [x] PING
 
 ### Status Page
 
@@ -94,8 +94,13 @@ pip install -e .
 
 ### Notification
 
-- [ ] List all `notification`(s)
-- [ ] See details of a `single notification`
+- Supported notification providers (tested)
+  - [x] Rocket.Chat
+  - [x] Slack
+  - [x] MS Teams
+  - [x] Webhook
+- [x] List all `notification`(s)
+- [x] See details of a `single notification`
 - [ ] Add new notification (interactive)
 - [ ] Add notifications from file(s)
 - [ ] Delete notification

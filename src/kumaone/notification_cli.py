@@ -18,7 +18,7 @@ import typer
 # Import custom (local) python packages
 from .configs import check_config
 from .connection import connect_login, disconnect
-from .notifications import list_notifications
+from .notifications import add_notification, list_notifications
 from src.kumaone.utils import _check_data_path, log_manager, _mutual_exclusivity_check
 
 # Source code meta data
@@ -31,7 +31,41 @@ state = {"log_level": "NOTSET"}
 console = Console()
 
 
-@app.command(name="list", help="List all uptime kuma notification processes.")
+@app.command(name="add", help="Add a new notification provider.")
+def notification_add(
+    notifications: Annotated[
+        Optional[Path],
+        typer.Option(..., "--notifications", "-n", help="Notification(s) data."),
+    ] = None,
+    config_file: Annotated[
+        Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
+    ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    interactive: Annotated[bool, typer.Option(help="Add notification interactively.")] = False,
+    verbose: Annotated[bool, typer.Option(help="Show verbose output.")] = False,
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+):
+    """
+    Add a new notification provider.
+
+    :return: None
+    """
+
+    if log_level:
+        state["log_level"] = log_level
+        logger = log_manager(log_level=log_level)
+    if interactive and notifications:
+        raise typer.BadParameter("Only one parameter is allowed.")
+
+    config_data = check_config(config_path=config_file, logger=logger)
+    connect_login(config_data=config_data)
+    if interactive:
+        add_notification(interactive=interactive, verbose=verbose, logger=logger)
+    elif notifications:
+        add_notification(notifications_file_path=notifications, interactive=interactive, verbose=verbose, logger=logger)
+    disconnect()
+
+
+@app.command(name="list", help="List all uptime kuma notification providers.")
 def notification_list(
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
@@ -40,7 +74,7 @@ def notification_list(
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
-    List all uptime kuma notification
+    List all uptime kuma notification providers.
 
     :return: None
     """
@@ -55,10 +89,20 @@ def notification_list(
     disconnect()
 
 
-@app.command(name="show", help="Show details of an uptime kuma notification processes.")
+@app.command(name="show", help="Show details of an uptime kuma notification provider.")
 def notification_list(
-    notification_name: Annotated[str, typer.Option(..., "--name", "-n", help="Uptime kuma notification name.", callback=_mutual_exclusivity_check(size=2))] = None,
-    notification_id: Annotated[int, typer.Option(..., "--id", "-i", help="Uptime kuma notification id.", callback=_mutual_exclusivity_check(size=2))] = None,
+    notification_name: Annotated[
+        str,
+        typer.Option(
+            ..., "--name", "-n", help="Uptime kuma notification name.", callback=_mutual_exclusivity_check(size=2)
+        ),
+    ] = None,
+    notification_id: Annotated[
+        int,
+        typer.Option(
+            ..., "--id", "-i", help="Uptime kuma notification id.", callback=_mutual_exclusivity_check(size=2)
+        ),
+    ] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -66,7 +110,7 @@ def notification_list(
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
     """
-    List all uptime kuma notification
+    List all uptime kuma notification provider.
 
     :return: None
     """
