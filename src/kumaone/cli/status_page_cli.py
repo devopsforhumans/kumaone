@@ -16,9 +16,9 @@ from typing_extensions import Annotated
 import typer
 
 # Import custom (local) python packages
-from .configs import check_config
-from .connection import connect_login, disconnect
-from .status_pages import add_status_page, delete_status_page, get_satus_page, list_status_pages
+from src.kumaone.configs import check_config
+from src.kumaone.connection import connect_login, disconnect
+from src.kumaone.status_pages import add_status_page, delete_status_page, get_satus_page, list_status_pages
 from src.kumaone.utils import _check_data_path, log_manager, _mutual_exclusivity_check
 
 # Source code meta data

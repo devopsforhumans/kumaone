@@ -7,9 +7,8 @@
 __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
-
 notification_providers = {
-    "rocket_chat": {
+    "rocket.chat": {
         "rocketchannel": "",
         "rocketusername": "",
         "rocketiconemo": "",

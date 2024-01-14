@@ -11,11 +11,8 @@ from typing_extensions import Annotated
 import typer
 
 # Import custom (local) python packages
-from . import config_cli
-from . import monitor_cli
-from . import notification_cli
-from . import status_page_cli
-from .utils import app_info
+from src.kumaone.cli import config_cli, monitor_cli, notification_cli, status_page_cli
+from src.kumaone.utils import app_info
 
 # Source code meta data
 __author__ = "Dalwar Hossain"

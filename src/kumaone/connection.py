@@ -97,7 +97,7 @@ def disconnect():
     # console.print(Rule(title="Disconnect", style="purple"))
     try:
         sio.disconnect()
-        console.print(f":boxing_glove: Disconnected from server.", style="logging.level.info")
+        console.print(f":firecracker: Disconnected from server.", style="logging.level.info")
     except Exception as err:
         console.print(f":x:  Could not disconnect from server. Error: {err}", style="logging.level.error")
         exit(1)
