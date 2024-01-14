@@ -77,8 +77,6 @@ pip install -e .
   - [x] PING
 - [x] List all monitors. `groups` and `processes` also.
 - [x] Bulk `add` monitors from file(s)
-- [ ] Don't stop the program if one monitor process runs into error
-- [ ] Add debug logs for methods
 - [x] Bulk `delete` monitors from file(s)
 - [ ] Add Single monitor from `inline` dictionary data
 - [x] Delete Single Monitor by name
@@ -100,23 +98,32 @@ pip install -e .
   - [x] MS Teams
   - [x] Webhook
 - [x] List all `notification`(s)
-- [x] See details of a `single notification`
+- [x] See details of a `single notification` by name/id.
 - [ ] Add new notification (interactive)
-- [ ] Add notifications from file(s)
-- [ ] Delete notification
-- [ ] Delete notifications from file(s)
+- [x] Add notifications from single file.
+- [ ] Delete notification by name/id.
+- [ ] Delete notifications from single file.
 
 ### Maintenance
 
+TBA
+
 ### Incident
+
+TBA
 
 ### Change Password
 
 - [ ] Change password from CLI
-- [ ] Updated password in `kumaone` config
+- [ ] Update password in `kumaone` config
 
 ### Cleanup
 
 - [ ] Clear heartbeats
 - [ ] Clear statistics
 - [ ] Clear events
+
+### Backlog
+
+- [ ] Don't stop the program if one monitor process runs into error
+- [ ] Add debug logs for methods
