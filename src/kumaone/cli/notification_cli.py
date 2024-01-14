@@ -122,7 +122,7 @@ def notification_show(
         raise typer.BadParameter("At least on of '--name' / '-n' or '--id' / '-i' parameter is required.")
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_notifications(verbose=verbose, name=notification_name, id=notification_id, logger=logger)
+    list_notifications(verbose=verbose, name=notification_name, notification_id=notification_id, logger=logger)
     disconnect()
 
 

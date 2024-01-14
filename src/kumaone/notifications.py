@@ -63,24 +63,28 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
         for payload in notification_config.values():
             logger.debug(f"Payload for '{payload['type']}': {payload}")
             # TODO: check if already exists or not.
-            with wait_for_event(ioevents.notification_list):
-                response = _sio_call("addNotification", (payload, None))
-                if verbose:
-                    print(f"{payload['type']}: {response}")
-                else:
-                    if response["ok"]:
-                        console.print(
-                            f":floppy_disk: Notification provider for {payload['type']} added successfully.",
-                            style="logging.level.info",
-                        )
+            notification_provider_exists = list_notifications(name=payload["name"], logger=logger, check_existence=True)
+            if not notification_provider_exists:
+                with wait_for_event(ioevents.notification_list):
+                    response = _sio_call("addNotification", (payload, None))
+                    if verbose:
+                        print(f"{payload['type']}: {response}")
                     else:
-                        console.print(
-                            f":orange_circle: '{payload['type']}' notification provider addition failed. Response: {response['msg']}",
-                            style="logging.level.warning",
-                        )
+                        if response["ok"]:
+                            console.print(
+                                f":floppy_disk: Notification provider for {payload['type']} added successfully.",
+                                style="logging.level.info",
+                            )
+                        else:
+                            console.print(
+                                f":orange_circle: '{payload['type']}' notification provider addition failed. Response: {response['msg']}",
+                                style="logging.level.warning",
+                            )
+            else:
+                console.print(f":sunflower: '{payload['type']}' notification provider already exists.")
 
 
-def list_notifications(verbose=None, name=None, notification_id=None, logger=None):
+def list_notifications(verbose=None, name=None, notification_id=None, logger=None, check_existence=False):
     """
     Show list of notification processes
 
@@ -88,6 +92,7 @@ def list_notifications(verbose=None, name=None, notification_id=None, logger=Non
     :param name: (str) Uptime kuma notification process name.
     :param notification_id: (int) Uptime kuma notification process id.
     :param logger: (object) Logging object.
+    :param check_existence: (bool) Check existence of notification provider by name.
     :return: None
     """
 
@@ -106,6 +111,8 @@ def list_notifications(verbose=None, name=None, notification_id=None, logger=Non
             response=pretty_response, notification_name=name, notification_id=notification_id, logger=logger
         )
     if pretty_response:
+        if check_existence:
+            return True
         console.print(f":megaphone: Available notification providers", style="logging.level.info")
         if verbose:
             console.print(f"{json.dumps(pretty_response, indent=4, sort_keys=True)}", style="logging.level.info")
@@ -113,4 +120,11 @@ def list_notifications(verbose=None, name=None, notification_id=None, logger=Non
             table = Table("id", "type", "name", "active", "isDefault")
             for item in pretty_response:
                 table.add_row(str(item["id"]), item["type"], item["name"], str(item["active"]), str(item["isDefault"]))
-            console.print(table, style="green")
+            if table.rows:
+                console.print(table, style="green")
+            else:
+                console.print(f":four_leaf_clover: No data available.", style="logging.level.info")
+    else:
+        if check_existence:
+            return False
+        console.print(f":four_leaf_clover: No data available.", style="logging.level.info")
