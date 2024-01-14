@@ -5,24 +5,16 @@
 
 # Import builtin python libraries
 import json
-import sys
-
+from pathlib import Path
 import yaml
 
 # Import external python libraries
 from rich.console import Console
-from rich import print
-from rich.rule import Rule
 from rich.table import Table
-import requests
-
 
 # Import custom (local) python packages
 from .event_handlers import get_event_data, wait_for_event
 from . import ioevents
-from .monitors import _check_monitor
-from .payload_handler import _get_status_page_data_payload
-from .settings import get_missing_arguments, timeout
 from .utils import _sio_call
 
 # Source code meta data
@@ -52,6 +44,42 @@ def _get_notification_by_name_or_id(response=None, notification_name=None, notif
     console.print(f":orange_circle: Notification id or name doesn't exist.", style="logging.level.warning")
 
 
+def add_notification(notifications_file_path=None, interactive=None, logger=None, verbose=None):
+    """
+    Add notification provider(s)
+
+    :param notifications_file_path: (Path) Path to the notification provider definition file.
+    :param interactive: (bool) Whether the notification provider should be added interactively or not.
+    :param logger: (object) Logger object instance.
+    :param verbose: (bool) Print verbose output if True.
+    :return: None
+    """
+
+    if notifications_file_path is not None and Path(notifications_file_path).is_file():
+        with open(notifications_file_path, "r") as notification_config_file:
+            notification_configs = yaml.safe_load(notification_config_file)["notifications"]
+        logger.debug(notification_configs)
+    for notification_config in notification_configs:
+        for payload in notification_config.values():
+            logger.debug(f"Payload for '{payload['type']}': {payload}")
+            # TODO: check if already exists or not.
+            with wait_for_event(ioevents.notification_list):
+                response = _sio_call("addNotification", (payload, None))
+                if verbose:
+                    print(f"{payload['type']}: {response}")
+                else:
+                    if response["ok"]:
+                        console.print(
+                            f":floppy_disk: Notification provider for {payload['type']} added successfully.",
+                            style="logging.level.info",
+                        )
+                    else:
+                        console.print(
+                            f":orange_circle: '{payload['type']}' notification provider addition failed. Response: {response['msg']}",
+                            style="logging.level.warning",
+                        )
+
+
 def list_notifications(verbose=None, name=None, id=None, logger=None):
     """
     Show list of notification processes
@@ -74,7 +102,9 @@ def list_notifications(verbose=None, name=None, id=None, logger=None):
         flat_notification.update(config)
         pretty_response.append(flat_notification)
     if name is not None or id is not None:
-        pretty_response = _get_notification_by_name_or_id(response=pretty_response, notification_name=name, notification_id=id, logger=logger)
+        pretty_response = _get_notification_by_name_or_id(
+            response=pretty_response, notification_name=name, notification_id=id, logger=logger
+        )
     if pretty_response:
         console.print(f":megaphone: Available notification processes", style="logging.level.info")
         if verbose:

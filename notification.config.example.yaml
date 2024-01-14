@@ -1,0 +1,36 @@
+---
+notifications:
+  - rocketchat:
+      name: "Uptime notification"
+      type: "rocket.chat"
+      is_default: false
+      apply_existing: false
+      rocketwebhookURL: "https://chat.homelab.do"
+      rocketiconemo: "rocket"
+      rocketusername: "bot"
+      rocketchannel: "somechannel"
+  - slack:
+      name: "Uptime slack notification"
+      type: "slack"
+      is_default: false
+      apply_existing: false
+      slackwebhookURL: "https://some.slack.com"
+      slackiconemo: "slack"
+      slackusername: "dalwar23"
+      slackchannel: "uptime"
+      slackchannelnotify: ""
+  - teams:
+      name: "Uptime teams notification"
+      type: "teams"
+      is_default: false
+      apply_existing: false
+      webhookUrl: "https://teams.microsoft.com/somehting/"
+  - webhook:
+      name: "Uptime webhook notification"
+      type: "webhook"
+      is_default: false
+      apply_existing: false
+      webhookURL: "https://custom.webhookurl.homelab"
+      webhookAdditionalHeaders: ""
+      webhookCustomBody: "this is a webhook message"
+      webhookContentType: "application/json"
