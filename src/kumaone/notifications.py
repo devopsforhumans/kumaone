@@ -24,12 +24,12 @@ __email__ = "dalwar23@pm.me"
 console = Console()
 
 
-def _get_notification_by_name_or_id(response=None, notification_name=None, notification_id=None, logger=None):
+def _get_notification_by_name_or_id(response=None, notification_title=None, notification_id=None, logger=None):
     """
     Get notification process details by name or id
 
     :param response: (list) List of dictionaries with notification data.
-    :param notification_name: (str) The name of the notification process.
+    :param notification_title: (str) The name of the notification process.
     :param notification_id: (int) id of the notification process.
     :param logger: (object) Logger object instance.
     :return: (dict) notification details.
@@ -37,11 +37,27 @@ def _get_notification_by_name_or_id(response=None, notification_name=None, notif
 
     for _notification in response:
         logger.debug(f"Notification id: {notification_id}")
-        logger.debug(f"Notification name: {notification_name}")
-        if _notification["name"] == notification_name or _notification["id"] == notification_id:
+        logger.debug(f"Notification name: {notification_title}")
+        if _notification["name"] == notification_title or _notification["id"] == notification_id:
             response = [_notification]
             return response
-    console.print(f":orange_circle: Notification id or name doesn't exist.", style="logging.level.warning")
+
+
+def _get_notification_id_by_name(notification_name=None, logger=None):
+    """
+    Get notification id by name.
+
+    :param notification_name: (str) Name of the notification.
+    :param logger: (object) Logger object instance.
+    :return: (int) Notification id.
+    """
+
+    response = get_event_data(ioevents.notification_list)
+    logger.debug(f"Notification List: {response}")
+    for _notification in response:
+        if _notification["name"] == notification_name:
+            return _notification["id"]
+    return -1
 
 
 def add_notification(notifications_file_path=None, interactive=None, logger=None, verbose=None):
@@ -62,8 +78,7 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
     for notification_config in notification_configs:
         for payload in notification_config.values():
             logger.debug(f"Payload for '{payload['type']}': {payload}")
-            # TODO: check if already exists or not.
-            notification_provider_exists = list_notifications(name=payload["name"], logger=logger, check_existence=True)
+            notification_provider_exists = list_notifications(notification_title=payload["name"], logger=logger, check_existence=True)
             if not notification_provider_exists:
                 with wait_for_event(ioevents.notification_list):
                     response = _sio_call("addNotification", (payload, None))
@@ -72,7 +87,7 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
                     else:
                         if response["ok"]:
                             console.print(
-                                f":floppy_disk: Notification provider for {payload['type']} added successfully.",
+                                f":floppy_disk: Notification provider '{payload['type']}' added successfully.",
                                 style="logging.level.info",
                             )
                         else:
@@ -84,12 +99,12 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
                 console.print(f":sunflower: '{payload['type']}' notification provider already exists.")
 
 
-def list_notifications(verbose=None, name=None, notification_id=None, logger=None, check_existence=False):
+def list_notifications(verbose=None, notification_title=None, notification_id=None, logger=None, check_existence=False):
     """
     Show list of notification processes
 
     :param verbose: (bool) Enable verbose output.
-    :param name: (str) Uptime kuma notification process name.
+    :param notification_title: (str) Uptime kuma notification process name.
     :param notification_id: (int) Uptime kuma notification process id.
     :param logger: (object) Logging object.
     :param check_existence: (bool) Check existence of notification provider by name.
@@ -106,9 +121,9 @@ def list_notifications(verbose=None, name=None, notification_id=None, logger=Non
         del flat_notification["config"]
         flat_notification.update(config)
         pretty_response.append(flat_notification)
-    if name is not None or notification_id is not None:
+    if notification_title is not None or notification_id is not None:
         pretty_response = _get_notification_by_name_or_id(
-            response=pretty_response, notification_name=name, notification_id=notification_id, logger=logger
+            response=pretty_response, notification_title=notification_title, notification_id=notification_id, logger=logger
         )
     if pretty_response:
         if check_existence:
@@ -128,3 +143,36 @@ def list_notifications(verbose=None, name=None, notification_id=None, logger=Non
         if check_existence:
             return False
         console.print(f":four_leaf_clover: No data available.", style="logging.level.info")
+
+
+def delete_notification(notifications_file_path=None, notification_title=None, logger=None, verbose=None):
+    """
+    Delete a notification provider.
+
+    :param notifications_file_path: (Path) Path to the notification provider definition file.
+    :param notification_title: (str) Whether the notification provider should be added interactively or not.
+    :param logger: (object) Logger object instance.
+    :param verbose: (bool) Print verbose output if True.
+    :return: None
+    """
+
+    notification_provider_to_delete = []
+    if notifications_file_path is not None and Path(notifications_file_path).is_file():
+        with open(notifications_file_path, "r") as notification_config_file:
+            notification_configs = yaml.safe_load(notification_config_file)["notifications"]
+        logger.debug(notification_configs)
+        for notification_config in notification_configs:
+            for payload in notification_config.values():
+                notification_provider_to_delete.append(payload["name"])
+    elif notification_title is not None:
+        notification_provider_to_delete.append(notification_title)
+    if notification_provider_to_delete:
+        for notification_provider_name in notification_provider_to_delete:
+            notification_id = _get_notification_id_by_name(notification_name=notification_provider_name, logger=logger)
+            if notification_id != -1:
+                with wait_for_event(ioevents.notification_list):
+                    delete_event_response = _sio_call("deleteNotification", notification_id)
+                    if delete_event_response["ok"]:
+                        console.print(f":ghost: '{notification_id} - {notification_provider_name}' has been deleted.", style="logging.level.info")
+            else:
+                console.print(f":running_shoe: 'NULL - {notification_provider_name}' doesn't exist. Skipping...", style="logging.level.info")

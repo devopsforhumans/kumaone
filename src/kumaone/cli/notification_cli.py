@@ -18,7 +18,7 @@ import typer
 # Import custom (local) python packages
 from src.kumaone.configs import check_config
 from src.kumaone.connection import connect_login, disconnect
-from src.kumaone.notifications import add_notification, list_notifications
+from src.kumaone.notifications import add_notification, delete_notification, list_notifications
 from src.kumaone.utils import _check_data_path, log_manager, _mutual_exclusivity_check
 
 # Source code meta data
@@ -91,10 +91,10 @@ def notification_list(
 
 @app.command(name="show", help="Show details of an uptime kuma notification provider.")
 def notification_show(
-    notification_name: Annotated[
+    notification_title: Annotated[
         str,
         typer.Option(
-            ..., "--name", "-n", help="Uptime kuma notification name.", callback=_mutual_exclusivity_check(size=2)
+            ..., "--title", "-t", help="Uptime kuma notification name.", callback=_mutual_exclusivity_check(size=2)
         ),
     ] = None,
     notification_id: Annotated[
@@ -118,11 +118,47 @@ def notification_show(
     if log_level:
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
-    if notification_name is None and notification_id is None:
+    if notification_title is None and notification_id is None:
         raise typer.BadParameter("At least on of '--name' / '-n' or '--id' / '-i' parameter is required.")
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_notifications(verbose=verbose, name=notification_name, notification_id=notification_id, logger=logger)
+    list_notifications(verbose=verbose, name=notification_title, notification_id=notification_id, logger=logger)
+    disconnect()
+
+
+@app.command(name="delete", help="Delete a notification provider.")
+def notification_delete(
+    notifications: Annotated[
+        Optional[Path],
+        typer.Option(..., "--notifications", "-n", help="Notification(s) data."),
+    ] = None,
+    config_file: Annotated[
+        Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
+    ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    notification_title: Annotated[str, typer.Option(..., "--title", "-t", help="Notification title (case sensitive).")] = None,
+    verbose: Annotated[bool, typer.Option(help="Show verbose output.")] = False,
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+):
+    """
+    Delete a notification provider.
+
+    :return: None
+    """
+
+    if log_level:
+        state["log_level"] = log_level
+        logger = log_manager(log_level=log_level)
+    if notification_title and notifications:
+        raise typer.BadParameter("Only one parameter is allowed.")
+    if notification_title is None and notifications is None:
+        raise typer.BadParameter("At least one of '--notifications' / '--name' parameter is required.")
+
+    config_data = check_config(config_path=config_file, logger=logger)
+    connect_login(config_data=config_data)
+    if notification_title:
+        delete_notification(notification_title=notification_title, verbose=verbose, logger=logger)
+    elif notifications:
+        delete_notification(notifications_file_path=notifications, notification_title=notification_title, verbose=verbose, logger=logger)
     disconnect()
 
 
