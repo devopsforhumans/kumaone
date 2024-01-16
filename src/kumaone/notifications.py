@@ -43,11 +43,11 @@ def _get_notification_by_name_or_id(response=None, notification_title=None, noti
             return response
 
 
-def _get_notification_id_by_name(notification_name=None, logger=None):
+def _get_notification_id_by_name(notification_title=None, logger=None):
     """
     Get notification id by name.
 
-    :param notification_name: (str) Name of the notification.
+    :param notification_title: (str) Name of the notification.
     :param logger: (object) Logger object instance.
     :return: (int) Notification id.
     """
@@ -55,7 +55,7 @@ def _get_notification_id_by_name(notification_name=None, logger=None):
     response = get_event_data(ioevents.notification_list)
     logger.debug(f"Notification List: {response}")
     for _notification in response:
-        if _notification["name"] == notification_name:
+        if _notification["name"] == notification_title:
             return _notification["id"]
     return -1
 
@@ -162,17 +162,18 @@ def delete_notification(notifications_file_path=None, notification_title=None, l
             notification_configs = yaml.safe_load(notification_config_file)["notifications"]
         logger.debug(notification_configs)
         for notification_config in notification_configs:
-            for payload in notification_config.values():
-                notification_provider_to_delete.append(payload["name"])
+            for _notification in notification_config.values():
+                if _notification["name"] == notification_title:
+                    notification_provider_to_delete.append(_notification["id"])
     elif notification_title is not None:
-        notification_provider_to_delete.append(notification_title)
+        notification_id = _get_notification_id_by_name(notification_title=notification_title, logger=logger)
+        if notification_id != -1:
+            notification_provider_to_delete.append(notification_title)
     if notification_provider_to_delete:
-        for notification_provider_name in notification_provider_to_delete:
-            notification_id = _get_notification_id_by_name(notification_name=notification_provider_name, logger=logger)
-            if notification_id != -1:
-                with wait_for_event(ioevents.notification_list):
-                    delete_event_response = _sio_call("deleteNotification", notification_id)
-                    if delete_event_response["ok"]:
-                        console.print(f":ghost: '{notification_id} - {notification_provider_name}' has been deleted.", style="logging.level.info")
-            else:
-                console.print(f":running_shoe: 'NULL - {notification_provider_name}' doesn't exist. Skipping...", style="logging.level.info")
+        for _notification_id in notification_provider_to_delete:
+            with wait_for_event(ioevents.notification_list):
+                delete_event_response = _sio_call("deleteNotification", _notification_id)
+                if delete_event_response["ok"]:
+                    console.print(f":ghost: Notification provider with id: '{_notification_id}' has been deleted.", style="logging.level.info")
+    else:
+        console.print(f":running_shoe: Notification provider(s) doesn't exist. Skipping...", style="logging.level.info")
