@@ -207,24 +207,12 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
         exit(0)
     else:
         for item in files_to_delete:
-            console.print(f":hammer_and_wrench: Deleting {item} file.", style="logging.level.info")
+            console.print(f":llama: Deleting {item} file.", style="logging.level.info")
             try:
                 Path.unlink(item, missing_ok=True)
                 logger.info(f"File {item} removed.")
-                console.print(f":wastebasket: File {item} has been deleted.", style="green")
+                console.print(f":watermelon: File {item} has been deleted.", style="green")
             except Exception as err:
                 console.print(f":x: Exception occurred. ERROR: {err}", style="logging.level.error")
                 logger.error(f"{err}")
                 exit(1)
-
-
-def edit_config(config_path=None, log_level=None):
-    """
-    Delete uptime kuma config
-
-    :param config_path: (Path) Custom configuration path.
-    :param log_level: (str) Log level
-    :return: None
-    """
-
-    console.print(f":sunflower: Not implemented, yet!")

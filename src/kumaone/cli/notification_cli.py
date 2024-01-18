@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""monitor module for kumaone"""
-import sys
+"""Notification module for kumaone"""
 
 # Import builtin python libraries
 from pathlib import Path
@@ -10,8 +9,6 @@ from typing import Optional
 
 # Import external python libraries
 from rich.console import Console
-from rich import print
-from rich.panel import Panel
 from typing_extensions import Annotated
 import typer
 
@@ -19,7 +16,7 @@ import typer
 from src.kumaone.configs import check_config
 from src.kumaone.connection import connect_login, disconnect
 from src.kumaone.notifications import add_notification, delete_notification, list_notifications
-from src.kumaone.utils import _check_data_path, log_manager, _mutual_exclusivity_check
+from src.kumaone.utils import log_manager, _mutual_exclusivity_check
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -122,7 +119,7 @@ def notification_show(
         raise typer.BadParameter("At least on of '--name' / '-n' or '--id' / '-i' parameter is required.")
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_notifications(verbose=verbose, name=notification_title, notification_id=notification_id, logger=logger)
+    list_notifications(verbose=verbose, notification_title=notification_title, notification_id=notification_id, logger=logger)
     disconnect()
 
 

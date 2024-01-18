@@ -9,7 +9,7 @@ from typing_extensions import Annotated
 import typer
 
 # Import custom (local) python packages
-from src.kumaone.configs import check_config, create_config, delete_config, edit_config
+from src.kumaone.configs import check_config, create_config, delete_config
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -78,23 +78,23 @@ def config_delete(
     delete_config(config_path=config_path, log_level=log_level)
 
 
-@app.command(name="edit", help="Edit kumaone config.")
-def config_edit(
-    config_path: Annotated[
-        str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")
-    ] = "",
-    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
-):
-    """
-    Edit kumaone config for uptime kuma server.
-
-    :return: (None) On screen output.
-    """
-
-    if log_level != "NOTSET":
-        state["log_level"] = log_level
-
-    edit_config(config_path=config_path, log_level=log_level)
+# @app.command(name="edit", help="Edit kumaone config.")
+# def config_edit(
+#     config_path: Annotated[
+#         str, typer.Option(..., "--config", "-c", help="Custom full (with extension) location for config file.")
+#     ] = "",
+#     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+# ):
+#     """
+#     Edit kumaone config for uptime kuma server.
+#
+#     :return: (None) On screen output.
+#     """
+#
+#     if log_level != "NOTSET":
+#         state["log_level"] = log_level
+#
+#     edit_config(config_path=config_path, log_level=log_level)
 
 
 @app.callback()

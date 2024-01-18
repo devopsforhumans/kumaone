@@ -71,7 +71,7 @@ def connect_login(config_data=None, headers=None):
         # console.print(Rule(title="Connect", style="purple"))
         _register_event_handlers()
         sio.connect(config_data.url, headers=headers)
-        console.print(f":linked_paperclips: Connected to {config_data.url}", style="logging.level.info")
+        console.print(f":pretzel: Connected to {config_data.url}", style="logging.level.info")
     except TimeoutError:
         console.print(f":hourglass_done: Connection timed out.", style="logging.level.info")
     except Exception as err:

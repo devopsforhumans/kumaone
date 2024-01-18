@@ -112,9 +112,35 @@ def monitor_list(
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
 
+    if groups and processes:
+        raise typer.BadParameter("'--groups' and '--processes' can not be used together.")
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
     list_monitors(show_groups=groups, show_processes=processes, verbose=verbose, logger=logger)
+    disconnect()
+
+
+@app.command(name="show", help="Show details of a single process monitor by ID.")
+def monitor_show(
+    monitor_id: Annotated[int, typer.Option(...,  "--id", "-i", help="Uptime kuma monitor ID.")],
+    config_file: Annotated[
+        Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
+    ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+):
+    """
+    Lists all monitor groups and processes
+
+    :return: None
+    """
+
+    if log_level:
+        state["log_level"] = log_level
+        logger = log_manager(log_level=log_level)
+
+    config_data = check_config(config_path=config_file, logger=logger)
+    connect_login(config_data=config_data)
+    list_monitors(monitor_id=monitor_id, logger=logger)
     disconnect()
 
 

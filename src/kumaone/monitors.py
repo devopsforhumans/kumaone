@@ -5,16 +5,14 @@
 
 # Import builtin python libraries
 import json
-import os
-from pathlib import Path
 import sys
 
 
 # Import external python libraries
+from rich.columns import Columns
 from rich.console import Console
 from rich import print
 from rich.table import Table
-from socketio.exceptions import TimeoutError
 import yaml
 
 # Import custom (local) python packages
@@ -233,10 +231,11 @@ def delete_monitor(monitor_data_files=None, monitor_name=None, logger=None):
         print("-" * 80)
 
 
-def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=None):
+def list_monitors(monitor_id=None, show_groups=None, show_processes=None, verbose=None, logger=None):
     """
     Show list of monitor groups and processes.
 
+    :param monitor_id: (int) Monitor ID.
     :param show_groups: (bool) Show only monitoring groups.
     :param show_processes: (bool) Show only monitoring processes.
     :param verbose: (bool) Show verbose output.
@@ -245,33 +244,38 @@ def list_monitors(show_groups=None, show_processes=None, verbose=None, logger=No
     """
 
     response = list(get_event_data(ioevents.monitor_list).values())
-    logger.info(json.dumps(response, indent=4))
+    logger.debug(json.dumps(response, indent=4))
 
-    table = Table("id", "name")
-    if show_groups:
-        console.print(f":hamburger: Available monitor groups.", style="green")
+    if monitor_id:
         for item in response:
-            if item["type"] == "group":
-                table.add_row(str(item["id"]), item["name"])
-        if table.rows:
-            console.print(table, style="green")
-        else:
-            console.print(f":four_leaf_clover: No data available.")
-    elif show_processes:
-        for item in response:
-            if item["type"] != "group":
-                table.add_row(str(item["id"]), item["name"])
-        console.print(f":hamburger: Available monitor processes.", style="green")
-        if table.rows:
-            console.print(table, style="green")
-        else:
-            console.print(f":four_leaf_clover: No data available.", style="logging.level.info")
-    elif verbose:
-        console.print(json.dumps(response, indent=4, sort_keys=True))
+            if item["id"] == monitor_id:
+                console.print(f":cupcake: Details about monitor {item['name']}")
+                console.print(json.dumps(item, indent=4, sort_keys=True), style="logging.level.info")
+                return True
+        console.print(f":four_leaf_clover: Monitor with ID {monitor_id} does not exist.", style="logging.level.error")
     else:
-        console.print(f":hamburger: Available monitors (groups and processes).", style="green")
-        for item in response:
-            print(item["name"])
-
-
-# TODO: Change line separator
+        table = Table("id", "name")
+        if show_groups:
+            console.print(f":hamburger: Available monitor groups.", style="green")
+            for item in response:
+                if item["type"] == "group":
+                    table.add_row(str(item["id"]), item["name"])
+            if table.rows:
+                console.print(table, style="green")
+            else:
+                console.print(f":four_leaf_clover: No data available.")
+        elif show_processes:
+            for item in response:
+                if item["type"] != "group":
+                    table.add_row(str(item["id"]), item["name"])
+            console.print(f":hamburger: Available monitor processes.", style="green")
+            if table.rows:
+                console.print(table, style="green")
+            else:
+                console.print(f":four_leaf_clover: No data available.", style="logging.level.info")
+        elif verbose:
+            console.print(json.dumps(response, indent=4, sort_keys=True))
+        else:
+            console.print(f":hamburger: Available monitors (groups and processes).", style="green")
+            monitors = Columns(sorted([item['name'] for item in response], key=str.lower), equal=True, expand=True)
+            console.print(monitors, style="logging.level.info")
