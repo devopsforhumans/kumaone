@@ -75,7 +75,9 @@ pip install -e .
   - [x] HTTP
   - [x] JSON_QUERY
   - [x] PING
-- [x] List all monitors. `groups` and `processes` also.
+- [x] List all monitors.
+- [x] List monitor by `groups` and `processes` also.
+- [x] Show details of a monitor by ID.
 - [x] Bulk `add` monitors from file(s)
 - [x] Bulk `delete` monitors from file(s)
 - [ ] Add Single monitor from `inline` dictionary data
@@ -101,8 +103,8 @@ pip install -e .
 - [x] See details of a `single notification` by name/id.
 - [ ] Add new notification (interactive)
 - [x] Add notifications from single file.
-- [ ] Delete notification by name/id.
-- [ ] Delete notifications from single file.
+- [x] Delete notification by name/id.
+- [x] Delete notifications from single file.
 
 ### Maintenance
 
