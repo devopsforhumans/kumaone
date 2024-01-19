@@ -24,14 +24,19 @@ last_updated_with_tz = datetime.now(tz=time_zone).strftime(
     "%A, %B %d, %Y at %H:%M %p %Z"
 )
 
+release_file = os.path.join("../..", "src/kumaone/__about__.py")
+release_info = {}
+with open(release_file, "rb") as rf:
+    exec(rf.read(), release_info)
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'kumaone'
-author = 'Dalwar Hossain'
-version = '0.0.1-alpha.1'
-release = version
-copyright =  f"{year}, Dalwar Hossain || v{version}"
+author = release_info["__author__"]
+version = release_info["__version__"]
+release = release_info["__version__"]
+copyright = f"{release_info['__copyright__']} || v{release_info['__version__']} || Last Updated: {last_updated_with_tz}"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
