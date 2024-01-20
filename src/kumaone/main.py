@@ -7,12 +7,13 @@
 
 # Import external python libraries
 from rich.console import Console
-from typing_extensions import Annotated
 import typer
+from typing_extensions import Annotated
+from typing import Optional
 
 # Import custom (local) python packages
 from src.kumaone.cli import config_cli, monitor_cli, notification_cli, status_page_cli
-from src.kumaone.utils import app_info
+from src.kumaone.utils import app_info, version_callback
 
 # Source code meta data
 __author__ = "Dalwar Hossain"
@@ -42,7 +43,10 @@ def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSE
 
 
 @app.callback()
-def mission_control(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"):
+def mission_control(
+    version: Annotated[Optional[bool], typer.Option("--version", callback=version_callback)] = None,
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"
+):
     """
     Mission control for kumaone, an uptime kuma helper python package.
     """

@@ -2,7 +2,7 @@
 
 kumaone (`kumaone`) requires Python 3.8 or above. If you do not already have a
 Python environment configured on your computer, please see the
-`Python <https://www.python.org>`_ page for instructions on installing Python
+[Python](https://www.python.org) page for instructions on installing Python
 environment.
 
 Assuming that the default python environment is already configured on your computer, and
@@ -11,10 +11,10 @@ environments, please follow instructions from [pipenv](https://pipenv.pypa.io/en
 
 To start the installation process, please make sure the latest version of `pip`
 (python3 package manager) is installed. If `pip` is not installed, please refer to
-the `Pip documentation <https://pip.pypa.io/en/stable/installing/>`_ and install
+the [Pip documentation](https://pip.pypa.io/en/stable/installing/) and install
 `pip` first.
 
-# Linux/macOS
+## Linux/macOS
 
 Install the latest release of `kumaone` with ``pip``:
 
@@ -35,7 +35,7 @@ flag to install `kumaone` for current user
 pip install --user kumaone
 ```
 
-# Windows
+## Windows
 
 Considering `python3` is installed and `pip` is configured.
 
@@ -53,7 +53,7 @@ pipenv install kumaone
 
 This should install `kumaone` with all the required dependencies.
 
-# Install from Source
+## Install from Source
 
 Alternatively, `kumaone` can be installed manually by downloading the current version
 from [GitHub](https://github.com/dalwar23/kumaone) or
@@ -65,20 +65,30 @@ the directory:
 pip install .
 ```
 
-# Dependencies
+## Dependencies
 
 This package requires a configuration file in ``.yaml`` format. The
 look-up priority for the configuration file is as following-
 
-1. <user_home_directory>/.config/kumaone/kuma.yaml (`Window/Linux/MacOS`) **Default**
-2. <user_home_directory>/kuma.yaml (`Windows/Linux/MacOS`)
-3. <current_working_directory>/kuma.yaml (`Windows/Linux/MacOS`)
-4. /etc/<package_name>/config.yaml (`Linux/MacOS`)
+1. `<user_home_directory>/.config/kumaone/kuma.yaml` (`Window/Linux/MacOS`) [**Default**]
+2. `<user_home_directory>/kuma.yaml` (`Windows/Linux/MacOS`)
+3. `<current_working_directory>/kuma.yaml` (`Windows/Linux/MacOS`)
+4. `/etc/<package_name>/kuma.yaml` (`Linux/MacOS`)
 
 If `kuma.yaml` doesn't exists in one of these locations, the program will prompt for creating
-a new config.
+a new config. Alternatively you can provide a custom location for `kumaone` config. Find out more
+with
 
-**Windows**
+```shell
+kumaone config create --help
+```
+
+```{tip}
+It's recommended to leave the config file creation at one of the location above. This way while using `kumaone`,
+user doesn't have to provide custom config path everytime with `-c` or `--config` flag.
+```
+
+### Windows
 
 Windows system by default doesn't allow creation of `.` prefixed directory from GUI,
 so use the following -
@@ -95,10 +105,12 @@ file.
 kumaone config create
 ```
 
-**Linux/MacOS**
+### Linux/MacOS
 
 ```shell
 kumaone config create
 ```
 
-> N.B: Example config files can be found under examples directory in `kumaone` GitHub repository.
+```{note}
+Example config files can be found under examples directory in `kumaone` GitHub repository.
+```

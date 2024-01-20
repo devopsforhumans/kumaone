@@ -44,7 +44,7 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
-## Get Started!
+## Get Started
 
 Ready to contribute? Here's how to set up `kumaone` for local development.
 

@@ -33,6 +33,12 @@ __email__ = "dalwar23@pm.me"
 console = Console()
 
 
+def version_callback(value: bool):
+    if value:
+        print(f"{version}")
+        raise typer.Exit()
+
+
 # Turn on/off logging visibility
 def log_manager(log_level=None):
     """
