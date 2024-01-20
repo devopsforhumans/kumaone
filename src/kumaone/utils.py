@@ -174,6 +174,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
             with open(data_path) as tmp_read_file:
                 raw_data = yaml.safe_load(tmp_read_file)
                 logger.debug(raw_data)
+                logger.debug(key_to_check_for)
                 if key_to_check_for in raw_data:
                     return sorted([data_path])
                 else:

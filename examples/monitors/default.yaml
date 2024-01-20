@@ -1,0 +1,9 @@
+---
+monitors:
+  default:
+    - name: Personal Website
+      type: http
+      url: https://dalwar23.com
+    - name: MacBook Pro
+      type: ping
+      hostname: 192.168.178.188

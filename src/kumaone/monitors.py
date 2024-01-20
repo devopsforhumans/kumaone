@@ -151,7 +151,7 @@ def _delete_process_monitor_or_group(input_data=None):
             return False
     else:
         console.print(
-            f":running_shoe: Monitor {process_monitor_name} doesn't exist. Skipping...", style="logging.level.info"
+            f":running_shoe: Monitor '{process_monitor_name}' doesn't exist. Skipping...", style="logging.level.info"
         )
 
 
@@ -225,7 +225,7 @@ def delete_monitor(monitor_data_files=None, monitor_name=None, logger=None):
                                 f":gloves: Monitor process data malformed, please check input.",
                                 style="logging.level.error",
                             )
-                    _delete_process_monitor_or_group(input_data=group)
+                    _delete_process_monitor_or_group(input_data={"name": group})
         print("-" * 80)
 
 
@@ -247,7 +247,7 @@ def list_monitors(monitor_id=None, show_groups=None, show_processes=None, verbos
     if monitor_id:
         for item in response:
             if item["id"] == monitor_id:
-                console.print(f":cupcake: Details about monitor {item['name']}")
+                console.print(f":cupcake: Details about monitor '{item['name']}'")
                 console.print(json.dumps(item, indent=4, sort_keys=True), style="logging.level.info")
                 return True
         console.print(f":four_leaf_clover: Monitor with ID {monitor_id} does not exist.", style="logging.level.error")

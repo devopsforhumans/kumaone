@@ -85,7 +85,7 @@ def monitor_delete(
     if monitors is None and monitor_name is None:
         raise typer.BadParameter("At least one of the parameter '--monitor'/'-m' OR '--name'/'-n' is required.")
     if monitors:
-        monitor_file_paths = _check_data_path(data_path=monitors, logger=logger)
+        monitor_file_paths = _check_data_path(data_path=monitors, logger=logger, key_to_check_for="monitors")
         delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
     elif monitor_name:
         delete_monitor(monitor_name=monitor_name, logger=logger)

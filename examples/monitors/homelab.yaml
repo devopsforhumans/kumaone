@@ -1,0 +1,29 @@
+---
+monitors:
+  homelab:
+    - name: PI Server
+      type: ping
+      hostname: 192.168.178.179
+    - name: Windows Desktop
+      type: ping
+      hostname: 192.168.178.177
+status_pages:
+  - title: Homelab Status Page
+    slug: homelab
+    description: "Homelab services status page."
+    theme: "auto"
+    published: True
+    showTags: False
+    domainNameList: ["homelab.uptimestatus.do"]
+    googleAnalyticsId: ""
+    customCSS: ""
+    footerText: "Status page footer"
+    showPoweredBy: False
+    showCertificateExpiry: False
+    icon: "/icon.svg"
+    publicGroupList:
+      - name: Services
+        weight: 1
+        monitorList:
+          - PI Server
+          - Windows Desktop

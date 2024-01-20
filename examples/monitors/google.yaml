@@ -1,0 +1,29 @@
+---
+monitors:
+  google:
+    - name: Google
+      type: http
+      url: https://google.com
+    - name: Gmail
+      type: http
+      url: https://mail.google.com
+status_pages:
+  - title: Google Status
+    slug: google
+    description: "Google services status page."
+    theme: "auto"
+    published: True
+    showTags: False
+    domainNameList: ["google.uptimestatus.do"]
+    googleAnalyticsId: ""
+    customCSS: ""
+    footerText: "this goes in the footer of status page"
+    showPoweredBy: False
+    showCertificateExpiry: True
+    icon: "/icon.svg"
+    publicGroupList:
+      - name: Services
+        weight: 1
+        monitorList:
+          - Google
+          - Gmail
