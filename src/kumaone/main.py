@@ -44,7 +44,7 @@ def info(log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSE
 
 @app.callback()
 def mission_control(
-    version: Annotated[Optional[bool], typer.Option("--version", callback=version_callback)] = None,
+    version: Annotated[Optional[bool], typer.Option("--version", callback=version_callback, is_eager=True)] = None,
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET"
 ):
     """
