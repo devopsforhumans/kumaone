@@ -54,7 +54,7 @@ Ready to contribute? Here's how to set up `kumaone` for local development.
     ```shell
     $ git clone git@github.com:your_name_here/kumaone.git
     ```
-3. Install [pipenv](https://pipenv.pypa.io/en/latest/) from here, if required.
+3. Install [pipenv](https://pipenv.pypa.io/en/latest/) from here.
 4. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper
    installed, this is how you set up your fork for local development
 

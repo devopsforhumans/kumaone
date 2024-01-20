@@ -21,7 +21,7 @@ import typer
 # Import custom (local) python packages
 from .connection import sio
 from src.kumaone.__about__ import __author__ as author
-from src.kumaone.__about__ import __copy_right__ as app_copy_right
+from src.kumaone.__about__ import __copyright__ as app_copy_right
 from src.kumaone.__about__ import __home_page__ as homepage
 from src.kumaone.__about__ import __license__ as app_license
 from src.kumaone.__about__ import __version__ as version
