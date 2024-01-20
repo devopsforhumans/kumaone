@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """Notification pages module for kumaone"""
 
@@ -72,13 +71,15 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
     """
 
     if notifications_file_path is not None and Path(notifications_file_path).is_file():
-        with open(notifications_file_path, "r") as notification_config_file:
+        with open(notifications_file_path) as notification_config_file:
             notification_configs = yaml.safe_load(notification_config_file)["notifications"]
         logger.debug(notification_configs)
     for notification_config in notification_configs:
         for payload in notification_config.values():
             logger.debug(f"Payload for '{payload['type']}': {payload}")
-            notification_provider_exists = list_notifications(notification_title=payload["name"], logger=logger, check_existence=True)
+            notification_provider_exists = list_notifications(
+                notification_title=payload["name"], logger=logger, check_existence=True
+            )
             if not notification_provider_exists:
                 with wait_for_event(ioevents.notification_list):
                     response = _sio_call("addNotification", (payload, None))
@@ -123,7 +124,10 @@ def list_notifications(verbose=None, notification_title=None, notification_id=No
         pretty_response.append(flat_notification)
     if notification_title is not None or notification_id is not None:
         pretty_response = _get_notification_by_name_or_id(
-            response=pretty_response, notification_title=notification_title, notification_id=notification_id, logger=logger
+            response=pretty_response,
+            notification_title=notification_title,
+            notification_id=notification_id,
+            logger=logger,
         )
     if pretty_response:
         if check_existence:
@@ -174,6 +178,9 @@ def delete_notification(notifications_file_path=None, notification_title=None, l
             with wait_for_event(ioevents.notification_list):
                 delete_event_response = _sio_call("deleteNotification", _notification_id)
                 if delete_event_response["ok"]:
-                    console.print(f":ghost: Notification provider with id: '{_notification_id}' has been deleted.", style="logging.level.info")
+                    console.print(
+                        f":ghost: Notification provider with id: '{_notification_id}' has been deleted.",
+                        style="logging.level.info",
+                    )
     else:
         console.print(f":running_shoe: Notification provider(s) doesn't exist. Skipping...", style="logging.level.info")

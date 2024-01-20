@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """Status pages module for kumaone"""
 
 # Import builtin python libraries
 import json
 import sys
-
 import yaml
 
 # Import external python libraries

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
 
 """monitor module for kumaone"""
 
@@ -113,7 +113,7 @@ def monitor_list(
         logger = log_manager(log_level=log_level)
 
     if groups and processes:
-        raise typer.BadParameter("'--groups' and '--processes' can not be used together.")
+        raise typer.BadParameter(message="'--groups' and '--processes' can not be used together.")
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
     list_monitors(show_groups=groups, show_processes=processes, verbose=verbose, logger=logger)
@@ -122,7 +122,7 @@ def monitor_list(
 
 @app.command(name="show", help="Show details of a single process monitor by ID.")
 def monitor_show(
-    monitor_id: Annotated[int, typer.Option(...,  "--id", "-i", help="Uptime kuma monitor ID.")],
+    monitor_id: Annotated[int, typer.Option(..., "--id", "-i", help="Uptime kuma monitor ID.")],
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
 
 """monitor module for kumaone"""
 
 # Import external python libraries
 from rich.console import Console
-from typing_extensions import Annotated
 import typer
+from typing_extensions import Annotated
 
 # Import custom (local) python packages
 from src.kumaone.configs import check_config, create_config, delete_config

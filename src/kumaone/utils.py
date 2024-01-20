@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """Utility module for kumaone"""
 
@@ -8,13 +7,11 @@ import logging
 import os
 from pathlib import Path
 import sys
-
 import yaml
 
 # Import external python libraries
 from rich import print
 from rich.console import Console
-from rich.panel import Panel
 from rich.logging import RichHandler
 import typer
 
@@ -143,7 +140,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
                         file_type = item.name.split(".")[-1]
                         if file_type in ["yaml", "yml"]:
                             logger.info(f"{item.name} - {item.stat().st_size} bytes.")
-                            with open(item, "r") as tmp_read_file:
+                            with open(item) as tmp_read_file:
                                 raw_data = yaml.safe_load(tmp_read_file)
                                 logger.debug(raw_data)
                                 if key_to_check_for in raw_data:
@@ -174,7 +171,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
             console.print(
                 f":high_brightness: Single file input detected. Input file: '{data_path}'.", style="logging.level.info"
             )
-            with open(data_path, "r") as tmp_read_file:
+            with open(data_path) as tmp_read_file:
                 raw_data = yaml.safe_load(tmp_read_file)
                 logger.debug(raw_data)
                 if key_to_check_for in raw_data:

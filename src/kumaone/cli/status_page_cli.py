@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
 
 """monitor module for kumaone"""
 import sys
@@ -10,10 +10,8 @@ from typing import Optional
 
 # Import external python libraries
 from rich.console import Console
-from rich import print
-from rich.panel import Panel
-from typing_extensions import Annotated
 import typer
+from typing_extensions import Annotated
 
 # Import custom (local) python packages
 from src.kumaone.configs import check_config
@@ -126,7 +124,9 @@ def status_page_delete(
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
     if status_pages is None and slug is None:
-        raise typer.BadParameter(message="At least one of the parameters '--slug' / '-s' OR '--pages' / '-p' is required.")
+        raise typer.BadParameter(
+            message="At least one of the parameters '--slug' / '-s' OR '--pages' / '-p' is required."
+        )
         sys.exit(1)
     elif status_pages:
         status_page_config = "from_file"

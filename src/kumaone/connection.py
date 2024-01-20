@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """Connection module for kumaone"""
+
+# Import builtin python libraries
+import sys
 
 # Import builtin python libraries
 from types import SimpleNamespace
 
 # Import external python libraries
 from rich.console import Console
-from rich.rule import Rule
+
 import socketio
 from socketio.exceptions import TimeoutError
 
@@ -84,13 +86,13 @@ def connect_login(config_data=None, headers=None):
             login_response = SimpleNamespace(**login_response)
     except Exception as err:
         console.print(f":x:  Error: {err}", style="logging.level.error")
-        exit(1)
+        sys.exit(1)
 
 
 @sio.event
 def connect_error(data):
     console.print(f":x: Could not connect to server. Error: {data}", style="logging.level.error")
-    exit(1)
+    sys.exit(1)
 
 
 def disconnect():
@@ -100,4 +102,4 @@ def disconnect():
         console.print(f":firecracker: Disconnected from server.", style="logging.level.info")
     except Exception as err:
         console.print(f":x:  Could not disconnect from server. Error: {err}", style="logging.level.error")
-        exit(1)
+        sys.exit(1)

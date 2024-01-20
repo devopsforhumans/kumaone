@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """Config module for kumaone"""
 
 # Import builtin python libraries
-from enum import Enum
 from pathlib import Path
+import sys
 from types import SimpleNamespace
 import yaml
 
@@ -200,11 +199,11 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
             console.print(
                 f":lollipop: Provided config file path doesn't exists. Nothing to delete.", style="logging.level.info"
             )
-            exit(0)
+            sys.exit(0)
     if not files_to_delete:
         logger.info(f"No config file found.")
         console.print(f":lollipop: No config file found. Nothing to delete.", style="logging.level.info")
-        exit(0)
+        sys.exit(0)
     else:
         for item in files_to_delete:
             console.print(f":llama: Deleting {item} file.", style="logging.level.info")
@@ -215,4 +214,4 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
             except Exception as err:
                 console.print(f":x: Exception occurred. ERROR: {err}", style="logging.level.error")
                 logger.error(f"{err}")
-                exit(1)
+                sys.exit(1)

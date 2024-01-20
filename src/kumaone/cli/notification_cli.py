@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
 
 """Notification module for kumaone"""
 
@@ -9,8 +9,8 @@ from typing import Optional
 
 # Import external python libraries
 from rich.console import Console
-from typing_extensions import Annotated
 import typer
+from typing_extensions import Annotated
 
 # Import custom (local) python packages
 from src.kumaone.configs import check_config
@@ -119,7 +119,9 @@ def notification_show(
         raise typer.BadParameter("At least on of '--name' / '-n' or '--id' / '-i' parameter is required.")
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    list_notifications(verbose=verbose, notification_title=notification_title, notification_id=notification_id, logger=logger)
+    list_notifications(
+        verbose=verbose, notification_title=notification_title, notification_id=notification_id, logger=logger
+    )
     disconnect()
 
 
@@ -132,7 +134,9 @@ def notification_delete(
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
-    notification_title: Annotated[str, typer.Option(..., "--title", "-t", help="Notification title (case sensitive).")] = None,
+    notification_title: Annotated[
+        str, typer.Option(..., "--title", "-t", help="Notification title (case sensitive).")
+    ] = None,
     verbose: Annotated[bool, typer.Option(help="Show verbose output.")] = False,
     log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
 ):
@@ -146,16 +150,18 @@ def notification_delete(
         state["log_level"] = log_level
         logger = log_manager(log_level=log_level)
     if notification_title and notifications:
-        raise typer.BadParameter("Only one parameter is allowed.")
+        raise typer.BadParameter(message="Only one parameter is allowed.")
     if notification_title is None and notifications is None:
-        raise typer.BadParameter("At least one of '--notifications' / '--name' parameter is required.")
+        raise typer.BadParameter(message="At least one of '--notifications' / '--name' parameter is required.")
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
     if notification_title:
         delete_notification(notification_title=notification_title, verbose=verbose, logger=logger)
     elif notifications:
-        delete_notification(notifications_file_path=notifications, notification_title=notification_title, verbose=verbose, logger=logger)
+        delete_notification(
+            notifications_file_path=notifications, notification_title=notification_title, verbose=verbose, logger=logger
+        )
     disconnect()
 
 

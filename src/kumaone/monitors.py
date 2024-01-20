@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """Monitors module for kumaone"""
 
 # Import builtin python libraries
 import json
 import sys
-
 
 # Import external python libraries
 from rich.columns import Columns
@@ -167,7 +165,7 @@ def add_monitor(monitor_data_files=None, logger=None):
     """
 
     for monitor_file in monitor_data_files:
-        with open(monitor_file, "r") as monitors_:
+        with open(monitor_file) as monitors_:
             monitors = yaml.safe_load(monitors_)["monitors"]
             groups = [group for group in monitors.keys()]
             for group in groups:
