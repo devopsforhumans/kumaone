@@ -7,16 +7,17 @@ name = "kumaone"
 dynamic = ["version"]
 description = 'CLI helper for uptime kuma'
 readme = "README.md"
-requires-python = ">=3.7"
-license = "MIT"
+requires-python = ">=3.8"
+license = "BSD-3-Clause"
 keywords = []
 authors = [
   { name = "Dalwar Hossain", email = "dalwar23@pm.me" },
 ]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "License :: OSI Approved",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -37,15 +38,21 @@ kumaone = "src.kumaone.main:app"
 [tool.hatch.version]
 path = "src/kumaone/__about__.py"
 
-[tool.hatch.build]
+[tool.hatch.build.targets.sdist]
 include = [
-  "src/kumaone/*.py",
-  "tests/"
+  "CONTRIBUTING.md",
+  "CHANGELOG.md"
+]
+exclude = [
+  ".github/",
+  "docs/",
+  ".gitignore",
+  "pyproject.toml",
 ]
 
 [tool.hatch.envs.default]
 dependencies = [
-  "coverage[toml]>=6.5",
+  "coverage[toml]>=6.5.0",
   "pytest",
 ]
 [tool.hatch.envs.default.scripts]
@@ -61,14 +68,14 @@ cov = [
 ]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
+python = ["3.8", "3.9", "3.10", "3.11"]
 
 [tool.hatch.envs.lint]
 detached = true
 dependencies = [
-  "black>=23.1.0",
-  "mypy>=1.0.0",
-  "ruff>=0.0.243",
+  "black>=23.12.1",
+  "mypy>=1.8.0",
+  "ruff>=0.1.14",
 ]
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/kumaone tests}"
@@ -87,12 +94,12 @@ all = [
 ]
 
 [tool.black]
-target-version = ["py37"]
+target-version = ["py38"]
 line-length = 120
 skip-string-normalization = true
 
 [tool.ruff]
-target-version = "py37"
+target-version = "py38"
 line-length = 120
 select = [
   "A",
@@ -130,6 +137,10 @@ ignore = [
   "S105", "S106", "S107",
   # Ignore complexity
   "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
+  # Argument name should be lowercase
+  "N803",
+  # fString without a placeholder
+  "F541",
 ]
 unfixable = [
   # Don't touch unused imports

@@ -11,8 +11,6 @@ import yaml
 
 # Import external python libraries
 from rich.console import Console
-from rich import print
-from rich.rule import Rule
 from rich.table import Table
 import requests
 

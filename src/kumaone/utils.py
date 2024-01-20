@@ -141,7 +141,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
                 for item in items:
                     if item.is_file():
                         file_type = item.name.split(".")[-1]
-                        if file_type == "yaml" or file_type == "yml":
+                        if file_type in ["yaml", "yml"]:
                             logger.info(f"{item.name} - {item.stat().st_size} bytes.")
                             with open(item, "r") as tmp_read_file:
                                 raw_data = yaml.safe_load(tmp_read_file)
@@ -187,7 +187,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
                     sys.exit(1)
     else:
         console.print(f":x:  Data path: '{data_path}', does not exists!", style="logging.level.error")
-        exit(1)
+        sys.exit(1)
 
 
 def _mutual_exclusivity_check(size=None):
