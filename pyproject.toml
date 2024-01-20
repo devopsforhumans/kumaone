@@ -38,16 +38,15 @@ kumaone = "src.kumaone.main:app"
 [tool.hatch.version]
 path = "src/kumaone/__about__.py"
 
-[tool.hatch.build.targets.sdist]
+[tool.hatch.build]
 include = [
-  "CONTRIBUTING.md",
-  "CHANGELOG.md"
+  "src/kumaone",
 ]
+
+[tool.hatch.build.targets.sdist]
 exclude = [
   ".github/",
   "docs/",
-  ".gitignore",
-  "pyproject.toml",
 ]
 
 [tool.hatch.envs.default]
