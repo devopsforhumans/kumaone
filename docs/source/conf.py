@@ -152,8 +152,18 @@ html_css_files = ["css/custom.css"]
 # Output file base name for HTML help builder.
 htmlhelp_basename = "kumaone"
 
-# -- Additional options for LaTeX -------------------------------------------
+# -- Options for LaTeX output ------------------------------------------------
 latex_engine = "xelatex"
+latex_show_urls = "footnote"
+latex_additional_files = [
+    "preamble.tex.txt",
+    "title_page.tex.txt",
+    "_static/images/kumaone-logo.png",
+]
+latex_show_pagerefs = True
+
+# -- Additional options for LaTeX -------------------------------------------
+# latex_engine = "xelatex"
 latex_doc_class = "article"
 latex_use_xindy = True
 latex_elements = {
