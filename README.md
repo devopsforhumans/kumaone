@@ -8,10 +8,20 @@
 
 **Table of Contents**
 
+- [Note](#note)
 - [Virtualenv](#virtualenv)
 - [Installation](#installation)
-- [License](#license)
-- [Features](#features)
+
+## Note
+
+`kumaone`'s primary objective is to enable users to perform bulk action in `uptime kuma` server. A very special thanks
+to the author and contributors of the project [uptime-kuma-api](https://github.com/lucasheld/uptime-kuma-api). `kumaone`
+is built by studying and understanding the code of `uptime-kuma-api` and in places I used some parts of the code as it
+is from `uptime-kuma-api`. Appreciate the outstanding work done by the author and contributors of both
+[uptime kuma](https://github.com/louislam/uptime-kuma) and `uptime-kuma-api` project.
+
+`kumaone` is a CLI application. Designed for bulk operations mainly from reading configuration files. `kumaone` is very
+early in development. Contribution and constructive feedbacks are always welcome.
 
 ## Virtualenv
 
@@ -51,10 +61,6 @@ pip install kumaone
 ```shell
 pip install -e .
 ```
-
-## License
-
-`kumaone` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
 
 ## To Do List
 
