@@ -11,4 +11,4 @@ formats:
   - epub
 python:
   install:
-    - requirements: Pipfile
+    - requirements: docs/requirements.txt
