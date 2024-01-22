@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.0.1a1 (21.01.2024)
+## 0.0.1a1 (23.01.2024)
 
-:tada: Initial "alpha" release.
+Initial "alpha" release. :tada:
 
 **Features**
 

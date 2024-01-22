@@ -6,7 +6,7 @@ Python environment configured on your computer, please see the
 environment.
 
 Assuming that the default python environment is already configured on your computer, and
-you intend to install `kumaone` in it. To create and work with Python virtual
+you intend to install `kumaone` in it, to create and work with Python virtual
 environments, please follow instructions from [pipenv](https://pipenv.pypa.io/en/latest/).
 
 To start the installation process, please make sure the latest version of `pip`
@@ -58,7 +58,7 @@ This should install `kumaone` with all the required dependencies.
 Alternatively, `kumaone` can be installed manually by downloading the current version
 from [GitHub](https://github.com/dalwar23/kumaone) or
 [PyPI](https://pypi.org/project/kumaone/). To install a downloaded versions, please
-unpack it in a preferred directory and run the following commands at the top level of
+unpack it in a preferred directory and run the following command at the top level of
 the directory:
 
 ```shell
@@ -90,7 +90,7 @@ user doesn't have to provide custom config path everytime with `-c` or `--config
 
 ### Windows
 
-Windows system by default doesn't allow creation of `.` prefixed directory from GUI,
+Windows system, by default doesn't allow creation of `.` prefixed directory from GUI,
 so use the following -
 
 - Open `cmd` and change the directory to the ``home`` folder of the user

@@ -31,15 +31,30 @@ monitors:
   google:
 ```
 
-This will instruct `kumaone` to create a `monitor` type `group`. Each group can have a list of monitors.
+This will instruct `kumaone` to create a `monitor` of type `group`. Each group can have a list of monitors.
 
 ```{seealso}
 A group named `default` will instruct `kumaone` to add the following list of monitors at the root of the monitor path.
 ```
 
 ```{warning}
-Group name can NOT be same as one of the monitors in the list. In above example `group` name is `Google` and first
-monitor in the group is named `google`. (Notice the difference in the capital letter).
+Group name can NOT be same as one of the monitors in the list. In above example `group` name is `google` and first
+monitor in the group is named `Google`. (Notice the difference in the capital letter).
+```
+## Supported monitors
+
+```{attention}
+Following monitors are supported (tested) by **`kumaone`** NOT `uptime kuma`. To see a full list of monitor type
+supported for `uptime kuma` [documentation](https://github.com/louislam/uptime-kuma/wiki/).
+```
+
+- GROUP
+- HTTP
+- JSON_QUERY
+- PING
+
+```{seealso}
+More monitors types will be added to `kumaone` in the future.
 ```
 
 ## Add monitors
@@ -154,7 +169,7 @@ Deleting monitor by `id` is not yet implemented.
 
 ## List monitors
 
-User can list all the monitors available by `list` command. List command take `--groups` and `--processes` option to
+User can list all the monitors available with `list` command. List command take `--groups` and `--processes` option to
 list monitor groups and processes separately with their respective uptime kuma monitor id.
 
 ```shell

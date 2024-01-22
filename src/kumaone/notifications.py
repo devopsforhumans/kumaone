@@ -136,7 +136,7 @@ def list_notifications(verbose=None, notification_title=None, notification_id=No
         if verbose:
             console.print(f"{json.dumps(pretty_response, indent=4, sort_keys=True)}", style="logging.level.info")
         else:
-            table = Table("id", "type", "name", "active", "isDefault")
+            table = Table("id", "type", "title", "active", "isDefault")
             for item in pretty_response:
                 table.add_row(str(item["id"]), item["type"], item["name"], str(item["active"]), str(item["isDefault"]))
             if table.rows:
@@ -167,12 +167,14 @@ def delete_notification(notifications_file_path=None, notification_title=None, l
         logger.debug(notification_configs)
         for notification_config in notification_configs:
             for _notification in notification_config.values():
-                if _notification["name"] == notification_title:
-                    notification_provider_to_delete.append(_notification["id"])
+                notification_id = _get_notification_id_by_name(notification_title=_notification["name"], logger=logger)
+                if notification_id != -1:
+                    notification_provider_to_delete.append(notification_id)
     elif notification_title is not None:
         notification_id = _get_notification_id_by_name(notification_title=notification_title, logger=logger)
         if notification_id != -1:
-            notification_provider_to_delete.append(notification_title)
+            notification_provider_to_delete.append(notification_id)
+    logger.debug(f"Notification provider IDs to delete: {notification_provider_to_delete}")
     if notification_provider_to_delete:
         for _notification_id in notification_provider_to_delete:
             with wait_for_event(ioevents.notification_list):

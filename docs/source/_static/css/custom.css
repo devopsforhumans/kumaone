@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
+
+body {
+    font-family: 'Barlow', 'PT Sans', 'DM Sans', Helvetica, Arial, sans-serif !important;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Barlow', 'PT Sans', 'DM Sans', serif;
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 32px;
+    margin-top: 0;
+    font-weight: 400;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h2,
+h3 {
+    margin: 3rem 0 0.8rem;
+}
+
+b, strong {
+    font-weight: bold;
+}
+
+section {
+    text-align: justify !important;
+}
+
+section .highlight pre {
+    font-family: 'JetBrains Mono', 'PT Mono', monospace !important;
+    overflow-x: auto;
+    font-weight: 400;
+}
+
+section code pre {
+    font-family: 'JetBrains Mono', 'PT Mono', monospace !important;
+    font-size: 105%;
+    font-weight: 400;
+}
+
+.document p {
+    text-align: justify;
+}
+
+.footer .container p {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+/*Custom announcement style*/
+.announcement strong {
+    background-color: #ff0000;
+    color: #ffff00;
+    font-weight: bold;
+    padding: 5px;
+}

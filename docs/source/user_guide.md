@@ -30,4 +30,5 @@ $ kumaone --help
 
 monitors.md
 status_pages.md
+notifications.md
 ```
