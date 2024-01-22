@@ -1,0 +1,34 @@
+%--------------- To avoid page 1 conflict with actual page 1 --
+\pagenumbering{Roman}
+\begin{titlepage}
+    \centering
+
+    %----------- * is used to give space from top --------------
+    \vspace*{40mm}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.7]{ops1-logo-standard.png}
+    \end{figure}
+
+    \vspace{2cm}
+    \textbf{\Huge {kumaone}}
+
+    \vspace{2cm}
+    \Large \textbf{By Dalwar Hossain}
+
+    \vspace*{0mm}
+    \small  Last updated : {\today}
+
+    %----------- \vfill adds at the bottom ----------------------
+    \vfill
+\end{titlepage}
+
+\clearpage
+% ------------- Table of contents -------------------------------
+\pagenumbering{roman}
+%\tableofcontents
+%\listoffigures
+%\listoftables
+\clearpage
+% ------------ Restting page numbering --------------------------
+\pagenumbering{arabic}
