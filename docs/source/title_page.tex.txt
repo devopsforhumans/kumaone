@@ -4,11 +4,11 @@
     \centering
 
     %----------- * is used to give space from top --------------
-    %\vspace*{40mm}
-    %\begin{figure}[!h]
-    %    \centering
-    %    \includegraphics[scale=0.7]{ops1-logo-standard.png}
-    %\end{figure}
+    \vspace*{40mm}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[scale=0.7]{kumaone-logo.png}
+    \end{figure}
 
     \vspace{2cm}
     \textbf{\Huge {kumaone}}
