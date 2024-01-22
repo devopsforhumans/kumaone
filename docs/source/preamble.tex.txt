@@ -1,0 +1,88 @@
+% ------------------ Sphinx specific setup ------------------------
+\definecolor{lightgray}{rgb}{0.81, 0.81, 0.81}
+\definecolor{cosmiclatte}{rgb}{1.0, 0.97, 0.91}
+\definecolor{sphinxgreen}{rgb}{0.93, 1.0, 0.80}
+\usepackage{sphinx}
+\sphinxsetup{
+     verbatimwithframe=true,
+     VerbatimColor={named}{sphinxgreen},
+     VerbatimHighlightColor={named}{Ivory},
+     literalblockcappos=b,
+     TitleColor={named}{Black},
+     hintBorderColor={named}{LightCoral},
+     attentionborder=2pt,
+     attentionBorderColor={named}{LightCoral},
+     attentionBgColor={named}{lightgray},
+     attentionborder=2pt,
+     warningBorderColor={named}{Red},
+     warningBgColor={named}{Seashell},
+     noteborder=2pt,
+     noteBorderColor={named}{DeepSkyBlue},
+     cautionborder=2pt,
+     cautionBorderColor={named}{Cyan},
+     cautionBgColor={named}{LightCyan},
+     dangerborder=2pt,
+     dangerBorderColor={named}{Tomato},
+     dangerBgColor={named}{LavenderBlush},
+ }
+% ----------------- Required packages -----------------------------
+\usepackage[T1]{fontenc}
+\usepackage[]{hyperref}
+\setcounter{secnumdepth}{6}
+\setcounter{tocdepth}{6}
+\usepackage{graphicx}
+\usepackage{courier}
+\usepackage[notlot,nottoc,notlof]{}
+\usepackage{color}
+\usepackage{eso-pic}
+\usepackage{setspace}
+\singlespacing
+\usepackage{datetime}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds}
+\usepackage{nameref}
+
+%------------------ Continious counting --------------------------
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+%\counterwithout{literalblock}{chapter}
+%------------------ Link / Url colors ----------------------------
+\hypersetup {
+    colorlinks=true,
+    linkcolor=Blue,
+    urlcolor={Blue},
+}
+%----------------- Custom fonts ----------------------------------
+%    These fonts must be available in build and target systems
+% ----------------------------------------------------------------
+\usepackage{fontspec}
+%% Main Fonts
+%\setmainfont[Ligatures=TeX]{Ubuntu}
+%\setmainfont[Ligatures=TeX]{DejaVuSans}
+%\setmainfont[Ligatures=TeX]{PT Sans}
+%% Sans Fonts
+%\setsansfont[Ligatures=TeX]{Ubuntu}
+%\setsansfont[Ligatures=TeX]{PT Sans}
+%% Mono Fonts
+%\setmonofont[Ligatures=TeX]{Ubuntu Mono}
+%\setmonofont[Ligatures=TeX]{PT Mono}
+%\setmonofont[Ligatures=TeX]{SF Mono}
+% ---------------- Customizable header and footer ----------------
+\makeatletter
+    \fancypagestyle{normal}{
+        \fancyhf{}
+        \fancyfoot[LE,RO]{Confidential}
+        \fancyfoot[CE,CO]{\py@HeaderFamily\thepage}
+        \fancyfoot[LO]{Infrastructure Team, Operations1}
+        \fancyfoot[RE]{Infrastructure Team, Operatons1}
+        \fancyhead[LO,RE]{{\py@release}}
+        \fancyhead[LE,RO]{Infrastructure Technical Document}
+        \renewcommand{\headrulewidth}{0.4pt}
+        \renewcommand{\footrulewidth}{0.4pt}
+    }
+\makeatother
+%---------------- Clear blank page after each chapter ------------
+\let\cleardoublepage\clearpage
