@@ -9,7 +9,7 @@ description = 'CLI helper for uptime kuma'
 readme = "README.md"
 requires-python = ">=3.8"
 license = "BSD-3-Clause"
-keywords = []
+keywords = ["kumaone", "kuma", "uptime-kuma", "monitoring", "cli", "python3"]
 authors = [
   { name = "Dalwar Hossain", email = "dalwar23@pm.me" },
 ]
@@ -25,10 +25,16 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+  "python-socketio[client] >= 5.11.0",
+  "pyyaml >= 6.0.1",
+  "requests >= 2.31.0",
+  "typer[all] >= 0.9.0",
+  "validators >= 0.22.0"
+]
 
 [project.urls]
-Documentation = "https://github.com/dalwar23/kumaone#readme"
+Documentation = "https://kumaone.rtfd.io/"
 Issues = "https://github.com/dalwar23/kumaone/issues"
 Source = "https://github.com/dalwar23/kumaone"
 
