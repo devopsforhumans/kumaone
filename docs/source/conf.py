@@ -189,8 +189,6 @@ latex_documents = [
     )
 ]
 
-latex_show_urls = "inline"
-
 # -- Options for ePub output --------------------------------------------------
 
 epub_basename = "kumaone"
