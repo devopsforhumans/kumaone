@@ -144,7 +144,30 @@ $ kumaone monitor delete -m examples/monitors/homelab.yaml
 🧨 Disconnected from server.
 ```
 
-Also, a monitor can be deleted by name.
+Also, a monitor can be deleted by name. Below is a list of monitor shown by the command
+`kumaone monitor list --processes`
+
+```text
+$ kumaone monitor list --processes
+🥳 Uptime kuma config file found at: /Users/dalwar23/.config/kumaone/kuma.yaml
+🥨 Connected to http://uptime.homelab.do
+🔐 Successfully logged in.
+🍔 Available monitor processes.
+┏━━━━━┳━━━━━━━━━━━━━━━━━━┓
+┃ id  ┃ name             ┃
+┡━━━━━╇━━━━━━━━━━━━━━━━━━┩
+│ 16  │ pi-prime         │
+│ 192 │ Google           │
+│ 193 │ Gmail            │
+│ 205 │ Personal Website │
+│ 212 │ Windows Desktop  │
+│ 213 │ MacBook Pro      │
+│ 214 │ PI Server        │
+└─────┴──────────────────┘
+🧨 Disconnected from server.
+```
+
+The following command will try and delete the monitor process named `MacBook Pro`
 
 ```shell
 kumaone monitor delete --name "MacBook Pro"
@@ -163,8 +186,42 @@ $ kumaone monitor delete --name "MacBook Pro"
 Name of the monitor should match with the provided name in the CLI. Monitor names are case sensitive.
 ```
 
-```{seealso}
-Deleting monitor by `id` is not yet implemented.
+To delete a `monitor` by id, use `--id` or `-i` parameter flag. Below is a list of monitor shown by the command
+`kumaone monitor list --processes`
+
+```text
+$ kumaone monitor list --processes
+🥳 Uptime kuma config file found at: /Users/dalwar23/.config/kumaone/kuma.yaml
+🥨 Connected to http://uptime.homelab.do
+🔐 Successfully logged in.
+🍔 Available monitor processes.
+┏━━━━━┳━━━━━━━━━━━━━━━━━━┓
+┃ id  ┃ name             ┃
+┡━━━━━╇━━━━━━━━━━━━━━━━━━┩
+│ 16  │ pi-prime         │
+│ 192 │ Google           │
+│ 193 │ Gmail            │
+│ 205 │ Personal Website │
+│ 212 │ Windows Desktop  │
+│ 213 │ MacBook Pro      │
+│ 214 │ PI Server        │
+└─────┴──────────────────┘
+🧨 Disconnected from server.
+```
+
+The following command will try and delete the monitor process with id `214`, which is `PI Server`
+
+```shell
+kumaone monitor delete --id 214
+```
+
+```text
+$ kumaone monitor delete --id 214
+🥳 Uptime kuma config file found at: /Users/dalwar23/.config/kumaone/kuma.yaml
+🥨 Connected to http://uptime.homelab.do
+🔐 Successfully logged in.
+👻 'PI Server' monitor deletion successful!
+🧨 Disconnected from server.
 ```
 
 ## List monitors

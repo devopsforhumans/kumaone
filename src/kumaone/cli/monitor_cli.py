@@ -65,6 +65,7 @@ def monitor_delete(
             ..., "--name", "-n", help="Name of the monitor to delete.", callback=_mutual_exclusivity_check(size=2)
         ),
     ] = None,
+    monitor_id: Annotated[int, typer.Option(..., "--id", "-i", help="Uptime kuma monitor ID.")] = None,
     config_file: Annotated[
         Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
     ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
@@ -82,11 +83,17 @@ def monitor_delete(
 
     config_data = check_config(config_path=config_file, logger=logger)
     connect_login(config_data=config_data)
-    if monitors is None and monitor_name is None:
-        raise typer.BadParameter("At least one of the parameter '--monitor'/'-m' OR '--name'/'-n' is required.")
+    if monitors is None and monitor_name is None and monitor_id is None:
+        raise typer.BadParameter(
+            "At least one of the parameter '--monitor'/'-m' OR '--name'/'-n' OR '--id'/'-i' is required."
+        )
+    if monitor_name is not None and monitor_id is not None:
+        raise typer.BadParameter(message="Only one of '--name' and '--id' parameter is allowed.")
     if monitors:
         monitor_file_paths = _check_data_path(data_path=monitors, logger=logger, key_to_check_for="monitors")
         delete_monitor(monitor_data_files=monitor_file_paths, logger=logger)
+    elif monitor_id:
+        delete_monitor(monitor_id=monitor_id, logger=logger)
     elif monitor_name:
         delete_monitor(monitor_name=monitor_name, logger=logger)
     disconnect()

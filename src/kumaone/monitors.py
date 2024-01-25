@@ -27,11 +27,12 @@ __email__ = "dalwar23@pm.me"
 console = Console()
 
 
-def _check_monitor(monitor_name_to_check=None):
+def _check_monitor(monitor_name_to_check=None, monitor_id_to_check=None):
     """
     Checks if the provided monitor exists or not. Can check both group and process monitor.
 
     :param monitor_name_to_check: (str) Name of the monitor to check
+    :param monitor_id_to_check: (int) ID of the monitor to check
     :return: (dict) Monitor info dictionary
     """
 
@@ -39,12 +40,15 @@ def _check_monitor(monitor_name_to_check=None):
     monitor_exists = False
     monitor_info = {}
     for item in current_monitors:
-        if item["name"] == monitor_name_to_check:
-            m_id = item["id"]
-            monitor_exists = True
-            monitor_info = {"name": item["name"], "id": m_id, "exists": monitor_exists}
-        else:
-            pass
+        if monitor_name_to_check is not None:
+            if item["name"] == monitor_name_to_check:
+                m_id = item["id"]
+                monitor_exists = True
+                monitor_info = {"name": item["name"], "id": m_id, "exists": monitor_exists}
+        elif monitor_id_to_check is not None:
+            if item["id"] == monitor_id_to_check:
+                monitor_exists = True
+                monitor_info = {"name": item["name"], "id": item["id"], "exists": monitor_exists}
     if not monitor_exists:
         monitor_info = {"name": monitor_name_to_check, "id": None, "exists": monitor_exists}
     return monitor_info
@@ -128,21 +132,25 @@ def _delete_process_monitor_or_group(input_data=None):
     :return: (bool) True if deletion is successful, False otherwise
     """
 
-    process_monitor_name = input_data["name"]
-    process_monitor_check = _check_monitor(monitor_name_to_check=process_monitor_name)
-
+    if "name" in input_data:
+        process_monitor_name = input_data["name"]
+        process_monitor_check = _check_monitor(monitor_name_to_check=process_monitor_name)
+    elif "id" in input_data:
+        process_monitor_id = input_data["id"]
+        process_monitor_check = _check_monitor(monitor_id_to_check=process_monitor_id)
     if process_monitor_check["exists"]:
         # console.print(f":wastebasket: Deleting process monitor '{process_monitor_name}'.", style="logging.level.info")
         monitor_id = process_monitor_check["id"]
+        monitor_name = process_monitor_check["name"]
         delete_event_response = _sio_call("deleteMonitor", monitor_id)
         if isinstance(delete_event_response, dict):
             if delete_event_response["ok"]:
                 console.print(
-                    f":ghost: '{process_monitor_name}' monitor deletion successful!", style="logging.level.info"
+                    f":ghost: '{monitor_name}' monitor deletion successful!", style="logging.level.info"
                 )
             else:
                 console.print(
-                    f":crab: '{process_monitor_name}' monitor deletion unsuccessful!", style="logging.level.warning"
+                    f":crab: '{monitor_name}' monitor deletion unsuccessful!", style="logging.level.warning"
                 )
         else:
             console.print(
@@ -151,7 +159,7 @@ def _delete_process_monitor_or_group(input_data=None):
             return False
     else:
         console.print(
-            f":running_shoe: Monitor '{process_monitor_name}' doesn't exist. Skipping...", style="logging.level.info"
+            f":running_shoe: Monitor with provided name/id doesn't exist. Skipping...", style="logging.level.info"
         )
 
 
@@ -198,18 +206,21 @@ def add_monitor(monitor_data_files=None, logger=None):
     print("-" * 80)
 
 
-def delete_monitor(monitor_data_files=None, monitor_name=None, logger=None):
+def delete_monitor(monitor_data_files=None, monitor_name=None, monitor_id=None, logger=None):
     """
     Deletes one or more monitor(s)
 
     :param monitor_data_files: (list) Data file path(s)
     :param monitor_name: (str) Single monitor name
+    :param monitor_id: (int) Single monitor id
     :param logger: (object) Logger object
     :return: None
     """
 
     if monitor_name is not None:
         _delete_process_monitor_or_group(input_data={"name": monitor_name})
+    elif monitor_id is not None:
+        _delete_process_monitor_or_group(input_data={"id": monitor_id})
     elif monitor_data_files:
         for monitor_file in monitor_data_files:
             with open(monitor_file, "r") as monitors_:

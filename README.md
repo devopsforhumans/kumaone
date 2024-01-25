@@ -71,10 +71,10 @@ pip install -e .
 
 ### Configuration
 
-- [x] Show `uptime kuma` configuration (default/custom paths)
-- [x] Create `uptime kuma` configuration (default/custom path)
-- [x] Delete `uptime kuma` configuration
-- [ ] Edit `uptime kuma` configuration
+- [x] Show `uptime kuma` configuration (default/custom paths).
+- [x] Create `uptime kuma` configuration (default/custom path).
+- [x] Delete `uptime kuma` configuration.
+- [ ] Edit `uptime kuma` configuration.
 
 ### Monitors
 
@@ -85,19 +85,20 @@ pip install -e .
 - [x] List all monitors.
 - [x] List monitor by `groups` and `processes` also.
 - [x] Show details of a monitor by ID.
-- [x] Bulk `add` monitors from file(s)
-- [x] Bulk `delete` monitors from file(s)
-- [ ] Add Single monitor from `inline` dictionary data
-- [x] Delete Single Monitor by name
+- [x] Bulk `add` monitors from file(s).
+- [x] Bulk `delete` monitors from file(s).
+- [ ] Add single monitor from `inline` dictionary data.
+- [x] Delete single Monitor by name.
+- [x] Delete single monitor by id.
 
 ### Status Page
 
-- [x] List all `staus page`(s)
-- [x] See details of a `single status page`
-- [x] Add a new `status page`
-- [x] Add status pages from file(s)
-- [x] Delete status page
-- [x] Delete status page from file(s)
+- [x] List all `staus page`(s).
+- [x] See details of a `single status page`.
+- [x] Add a new `status page`.
+- [x] Add status pages from file(s).
+- [x] Delete single status page by slug.
+- [x] Delete status page from file(s).
 
 ### Notification
 
@@ -106,11 +107,12 @@ pip install -e .
   - [x] Slack
   - [x] MS Teams
   - [x] Webhook
-- [x] List all `notification`(s)
+- [x] List all `notification`(s).
 - [x] See details of a `single notification` by name/id.
-- [ ] Add new notification (interactive)
+- [ ] Add new notification (interactive).
 - [x] Add notifications from single file.
-- [x] Delete notification by name/id.
+- [x] Delete notification by name.
+- [x] Delete notification by id.
 - [x] Delete notifications from single file.
 
 ### Maintenance
@@ -123,16 +125,16 @@ TBA
 
 ### Change Password
 
-- [ ] Change password from CLI
-- [ ] Update password in `kumaone` config
+- [ ] Change password from CLI.
+- [ ] Update password in `kumaone` config.
 
 ### Cleanup
 
-- [ ] Clear heartbeats
-- [ ] Clear statistics
-- [ ] Clear events
+- [ ] Clear heartbeats.
+- [ ] Clear statistics.
+- [ ] Clear events.
 
 ### Backlog
 
-- [ ] Don't stop the program if one monitor process runs into error
-- [ ] Add debug logs for methods
+- [ ] Don't stop the program if one monitor process runs into error.
+- [ ] Add debug logs for methods.
