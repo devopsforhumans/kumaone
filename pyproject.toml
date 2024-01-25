@@ -221,3 +221,8 @@ values =[
 ]
 [tool.bumpversion.parts.pre_n]
 independent = true
+
+[[tool.bumpversion.files]]
+filename = "src/kumaone/__about__.py"
+search = "__version__ = {current_version}"
+replace = "__version__ = {new_version}"
