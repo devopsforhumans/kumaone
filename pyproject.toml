@@ -211,8 +211,8 @@ commit_args = "No"
 
 [[tool.bumpversion.files]]
 filename = "src/kumaone/__about__.py"
-search = "__version__ = {current_version}"
-replace = "__version__ = {new_version}"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"
