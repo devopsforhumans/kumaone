@@ -198,8 +198,6 @@ serialize = [
   "{major}.{minor}.{patch}-{pre_label}.{pre_n}",
   "{major}.{minor}.{patch}",
 ]
-search = "{current_version}"
-replace = "{new_version}"
 regex = false
 ignore_missing_version = false
 tag = false
@@ -215,6 +213,11 @@ commit_args = "No"
 filename = "src/kumaone/__about__.py"
 search = "__version__ = {current_version}"
 replace = "__version__ = {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = "{current_version}"
+replace = "{new_version}"
 
 [tool.bumpversion.parts.pre_label]
 optional_value = "stable"
