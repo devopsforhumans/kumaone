@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.0.1-alpha.4(25.01.2024)
+
+- Add delete monitor by monitor id
+- Add `bump-my-version` for version handling
+- Bump version
+
+## 0.0.1-alpha.3 (24.01.2024)
+
+**What's Changed**
+
+- Adding dependencies to pyproject.toml file by
+- Bump version
+
 ## 0.0.1-alpha.2 (23.01.2024)
 
 **Changes**
