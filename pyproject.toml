@@ -182,7 +182,7 @@ exclude_lines = [
 ]
 
 [tool.bumpversion]
-current_version = "0.0.1-alpha.4"
+current_version = "0.0.1-alpha.3"
 #parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 #serialize = ["{major}.{minor}.{patch}"]
 parse = """(?x)
@@ -211,6 +211,11 @@ commit = true
 message = "Bump version: {current_version} → {new_version}"
 commit_args = "No"
 
+[[tool.bumpversion.files]]
+filename = "src/kumaone/__about__.py"
+search = "__version__ = {current_version}"
+replace = "__version__ = {new_version}"
+
 [tool.bumpversion.parts.pre_label]
 optional_value = "stable"
 values =[
@@ -221,8 +226,3 @@ values =[
 ]
 [tool.bumpversion.parts.pre_n]
 independent = true
-
-[tool.bumpversion.files]
-filename = "src/kumaone/__about__.py"
-search = "__version__ = {current_version}"
-replace = "__version__ = {new_version}"
