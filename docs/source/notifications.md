@@ -12,8 +12,16 @@ Example configuration of `notificaiton` provider config file
 ```yaml
 ---
 notifications:
+  - opsgenie:
+      name: "Opsgenie Nofification"
+      type: "Opsgenie"
+      is_default: false
+      apply_existing: false
+      opsgeniePriority: 1
+      opsgenieRegion: "eu" # us(default)/eu
+      opsgenieApiKey: "something"
   - rocketchat:
-      name: "Uptime notification"
+      name: "RocketChat Notification"
       type: "rocket.chat"
       is_default: false
       apply_existing: false
@@ -36,9 +44,10 @@ Following notification providers are supported by **`kumaone`** NOT `uptime kuma
 support for `uptime kuma` [please see here](https://github.com/louislam/uptime-kuma/wiki/Notification-Methods).
 ```
 
-- MS Teams
+- Opsgenie
 - Rocket.Chat
 - Slack
+- Teams
 - Webhook
 
 ```{seealso}

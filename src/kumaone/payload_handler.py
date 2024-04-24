@@ -120,7 +120,7 @@ def _get_monitor_payload(
         accepted_statuscodes = ["200-299"]
 
     if notificationIDList is None:
-        notificationIDList = []
+        notificationIDList = {}
 
     monitor_data = {
         "type": type,
