@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.0.1-alpha.4(25.01.2024)
+## 0.0.1-alpha.5 (25.04.2024)
+
+- Add `Opsgenie` notification support
+- Update documentation
+- Update dependencies
+
+## 0.0.1-alpha.4 (25.01.2024)
 
 - Add delete monitor by monitor id
 - Add `bump-my-version` for version handling
