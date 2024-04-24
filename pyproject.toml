@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "kumaone"
 dynamic = ["version"]
-description = 'CLI helper for uptime kuma'
+description = 'Automation friendly bulk action CLI helper for Uptime Kuma.'
 readme = "README.md"
 requires-python = ">=3.8"
 license = "BSD-3-Clause"
