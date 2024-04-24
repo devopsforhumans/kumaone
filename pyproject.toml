@@ -29,7 +29,7 @@ dependencies = [
   "python-socketio[client] >= 5.11.0",
   "pyyaml >= 6.0.1",
   "requests >= 2.31.0",
-  "typer[all] >= 0.9.0",
+  "typer >= 0.12.3",
   "validators >= 0.22.0"
 ]
 
@@ -182,7 +182,7 @@ exclude_lines = [
 ]
 
 [tool.bumpversion]
-current_version = "0.0.1-alpha.4"
+current_version = "0.0.1-alpha.5"
 #parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 #serialize = ["{major}.{minor}.{patch}"]
 parse = """(?x)

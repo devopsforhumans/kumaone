@@ -7,6 +7,11 @@ __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
 notification_providers = {
+    "opsgenie":{
+        "opsgeniePriority": "",
+        "opsgenieRegion": "",
+        "opsgenieApiKey": "",
+    },
     "rocket.chat": {
         "rocketchannel": "",
         "rocketusername": "",

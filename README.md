@@ -103,9 +103,10 @@ pip install -e .
 ### Notification
 
 - Supported notification providers (tested)
+    [x] Opsgenie
   - [x] Rocket.Chat
   - [x] Slack
-  - [x] MS Teams
+  - [x] Teams
   - [x] Webhook
 - [x] List all `notification`(s).
 - [x] See details of a `single notification` by name/id.
