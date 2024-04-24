@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "kumaone"
 dynamic = ["version"]
-description = 'CLI helper for uptime kuma'
+description = 'Automation friendly bulk action CLI helper for Uptime Kuma.'
 readme = "README.md"
 requires-python = ">=3.8"
 license = "BSD-3-Clause"
@@ -182,7 +182,7 @@ exclude_lines = [
 ]
 
 [tool.bumpversion]
-current_version = "0.0.1-alpha.5"
+current_version = "0.0.1-alpha.6"
 #parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 #serialize = ["{major}.{minor}.{patch}"]
 parse = """(?x)

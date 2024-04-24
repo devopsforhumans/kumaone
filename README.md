@@ -103,7 +103,7 @@ pip install -e .
 ### Notification
 
 - Supported notification providers (tested)
-    [x] Opsgenie
+  - [x] Opsgenie
   - [x] Rocket.Chat
   - [x] Slack
   - [x] Teams
