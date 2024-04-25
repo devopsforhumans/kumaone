@@ -81,6 +81,7 @@ dependencies = [
   "black>=23.12.1",
   "mypy>=1.8.0",
   "ruff>=0.1.14",
+  "flake8>=7.0.0",
 ]
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/kumaone tests}"
@@ -105,7 +106,7 @@ skip-string-normalization = true
 
 [tool.ruff]
 target-version = "py38"
-line-length = 120
+line-length = 130
 select = [
   "A",
   "ARG",
@@ -146,6 +147,10 @@ ignore = [
   "N803",
   # fString without a placeholder
   "F541",
+  # Prefer absolute imports over relative imports
+  "TID252",
+  # Boolean default positional argument in function definition
+  "FBT001", "FBT002",
 ]
 unfixable = [
   # Don't touch unused imports

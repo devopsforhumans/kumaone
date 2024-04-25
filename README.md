@@ -26,7 +26,7 @@ early in development. Contribution and constructive feedbacks are always welcome
 
 ## Virtualenv
 
-- Install `pipenv` from [here](https://pipenv.pypa.io/en/latest/installation/)
+- Install `pipenv` from [here](https://pipenv.pypa.io/en/latest/)
 
 - Activate virtual environment
 

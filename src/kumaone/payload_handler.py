@@ -2,15 +2,10 @@
 
 """Payload handler module for kumaone"""
 
-# Import builtin python libraries
-import logging
-import sys
-
 # Import external python libraries
 from rich.console import Console
 
 # Import custom (local) python packages
-from .notification_settings import notification_providers
 from .settings import authentication_methods
 
 # Source code meta data

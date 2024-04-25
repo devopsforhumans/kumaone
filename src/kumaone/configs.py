@@ -11,7 +11,6 @@ import yaml
 # Import external python libraries
 from rich.console import Console
 from rich.prompt import Prompt
-from rich.rule import Rule
 import validators
 
 # Import custom (local) python packages
@@ -46,7 +45,7 @@ def __write_config_file(data_to_write=None, file_path=None):
             return True
     except Exception as err:
         console.print(f":x: {err} Exception occurred.", style="logging.level.error")
-        exit(1)
+        sys.exit(1)
 
 
 def check_config(config_path=None, log_level=None, logger=None, get_url=False):
@@ -91,11 +90,11 @@ def check_config(config_path=None, log_level=None, logger=None, get_url=False):
             else:
                 logger.error(f"Config path is not a file.")
                 console.print(f":x: {config_file} is not a file.", style="red")
-                exit(1)
+                sys.exit(1)
         else:
             logger.error(f"Provided config path doesn't exists.")
             console.print(f":x: {config_file} doesn't exists.", style="red")
-            exit(1)
+            sys.exit(1)
 
 
 def create_config(config_path=None, log_level=None):
@@ -163,7 +162,7 @@ def create_config(config_path=None, log_level=None):
         except Exception as err:
             logger.error(f"{err} exception occurred.")
             console.print(f":x: {err} exception occurred.", style="logging.level.error")
-            exit(1)
+            sys.exit(1)
 
 
 def delete_config(config_path=None, remove_parent=False, log_level=None):
