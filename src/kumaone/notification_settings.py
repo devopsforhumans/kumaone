@@ -7,23 +7,53 @@ __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
 notification_providers = {
+    "discord": {
+        "discordWebhookUrl": "",
+        "discordUsername": "",
+        "discordPrefixMessage": "",
+    },
     "opsgenie": {
-        "opsgeniePriority": "",
         "opsgenieRegion": "",
         "opsgenieApiKey": "",
+        "opsgeniePriority": "",
+    },
+    "pagerduty": {
+        "pagerdutyIntegrationKey": "",
+        "pagerdutyPriority": "",
+        "pagerdutyIntegrationUrl": "",
+        "pagerdutyAutoResolve": "",
     },
     "rocket.chat": {
+        "rocketwebhookURL": "",
         "rocketchannel": "",
         "rocketusername": "",
         "rocketiconemo": "",
-        "rocketwebhookURL": "",
     },
     "slack": {
+        "slackwebhookURL": "",
         "slackchannelnotify": "",
         "slackchannel": "",
         "slackusername": "",
         "slackiconemo": "",
-        "slackwebhookURL": "",
+    },
+    "smtp": {
+        "smtpFrom": "",
+        "smtpTo": "",
+        "smtpHost": "",
+        "smtpPort": "",
+        "smtpSecure": "",
+        "smtpIgnoreTLSError": "",
+        "smtpDkimDomain": "",
+        "smtpDkimKeySelector": "",
+        "smtpDkimPrivateKey": "",
+        "smtpDkimHashAlgo": "",
+        "smtpDkimheaderFieldNames": "",
+        "smtpDkimskipFields": "",
+        "smtpUsername": "",
+        "smtpPassword": "",
+        "customSubject": "",
+        "smtpCC": "",
+        "smtpBCC": "",
     },
     "teams": {
         "webhookUrl": "",

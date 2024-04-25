@@ -1,13 +1,30 @@
 ---
 notifications:
-  - opsgenie:
-      name: "Opsgenie Nofification"
-      type: "Opsgenie"
+  - dicord:
+      name: "Discord Notification"
+      type: "discord"
       is_default: false
       apply_existing: false
-      opsgeniePriority: 1
+      discordWebhookUrl: "url"
+      discordUsername: "discorduser"
+      discordPrefixMessage: "hello"
+  - opsgenie:
+      name: "Opsgenie Nofification"
+      type: "Opsgenie" # Capitalized
+      is_default: false
+      apply_existing: false
+      opsgeniePriority: 1 # 1-5
       opsgenieRegion: "eu" # us(default)/eu
       opsgenieApiKey: "something"
+  - pagerduty:
+      name: "Pagerduty Notifications"
+      type: "PagerDuty"
+      is_default: false
+      apply_existing: false
+      pagerdutyIntegrationKey: "somekey"
+      pagerdutyPriority: "critical" # info, warning, error, critical
+      pagerdutyIntegrationUrl: "pagerduty url"
+      pagerdutyAutoResolve: "yes"
   - rocketchat:
       name: "RocketChat Notification"
       type: "rocket.chat"
@@ -18,7 +35,7 @@ notifications:
       rocketusername: "bot"
       rocketchannel: "somechannel"
   - slack:
-      name: "Uptime slack notification"
+      name: "Uptime Slack Notification"
       type: "slack"
       is_default: false
       apply_existing: false
@@ -28,13 +45,13 @@ notifications:
       slackchannel: "uptime"
       slackchannelnotify: ""
   - teams:
-      name: "Uptime teams notification"
+      name: "Uptime Teams Notification"
       type: "teams"
       is_default: false
       apply_existing: false
       webhookUrl: "https://teams.microsoft.com/somehting/"
   - webhook:
-      name: "Uptime webhook notification"
+      name: "Uptime Webhook Notification"
       type: "webhook"
       is_default: false
       apply_existing: false
@@ -42,3 +59,12 @@ notifications:
       webhookAdditionalHeaders: ""
       webhookCustomBody: "this is a webhook message"
       webhookContentType: "application/json"
+  - email:
+      name: "Uptime Email Notification"
+      type: "smtp"
+      is_default: false
+      apply_existing: false
+      smtpFrom: "uptime@homelab.do"
+      smtpTo: "awesomedev@homelab.do"
+      smtpHost: "myawesome.smtpserver.do"
+      smtpPort: "485"
