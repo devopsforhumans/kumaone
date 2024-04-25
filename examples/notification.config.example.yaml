@@ -18,7 +18,7 @@ notifications:
       opsgenieApiKey: "something"
   - pagerduty:
       name: "Pagerduty Notifications"
-      type: "PagerDuty"
+      type: "PagerDuty" # Capitalized
       is_default: false
       apply_existing: false
       pagerdutyIntegrationKey: "somekey"
