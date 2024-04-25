@@ -145,13 +145,9 @@ def _delete_process_monitor_or_group(input_data=None):
         delete_event_response = _sio_call("deleteMonitor", monitor_id)
         if isinstance(delete_event_response, dict):
             if delete_event_response["ok"]:
-                console.print(
-                    f":ghost: '{monitor_name}' monitor deletion successful!", style="logging.level.info"
-                )
+                console.print(f":ghost: '{monitor_name}' monitor deletion successful!", style="logging.level.info")
             else:
-                console.print(
-                    f":crab: '{monitor_name}' monitor deletion unsuccessful!", style="logging.level.warning"
-                )
+                console.print(f":crab: '{monitor_name}' monitor deletion unsuccessful!", style="logging.level.warning")
         else:
             console.print(
                 f":red_circle: Something went wrong! {delete_event_response['msg']}", style="logging.level.error"
