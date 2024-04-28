@@ -164,6 +164,40 @@ def list_notifications(verbose=None, notification_title=None, notification_id=No
         console.print(f":four_leaf_clover: No data available.", style="logging.level.info")
 
 
+def list_notification_providers(verbose=None, logger=None):
+    """
+    Show list of notification processes
+
+    :param verbose: (bool) Enable verbose output.
+    :param logger: (object) Logging object.
+    :return: (dict) Dictionary of arguments for a notification provider
+    """
+
+    table = Table("Supported Providers")
+    for key in notification_types.keys():
+        table.add_row(key.lower())
+    if table.rows:
+        console.print(table, style="green")
+
+
+def list_notification_provider_args(verbose=None, notification_type=None, logger=None, check_existence=False):
+    """
+    Show list of notification processes
+
+    :param verbose: (bool) Enable verbose output.
+    :param notification_type: (str) Uptime kuma notification process name.
+    :param logger: (object) Logging object.
+    :param check_existence: (bool) Check existence of notification provider by name.
+    :return: (dict) Dictionary of arguments for a notification provider
+    """
+
+    table = Table("Argument Key", "Required?")
+    for key, val in notification_providers[notification_type.lower()].items():
+        table.add_row(key, str(val["required"]))
+    if table.rows:
+        console.print(table, style="green")
+
+
 def delete_notification(notifications_file_path=None, notification_title=None, logger=None, verbose=None):
     """
     Delete a notification provider.
