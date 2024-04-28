@@ -13,6 +13,7 @@ from rich.table import Table
 
 # Import custom (local) python packages
 from .event_handlers import get_event_data, wait_for_event
+from .notification_settings import notification_types, notification_providers
 from . import ioevents
 from .utils import _sio_call
 
@@ -75,8 +76,22 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
             notification_configs = yaml.safe_load(notification_config_file)["notifications"]
         logger.debug(notification_configs)
     for notification_config in notification_configs:
-        for payload in notification_config.values():
+        required_args = ["name", "type", "isDefault", "applyExisting"]
+        for notification_type, payload in notification_config.items():
+            payload['type'] = notification_types[notification_type.lower()]
             logger.debug(f"Payload for '{payload['type']}': {payload}")
+            # Check if necessary arguments are provided
+            for key, val in notification_providers[notification_type.lower()].items():
+                if val["required"]:
+                    required_args.append(key)
+            logger.debug(f"Required args: {required_args}")
+            logger.debug(f"Payload args: {payload.keys()}")
+            missing_keys = []
+            for key in required_args:
+                if key not in payload.keys():
+                    missing_keys.append(key)
+            if missing_keys:
+                raise TypeError(f"'{payload['type']}' notification type is missing required arguments: {missing_keys}.")
             notification_provider_exists = list_notifications(
                 notification_title=payload["name"], logger=logger, check_existence=True
             )
@@ -88,7 +103,7 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
                     else:
                         if response["ok"]:
                             console.print(
-                                f":floppy_disk: Notification provider '{payload['type']}' added successfully.",
+                                f":floppy_disk: Notification provider '{payload['type'].title()}' added successfully.",
                                 style="logging.level.info",
                             )
                         else:
@@ -97,7 +112,7 @@ def add_notification(notifications_file_path=None, interactive=None, logger=None
                                 style="logging.level.warning",
                             )
             else:
-                console.print(f":sunflower: '{payload['type']}' notification provider already exists.")
+                console.print(f":sunflower: '{payload['type'].title()}' notification provider already exists.")
 
 
 def list_notifications(verbose=None, notification_title=None, notification_id=None, logger=None, check_existence=False):
