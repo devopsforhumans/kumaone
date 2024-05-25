@@ -44,14 +44,56 @@ Following notification providers are supported by **`kumaone`** NOT `uptime kuma
 support for `uptime kuma` [please see here](https://github.com/louislam/uptime-kuma/wiki/Notification-Methods).
 ```
 
-- Opsgenie
-- Rocket.Chat
-- Slack
-- Teams
-- Webhook
+- discord
+- email
+- opsgenie
+- pagerduty
+- rocketchat
+- slack
+- teams
+- webhook
 
 ```{seealso}
 More notification providers will be added to `kumaone` in the future.
+```
+
+## Get required arguments for each provider
+
+`kumaone` CLI provides functionality to get information on required parametes about any supported provider
+
+```shell
+kumaone notification provider-args --type email
+```
+
+The above command should show information about `email` provider arguments.
+
+```text
+$ kumaone notification provider-args --type email
+🥳 Uptime kuma config file found at: /Users/dalwar23/.config/kumaone/kuma.yaml
+🥨 Connected to http://uptime.homelab.do
+🔐 Successfully logged in.
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┓
+┃ Argument Key             ┃ Required? ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━┩
+│ smtpFrom                 │ True      │
+│ smtpTo                   │ True      │
+│ smtpHost                 │ True      │
+│ smtpPort                 │ True      │
+│ smtpSecure               │ False     │
+│ smtpIgnoreTLSError       │ False     │
+│ smtpDkimDomain           │ False     │
+│ smtpDkimKeySelector      │ False     │
+│ smtpDkimPrivateKey       │ False     │
+│ smtpDkimHashAlgo         │ False     │
+│ smtpDkimheaderFieldNames │ False     │
+│ smtpDkimskipFields       │ False     │
+│ smtpUsername             │ False     │
+│ smtpPassword             │ False     │
+│ customSubject            │ False     │
+│ smtpCC                   │ False     │
+│ smtpBCC                  │ False     │
+└──────────────────────────┴───────────┘
+🧨 Disconnected from server.
 ```
 
 ## Add notification
@@ -132,14 +174,17 @@ $ kumaone notification list
 🥨 Connected to http://uptime.homelab.do
 🔐 Successfully logged in.
 📣 Available notification providers
-┏━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━┓
-┃ id ┃ type        ┃ title                       ┃ active ┃ isDefault ┃
-┡━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━┩
-│ 31 │ rocket.chat │ Uptime notification         │ True   │ False     │
-│ 32 │ slack       │ Uptime slack notification   │ True   │ False     │
-│ 33 │ teams       │ Uptime teams notification   │ True   │ False     │
-│ 34 │ webhook     │ Uptime webhook notification │ True   │ False     │
-└────┴─────────────┴─────────────────────────────┴────────┴───────────┘
+┏━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━┓
+┃ id  ┃ type        ┃ title                       ┃ active ┃ isDefault ┃
+┡━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━┩
+│ 281 │ discord     │ Discord Notification        │ True   │ False     │
+│ 282 │ Opsgenie    │ Opsgenie Nofification       │ True   │ False     │
+│ 283 │ PagerDuty   │ Pagerduty Notifications     │ True   │ False     │
+│ 284 │ rocket.chat │ RocketChat Notification     │ True   │ True      │
+│ 285 │ slack       │ Uptime Slack Notification   │ True   │ False     │
+│ 286 │ teams       │ Uptime Teams Notification   │ True   │ False     │
+│ 287 │ webhook     │ Uptime Webhook Notification │ True   │ False     │
+└─────┴─────────────┴─────────────────────────────┴────────┴───────────┘
 🧨 Disconnected from server.
 ```
 

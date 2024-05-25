@@ -26,7 +26,7 @@ early in development. Contribution and constructive feedbacks are always welcome
 
 ## Virtualenv
 
-- Install `pipenv` from [here](https://pipenv.pypa.io/en/latest/installation/)
+- Install `pipenv` from [here](https://pipenv.pypa.io/en/latest/)
 
 - Activate virtual environment
 
@@ -103,7 +103,10 @@ pip install -e .
 ### Notification
 
 - Supported notification providers (tested)
+  - [x] Discord
+  - [x] Email(SMTP)
   - [x] Opsgenie
+  - [x] PagerDuty
   - [x] Rocket.Chat
   - [x] Slack
   - [x] Teams

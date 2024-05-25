@@ -1,44 +1,70 @@
 ---
 notifications:
+  - discord:
+      name: "Discord Notification"
+      type: "discord"
+      isDefault: false
+      applyExisting: false
+      discordWebhookUrl: "url"
+      discordUsername: "discorduser"
+      discordPrefixMessage: "hello"
   - opsgenie:
       name: "Opsgenie Nofification"
-      type: "Opsgenie"
-      is_default: false
-      apply_existing: false
-      opsgeniePriority: 1
+      type: "Opsgenie" # Capitalized
+      isDefault: false
+      applyExisting: false
+      opsgeniePriority: 1 # 1-5
       opsgenieRegion: "eu" # us(default)/eu
       opsgenieApiKey: "something"
+  - pagerduty:
+      name: "Pagerduty Notifications"
+      type: "PagerDuty" # Capitalized
+      isDefault: false
+      applyExisting: false
+      pagerdutyIntegrationKey: "somekey"
+      pagerdutyPriority: "critical" # info, warning, error, critical
+      pagerdutyIntegrationUrl: "pagerduty url"
+      pagerdutyAutoResolve: "yes"
   - rocketchat:
       name: "RocketChat Notification"
-      type: "rocket.chat"
-      is_default: false
-      apply_existing: false
+      type: "rocketchat"
+      isDefault: true
+      applyExisting: true
       rocketwebhookURL: "https://chat.homelab.do"
       rocketiconemo: "rocket"
       rocketusername: "bot"
       rocketchannel: "somechannel"
   - slack:
-      name: "Uptime slack notification"
+      name: "Uptime Slack Notification"
       type: "slack"
-      is_default: false
-      apply_existing: false
+      isDefault: false
+      applyExisting: false
       slackwebhookURL: "https://some.slack.com"
       slackiconemo: "slack"
       slackusername: "dalwar23"
       slackchannel: "uptime"
       slackchannelnotify: ""
   - teams:
-      name: "Uptime teams notification"
+      name: "Uptime Teams Notification"
       type: "teams"
-      is_default: false
-      apply_existing: false
+      isDefault: false
+      applyExisting: false
       webhookUrl: "https://teams.microsoft.com/somehting/"
   - webhook:
-      name: "Uptime webhook notification"
+      name: "Uptime Webhook Notification"
       type: "webhook"
-      is_default: false
-      apply_existing: false
+      isDefault: false
+      applyExisting: false
       webhookURL: "https://custom.webhookurl.homelab"
       webhookAdditionalHeaders: ""
       webhookCustomBody: "this is a webhook message"
       webhookContentType: "application/json"
+  - email:
+      name: "Uptime Email Notification"
+      type: "smtp"
+      isDefault: false
+      applyExisting: false
+      smtpFrom: "uptime@homelab.do"
+      smtpTo: "awesomedev@homelab.do"
+      smtpHost: "myawesome.smtpserver.do"
+      smtpPort: "485"

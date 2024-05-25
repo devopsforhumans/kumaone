@@ -18,7 +18,7 @@ from .event_handlers import get_event_data, wait_for_event
 from . import ioevents
 from .monitors import _check_monitor
 from .payload_handler import _get_status_page_data_payload
-from .settings import get_missing_arguments, timeout
+from .settings import timeout
 from .utils import _sio_call
 
 # Source code meta data

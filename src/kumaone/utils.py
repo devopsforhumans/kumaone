@@ -179,7 +179,7 @@ def _check_data_path(data_path=None, logger=None, key_to_check_for=None):
                     return sorted([data_path])
                 else:
                     console.print(
-                        f":orange_circle: Provided data file might not contain necessary data. Missing {key_to_check_for} key.",
+                        f":orange_circle: Provided data file is missing necessary data. Missing {key_to_check_for} key.",
                         style="logging.level.warning",
                     )
                     sys.exit(1)

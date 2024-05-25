@@ -15,7 +15,7 @@ from typing_extensions import Annotated
 # Import custom (local) python packages
 from src.kumaone.configs import check_config
 from src.kumaone.connection import connect_login, disconnect
-from src.kumaone.notifications import add_notification, delete_notification, list_notifications
+from src.kumaone.notifications import add_notification, delete_notification, list_notifications, list_notification_providers, list_notification_provider_args
 from src.kumaone.utils import log_manager, _mutual_exclusivity_check
 
 # Source code meta data
@@ -121,6 +121,62 @@ def notification_show(
     connect_login(config_data=config_data)
     list_notifications(
         verbose=verbose, notification_title=notification_title, notification_id=notification_id, logger=logger
+    )
+    disconnect()
+
+
+@app.command(name="providers", help="Show all supported uptime kuma notification providers.")
+def notification_list_providers(
+    config_file: Annotated[
+        Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
+    ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    verbose: Annotated[bool, typer.Option(help="Show verbose output.")] = False,
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+):
+    """
+    List all uptime kuma notification provider.
+
+    :return: None
+    """
+
+    if log_level:
+        state["log_level"] = log_level
+        logger = log_manager(log_level=log_level)
+    config_data = check_config(config_path=config_file, logger=logger)
+    connect_login(config_data=config_data)
+    list_notification_providers(verbose=verbose, logger=logger)
+    disconnect()
+
+
+@app.command(name="provider-args", help="Show all arguments of an uptime kuma notification provider by notification type.")
+def notification_show_args(
+    notificaton_type: Annotated[
+        str,
+        typer.Option(
+            ..., "--type", "-t", help="Uptime kuma notification type.", callback=_mutual_exclusivity_check(size=2)
+        ),
+    ] = None,
+    config_file: Annotated[
+        Optional[Path], typer.Option(..., "--config", "-c", help="Uptime kuma configuration file path.")
+    ] = Path.home().joinpath(".config/kumaone/kuma.yaml"),
+    verbose: Annotated[bool, typer.Option(help="Show verbose output.")] = False,
+    log_level: Annotated[str, typer.Option(help="Set log level.")] = "NOTSET",
+):
+    """
+    List all uptime kuma notification provider.
+
+    :return: None
+    """
+
+    if log_level:
+        state["log_level"] = log_level
+        logger = log_manager(log_level=log_level)
+    if notificaton_type is None:
+        raise typer.BadParameter("Notification type '--type' / '-n' parameter is required.")
+    config_data = check_config(config_path=config_file, logger=logger)
+    connect_login(config_data=config_data)
+    list_notification_provider_args(
+        verbose=verbose, notification_type=notificaton_type, logger=logger
     )
     disconnect()
 

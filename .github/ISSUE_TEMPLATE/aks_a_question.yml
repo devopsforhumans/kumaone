@@ -1,0 +1,19 @@
+name: "❓Ask a question"
+description: "Ask a question about kumaone"
+labels: [question]
+body:
+  - type: textarea
+    id: related-issues
+    validations:
+      required: true
+    attributes:
+      label: "📑 I have found these related issues/pull requests"
+      description: "Search related issues by clicking [HERE](https://github.com/devopsforhumans/kumaone/issues)"
+      placeholder: "Related to #1"
+  - type: textarea
+    id: question
+    validations:
+      required: false
+    attributes:
+      label: "Question"
+      description: "Ask your question here."
