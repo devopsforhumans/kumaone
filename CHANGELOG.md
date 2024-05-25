@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.1-alpha.7 (25.05.2024)
+
+- Add new notification providers
+- Update documentation
+
 ## 0.0.1-alpha.6 (25.04.2024)
 
 - Project updates (non-functional updates)
