@@ -7,7 +7,7 @@ from datetime import datetime
 
 year = datetime.now().year
 
-__version__ = "0.0.1-alpha.6"
+__version__ = "0.0.1-alpha.7"
 __author__ = "Dalwar Hossain"
 __license__ = "BSD 3-Clause"
 __home_page__ = "https://kumaone.rtfd.io"

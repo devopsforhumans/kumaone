@@ -187,7 +187,7 @@ exclude_lines = [
 ]
 
 [tool.bumpversion]
-current_version = "0.0.1-alpha.6"
+current_version = "0.0.1-alpha.7"
 #parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 #serialize = ["{major}.{minor}.{patch}"]
 parse = """(?x)
