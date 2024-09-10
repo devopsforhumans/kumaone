@@ -92,8 +92,8 @@ def check_config(config_path=None, log_level=None, logger=None, get_url=False):
                 console.print(f":x: {config_file} is not a file.", style="red")
                 sys.exit(1)
         else:
-            logger.error(f"Provided config path doesn't exists.")
-            console.print(f":x: {config_file} doesn't exists.", style="red")
+            logger.error(f"Provided config path doesn't exist.")
+            console.print(f":x: {config_file} doesn't exist.", style="red")
             sys.exit(1)
 
 
@@ -149,7 +149,7 @@ def create_config(config_path=None, log_level=None):
     else:
         logger.info(f"Parent directory {parent_directory} doesn't exist. The directory will be created.")
         console.print(
-            f":file_folder: Parent directory doesn't exists. {parent_directory} directory will be created.",
+            f":file_folder: Parent directory doesn't exist. {parent_directory} directory will be created.",
             style="logging.level.info",
         )
         try:
@@ -194,9 +194,9 @@ def delete_config(config_path=None, remove_parent=False, log_level=None):
             logger.info(f"Config file found at: {config_path}")
             files_to_delete.append(config_path)
         else:
-            logger.info(f"Provided config file doesn't exists!")
+            logger.info(f"Provided config file doesn't exist!")
             console.print(
-                f":lollipop: Provided config file path doesn't exists. Nothing to delete.", style="logging.level.info"
+                f":lollipop: Provided config file path doesn't exist. Nothing to delete.", style="logging.level.info"
             )
             sys.exit(0)
     if not files_to_delete:
