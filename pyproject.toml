@@ -22,6 +22,7 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -30,7 +31,8 @@ dependencies = [
   "pyyaml >= 6.0.1",
   "requests >= 2.31.0",
   "typer >= 0.12.3",
-  "validators >= 0.22.0"
+  "validators >= 0.22.0",
+  "colorama >= 0.4.6"
 ]
 
 [project.urls]
@@ -73,7 +75,7 @@ cov = [
 ]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11"]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.lint]
 detached = true
@@ -100,12 +102,12 @@ all = [
 ]
 
 [tool.black]
-target-version = ["py38"]
+target-version = ["py312"]
 line-length = 120
 skip-string-normalization = true
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py312"
 line-length = 130
 select = [
   "A",

@@ -9,6 +9,7 @@ pyyaml = ">=6.0.1"
 requests = ">=2.31.0"
 typer = ">=0.12.3"
 validators = ">=0.22.0"
+colorama = ">=0.4.6"
 
 [dev-packages]
 black = ">=23.12.1"
