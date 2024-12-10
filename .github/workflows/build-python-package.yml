@@ -28,5 +28,9 @@ jobs:
           pip install pipenv wheel
       - name: Install dependencies
         run: pipenv install --dev
+      - name: Install kumaone package
+        run: pipenv install .
+      - name: Check kumaone version
+        run: pipenv run kumaone info
       - name: Build kumaone python package
         run: pipenv run hatch build

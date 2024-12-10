@@ -19,7 +19,7 @@ __author__ = "Dalwar Hossain"
 __email__ = "dalwar23@pm.me"
 
 # Create typer app and turn off debug mode by default
-app = typer.Typer()
+app = typer.Typer(no_args_is_help=True)
 app.add_typer(monitor_cli.app, name="monitor")
 app.add_typer(config_cli.app, name="config")
 app.add_typer(status_page_cli.app, name="status-page")
