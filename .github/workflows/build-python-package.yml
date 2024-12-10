@@ -22,15 +22,15 @@ jobs:
       # You can test your matrix by printing the current Python version
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
       - name: Install pipenv
-        run: |
-          python -m pip install --upgrade pip
-          pip install pipenv wheel
+        run: pip install pipenv wheel
       - name: Install dependencies
         run: pipenv install --dev
+      - name: Build kumaone python package
+        run: pipenv run hatch build
       - name: Install kumaone package
         run: pipenv install --ignore-pipfile .
       - name: Check kumaone version
         run: pipenv run kumaone info
-      - name: Build kumaone python package
-        run: pipenv run hatch build
