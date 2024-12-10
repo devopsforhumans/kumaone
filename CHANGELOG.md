@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.1-alpha.9 (10.12.2024)
+
+- Release patch by @dalwar23 in https://github.com/devopsforhumans/kumaone/pull/18
+- fix: Ensure status pages can be created if non are existing by @szEvEz in https://github.com/devopsforhumans/kumaone/pull/20
+
 ## 0.0.1-alpha.8 (09.12.2024)
 
 - fix typos by @rndmh3ro in #15
