@@ -25,9 +25,9 @@ jobs:
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
       - name: Install pipenv
-        run: pip install pipenv wheel
+        run: pip install pipenv wheel hatch
       - name: Install dependencies
-        run: pipenv install --dev
+        run: pipenv install
       - name: Build kumaone python package
         run: pipenv run hatch build
       - name: Install kumaone package
