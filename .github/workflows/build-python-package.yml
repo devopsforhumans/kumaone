@@ -27,6 +27,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install pipenv
       - name: Install dependencies
-        run: pipenv install --dev
+        run: |
+          pipenv shell
+          pipenv install --dev
       - name: Build kumaone python package
-        run: hatch build
+        run: |
+          pipenv shell
+          hatch build
