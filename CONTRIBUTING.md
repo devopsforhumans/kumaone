@@ -9,7 +9,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at https://github.com/dalwar23/kumaone/issues.
+Report bugs at https://github.com/devopsforhumans/kumaone/issues.
 
 If you are reporting a bug, please include:
 
@@ -35,7 +35,7 @@ articles, and such.
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/dalwar23/kumanone/issues.
+The best way to send feedback is to file an issue at https://github.com/devopsforhumans/kumaone/issues.
 
 If you are proposing a feature:
 
@@ -92,5 +92,5 @@ Before you submit a pull request, check that it meets these guidelines:
 1. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list of TODO in README file.
-2. The pull request should work for Python 3.8, 3.9, 3.10 > 3.10 and for PyPy.
+2. The pull request should work for Python 3.8, 3.9, 3.10, 3.11, 3.12 and same for PyPy.
 

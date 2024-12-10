@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.1-alpha.8 (09.12.2024)
+
+- fix typos by @rndmh3ro in #15
+- Feat/update monitor pages by @rndmh3ro in #16
+- Add python 3.12 in project settings
+
 ## 0.0.1-alpha.7 (25.05.2024)
 
 - Add new notification providers
