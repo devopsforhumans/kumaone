@@ -185,7 +185,7 @@ def add_status_page(
             status_page_details.pop("maintenanceList")
             return status_page_details
         with wait_for_event(ioevents.status_page_list):
-            response = _sio_call("addStatusPage", (status_page_title.title(), status_page_slug, status_page_id))
+            response = _sio_call("addStatusPage", (status_page_title.title(), status_page_slug))
             if response["ok"]:
                 console.print(
                     f":hatching_chick: Status page '{status_page_title.title()} ({status_page_slug})' has been created or updated.",
