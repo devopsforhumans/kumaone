@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.1-alpha.10 (11.12.2024)
+
+- Deprecate support for python 3.8
+- Add GiHub Actions for simple checks
+- Running `kumaone` without any option will invoke help
+
 ## 0.0.1-alpha.9 (10.12.2024)
 
 - Release patch by @dalwar23 in https://github.com/devopsforhumans/kumaone/pull/18

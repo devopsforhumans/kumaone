@@ -1,6 +1,6 @@
 # Installation
 
-kumaone (`kumaone`) requires Python 3.8 or above. If you do not already have a
+kumaone (`kumaone`) requires Python 3.9 or above. If you do not already have a
 Python environment configured on your computer, please see the
 [Python](https://www.python.org) page for instructions on installing Python
 environment.
